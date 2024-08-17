@@ -1,7 +1,7 @@
 import React from 'react';
 
 const HomePage: React.FC = () => {
-  return <button className="btn btn-accent">Accent</button>;
+  return <input type="checkbox" value="winter" className="toggle theme-controller" />;
 };
 
 export default HomePage;
