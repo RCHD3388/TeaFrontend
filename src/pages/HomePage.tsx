@@ -1,7 +1,7 @@
 import React from 'react';
 
 const HomePage: React.FC = () => {
-  return <div>Home Page Content</div>;
+  return <button className="btn btn-accent">Accent</button>;
 };
 
 export default HomePage;
