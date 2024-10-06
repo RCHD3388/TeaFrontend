@@ -1,25 +1,26 @@
+import GuestLayout from "../layouts/GuestLayout";
+import GuestPage from "../pages/public_pages/GuestPage";
+import GuestPage2 from "../pages/public_pages/GuestPage2";
+import GuestPage3 from "../pages/public_pages/GuestPage3";
 import { IRouteConfig } from "../types/RouteTypes";
-import HomePage from "../pages/HomePage";
-import AuthPage from "../pages/AuthPage";
-import MainPage from "../pages/private_pages/MainPage";
-import MainLayout from "../layouts/MainLayout";
-import AuthLayout from "../layouts/AuthLayout";
 
 export const routes: IRouteConfig[] = [
   {
     path: "/",
-    component: HomePage,
-    layout: MainLayout,
-  },
-  {
-    path: "/auth",
-    component: AuthPage,
-    layout: MainLayout,
-  },
-  {
-    path: "/private",
-    component: MainPage,
-    private: true,
-    layout: AuthLayout,
-  },
+    component: GuestLayout,
+    children: [
+      {
+        path: "",
+        component: GuestPage,
+      },
+      {
+        path: "g2",
+        component: GuestPage2,
+      },
+      {
+        path: "g3",
+        component: GuestPage3,
+      }
+    ]
+  }
 ]

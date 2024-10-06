@@ -3,10 +3,7 @@ import { Outlet } from 'react-router-dom';
 
 const AuthLayout: FC<{ children: React.ReactNode }> = () => {
   return (
-    <>
-      <>Auth Layout</>
-      <Outlet/>
-    </>
+    <Outlet/>
   );
 };
 

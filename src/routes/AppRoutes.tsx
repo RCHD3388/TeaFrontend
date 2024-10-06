@@ -5,7 +5,7 @@ import PrivateRoute from "./PrivateRoute";
 import { routes } from "./routeConfig";
 
 const renderRoutes = (routes: IRouteConfig[]) => {
-  return routes.map(({ path, component: Component, layout: Layout, private: isPrivate, children }, index) => {
+  return routes.map(({ path, component: Component, private: isPrivate, children }, index) => {
     const element = isPrivate ? (
       <PrivateRoute>
         <Component />
@@ -15,7 +15,7 @@ const renderRoutes = (routes: IRouteConfig[]) => {
     );
 
     return (
-      <Route key={index} path={path} element={<Layout>{element}</Layout>}>
+      <Route key={index} path={path} element={element}>
         {children && renderRoutes(children)}
       </Route>
     );
