@@ -12,8 +12,19 @@ export default {
       {
         my_emerald: {
           ...require("daisyui/src/theming/themes")["emerald"],
-          "primary": "#B5CFB7",
+          // dark green
+          "primary": "#c1e8c4",
+          "primary-content": "#1e211b",
+          // light green
           "secondary": "#223634",
+          "secondary-content": "#eaf0e4",
+          // light yellow
+          "accent": "#e8d990",
+          "accent-content": "#1e211b",
+          // light gray
+          "neutral": "#e0e0e0",
+          "nautral-content": "#e0e0e0",
+
           "--rounded-box": "0.5rem", // border radius rounded-box utility class, used in card and other large boxes
           "--rounded-btn": "0.5rem", // border radius rounded-btn utility class, used in buttons and similar element
         },

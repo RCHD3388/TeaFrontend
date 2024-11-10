@@ -1,35 +1,28 @@
 import React from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { IRouteConfig } from "../types/RouteTypes";
+import { createBrowserRouter, Navigate, RouterProvider} from "react-router-dom";
+import LoginPage from "../pages/public_pages/LoginPage";
 import PrivateRoute from "./PrivateRoute";
-import { routes } from "./routeConfig";
-
-const renderRoutes = (routes: IRouteConfig[]) => {
-  return routes.map(({ path, component: Component, private: isPrivate, children }, index) => {
-    const element = isPrivate ? (
-      <PrivateRoute>
-        <Component />
-      </PrivateRoute>
-    ) : (
-      <Component />
-    );
-
-    return (
-      <Route key={index} path={path} element={element}>
-        {children && renderRoutes(children)}
-      </Route>
-    );
-  });
-}
 
 const AppRoutes: React.FC = () => {
+  const router = createBrowserRouter([
+    // Public Route
+    { path: "/", element: <Navigate to={"/login"}/>},
+    { path: "/login", element: <LoginPage/>},
+    // Private Route 
+    {
+      path: "appuser",
+      element: <PrivateRoute/>,
+      children: [
+        {
+          index: true,
+          element: <h1>Hello world</h1>  
+        }
+      ]
+    }
+  ]);
+
   return (
-    <BrowserRouter>
-      <Routes>
-        {renderRoutes(routes)}
-        <Route path="*" element={<Navigate to="/" />}></Route>
-      </Routes>
-    </BrowserRouter>
+    <RouterProvider router={router}/>
   )
 }
 
