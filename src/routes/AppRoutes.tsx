@@ -14,10 +14,17 @@ const AppRoutes: React.FC = () => {
       path: "appuser",
       element: <PrivateRoute/>,
       children: [
-        {
-          index: true,
-          element: <Dashboard/> 
-        }
+        { index: true, element: <Navigate to={"/appuser/dashboard"}/> },
+        { path: "dashboard", element: <Dashboard/>},
+        { path: "project", element: <Dashboard/> },
+        { path: "inventory", element: <Dashboard/>},
+        { path: "purchasing", element: <Dashboard/> },
+        { path: "supplier", element: <Dashboard/>},
+        { path: "employee", element: <Dashboard/>},
+        { path: "user", element: <Dashboard/>},
+        { path: "process/request", element: <Dashboard/>},
+        { path: "process/approval", element: <Dashboard/>},
+        { path: "category", element: <Dashboard/>},
       ]
     }
   ]);
