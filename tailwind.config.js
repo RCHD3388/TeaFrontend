@@ -22,7 +22,7 @@ export default {
           "accent": "#e8d990",
           "accent-content": "#1e211b",
           // light gray
-          "neutral": "#e0e0e0",
+          "neutral": "#3c3d37",
           "nautral-content": "#e0e0e0",
 
           "--rounded-box": "0.5rem", // border radius rounded-box utility class, used in card and other large boxes

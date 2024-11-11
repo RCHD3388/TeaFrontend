@@ -2,6 +2,7 @@ import React from "react";
 import { createBrowserRouter, Navigate, RouterProvider} from "react-router-dom";
 import LoginPage from "../pages/public_pages/LoginPage";
 import PrivateRoute from "./PrivateRoute";
+import Dashboard from "../pages/private_pages/Dashboard";
 
 const AppRoutes: React.FC = () => {
   const router = createBrowserRouter([
@@ -15,7 +16,7 @@ const AppRoutes: React.FC = () => {
       children: [
         {
           index: true,
-          element: <h1>Hello world</h1>  
+          element: <Dashboard/> 
         }
       ]
     }
