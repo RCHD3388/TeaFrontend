@@ -9,7 +9,6 @@ const UserLayout: React.FC = () => {
     <>
       <Navbar/>
       <Sidebar/>
-      <Outlet></Outlet>
     </>
   )
 }

@@ -22,8 +22,8 @@ const AppRoutes: React.FC = () => {
         { path: "supplier", element: <Dashboard/>},
         { path: "employee", element: <Dashboard/>},
         { path: "user", element: <Dashboard/>},
-        { path: "process/request", element: <Dashboard/>},
-        { path: "process/approval", element: <Dashboard/>},
+        { path: "request", element: <Dashboard/>},
+        { path: "approval", element: <Dashboard/>},
         { path: "category", element: <Dashboard/>},
       ]
     }
