@@ -7,7 +7,7 @@ const UserLayout: React.FC = () => {
     <>
       <div className="flex flex-col h-screen ">
         <Navbar />
-        <div className="h-full max-h-full" style={{overflowY: "auto"}}>
+        <div className="h-full max-h-full" style={{ overflowY: "auto" }}>
           <Sidebar />
         </div>
       </div>
