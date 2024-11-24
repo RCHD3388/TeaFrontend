@@ -1,15 +1,16 @@
 import React from "react";
-import logout_logo from '../assets/logout.svg';
-import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 
 const UserLayout: React.FC = () => {
   return (
     <>
-      <Navbar/>
-      <Sidebar/>
-      <Outlet></Outlet>
+      <div className="flex flex-col h-screen ">
+        <Navbar />
+        <div className="h-full max-h-full" style={{overflowY: "auto"}}>
+          <Sidebar />
+        </div>
+      </div>
     </>
   )
 }

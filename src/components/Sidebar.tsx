@@ -10,27 +10,22 @@ import employee_svg from "./../assets/sidebar_icon/employee.svg";
 import user_svg from "./../assets/sidebar_icon/user.svg";
 import request_svg from "./../assets/sidebar_icon/request.svg";
 import category_svg from "./../assets/sidebar_icon/category.svg";
-import process_svg from "./../assets/sidebar_icon/process.svg";
 
 const Sidebar: React.FC = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  // Fungsi untuk toggle dropdown
-  function toggleDropdown(): void {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
 
   return (
     <>
-      <div className="drawer lg:drawer-open">
+      <div className="drawer lg:drawer-open h-full">
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content flex flex-col items-center justify-center">
-          <Outlet></Outlet>
+        <div className="drawer-content flex flex-col items-center justify-center h-full max-h-full" style={{ overflowY: "auto" }}>
+          <Outlet>
+
+          </Outlet>
           <label htmlFor="my-drawer-2" className="btn btn-primary drawer-button lg:hidden">
             Open drawer
           </label>
         </div>
-        <div className="drawer-side border-t-2 border-gray-400  shadow-lg">
+        <div className="drawer-side border-t-2 border-gray-400 shadow-lg h-full max-h-full" style={{ overflowY: "auto" }}>
           <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label>
           <ul className="menu bg-light text-primary-content min-h-full w-60 p-4">
             {/* Sidebar content here */}
