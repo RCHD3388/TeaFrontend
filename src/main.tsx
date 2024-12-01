@@ -12,10 +12,10 @@ const httpLink = new HttpLink({
 });
 
 const authLink = setContext((request, { headers }) => {
-  const token = localStorage.getItem('persist:user');
+  const persistUser: string = localStorage.getItem('persist:user') || ""
+  const token = persistUser == "" ? "" : JSON.parse(persistUser).access_token;
 
-  const requiresAuth = request?.variables?.requiresAuth !== false; // Defaultnya true, jika false berarti tidak perlu auth
-  console.log(requiresAuth)
+  const requiresAuth = request?.variables?.requiresAuth !== false;
 
   if (requiresAuth && token) {
     return {
