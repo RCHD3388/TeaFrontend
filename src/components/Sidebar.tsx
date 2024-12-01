@@ -21,9 +21,9 @@ const Sidebar: React.FC = () => {
           <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label>
           <ul className="menu bg-light text-primary-content min-h-full w-60 p-4">
             {/* Sidebar content here */}
-            {SIDEBAR_ITEMS.map((item) => {
+            {SIDEBAR_ITEMS.map((item, index) => {
               return (
-                <li><SidebarLink link_to={item.link_to} link_name={item.link_name} icon={item.icon}></SidebarLink></li>
+                <li key={index}><SidebarLink key={index} link_to={item.link_to} link_name={item.link_name} icon={item.icon}></SidebarLink></li>
               )
             })}
           </ul>

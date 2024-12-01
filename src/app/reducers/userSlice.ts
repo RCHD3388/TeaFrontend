@@ -6,12 +6,14 @@ interface UserState {
   username: string | null;
   role: string | null;
   access_token: string | null;
+  loggedIn: boolean;
 }
 
 const initialState: UserState = {
   username: null,
   role: null,
   access_token: null,
+  loggedIn: false
 };
 
 const userSlice = createSlice({
@@ -23,12 +25,11 @@ const userSlice = createSlice({
       state.username = username;
       state.role = role;
       state.access_token = access_token;
+      state.loggedIn = true
     },
 
     logoutUser: (state) => {
-      state.username = null;
-      state.role = null;
-      state.access_token = null;
+      return initialState
     },
   },
 });

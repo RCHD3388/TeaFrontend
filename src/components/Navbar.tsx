@@ -1,6 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logoutUser, selectUser } from "../app/reducers/userSlice";
+import { RootState } from "../app/store";
 
 const Navbar: React.FC = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => selectUser(state))
+
+  function logoutHandling(){
+    dispatch(logoutUser());
+    navigate("/");
+  }
+
+  useEffect(() => {
+    if(user.loggedIn == false){
+      navigate("/")
+    }
+  }, [user])
+
   return (
     <>
       <div className="navbar bg-light shadow-lg h-16">
@@ -24,7 +43,7 @@ const Navbar: React.FC = () => {
               <p className="font text-base">Richard Rafer Guy</p>
               <p className="font-bold text-sm">Admin</p>
               <hr className="my-2 border-t-2 border-gray-300" />
-              <li className="btn bg-important btn-sm">Logout</li>
+              <li className="btn bg-important btn-sm" onClick={() => {logoutHandling()}}>Logout</li>
             </ul>
           </div>
         </div>

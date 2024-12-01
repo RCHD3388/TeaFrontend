@@ -4,10 +4,12 @@ import { useMutation } from '@apollo/client';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../app/store';
 import { setUser } from '../../app/reducers/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage: React.FC = () => {
   const usernameRef = useRef<HTMLInputElement | null>(null)
   const passwordRef = useRef<HTMLInputElement | null>(null)
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [error, setError] = useState<string>("");
   const [login] = useMutation(LoginDocument); 
@@ -21,7 +23,6 @@ const LoginPage: React.FC = () => {
     .then((response) => {
       let data = response.data.login;
       dispatch(setUser({username: data.username, role: data.role, access_token: data.access_token}))
-      console.log("Berhasil Login")
     })
     .catch((err) => {
       let error = err.graphQLErrors[0];
