@@ -1,6 +1,38 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
+import { LoginDocument, useLoginMutation } from '../../graphql/user.generated';
+import { useMutation } from '@apollo/client';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../app/store';
 
 const LoginPage: React.FC = () => {
+  const usernameRef = useRef<HTMLInputElement | null>(null)
+  const passwordRef = useRef<HTMLInputElement | null>(null)
+  const dispatch = useDispatch<AppDispatch>();
+  const [error, setError] = useState<string>("");
+  const [login] = useMutation(LoginDocument); 
+
+  function handleLogin(){
+    let username = usernameRef?.current?.value || ""
+    let password = passwordRef?.current?.value || ""
+
+    console.log(typeof username + " " + typeof password);
+    setError("");
+    login({ variables: { data: {username, password}, requiresAuth: false}})
+    .then((response) => {
+      console.log(response)
+    })
+    .catch((err) => {
+      let error = err.graphQLErrors[0];
+      if(error.code == "INTERNAL_SERVER_ERROR" || error.code == "SERVER_ERROR"){
+        setError("Something went wrong! Please try again later")
+      }else{
+        let curError = error.original?.message || error.message;
+        if(typeof curError == "string") setError(curError);
+        if(typeof curError == "object") setError(curError[0]);  
+      }
+    })
+  }
+
   return (
     <div className="h-screen flex flex-col md:flex-row">
       {/* Bagian Kiri (3/5) - Tersembunyi di layar kecil */}
@@ -43,7 +75,7 @@ const LoginPage: React.FC = () => {
                   <path
                     d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
                 </svg>
-                <input type="text" className="grow" placeholder="Username" />
+                <input type="text" className="grow" placeholder="Username" ref={usernameRef}/>
               </label>
             </div>
             <label className="label">
@@ -61,19 +93,12 @@ const LoginPage: React.FC = () => {
                     d="M14 6a4 4 0 0 1-4.899 3.899l-1.955 1.955a.5.5 0 0 1-.353.146H5v1.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-2.293a.5.5 0 0 1 .146-.353l3.955-3.955A4 4 0 1 1 14 6Zm-4-2a.75.75 0 0 0 0 1.5.5.5 0 0 1 .5.5.75.75 0 0 0 1.5 0 2 2 0 0 0-2-2Z"
                     clipRule="evenodd" />
                 </svg>
-                <input type="password" className="grow" />
+                <input type="password" className="grow" ref={passwordRef}/>
               </label>
             </div>
-            <div className="form-control">
-              <div className='flex items-center justify-start'>
-                <div className="flex space-x-4">
-                  <input type="checkbox" defaultChecked className="checkbox checkbox-primary" />
-                  <span className="label-text">Remember me</span>
-                </div>
-              </div>
-            </div>
+            <span className='text-red-600'>{error}</span>
             <div className="form-control mt-6">
-              <button className="btn btn-primary">Login</button>
+              <div className="btn btn-primary" onClick={() => {handleLogin()}}>Login</div>
             </div>
           </form>
         </div>
