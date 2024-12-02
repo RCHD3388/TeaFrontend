@@ -13,7 +13,7 @@ const Sidebar: React.FC<SidebarProps> = ({sidebarID}) => {
     <>
       <div className="drawer lg:drawer-open h-full">
         <input id={sidebarID} type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content flex flex-col items-center justify-center h-full max-h-full" style={{ overflowY: "auto" }}>
+        <div className="drawer-content h-full max-h-full" style={{ overflowY: "auto" }}>
           <Outlet>
 
           </Outlet>

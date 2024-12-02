@@ -6,6 +6,8 @@ import { setContext } from '@apollo/client/link/context';
 import { Provider } from 'react-redux';
 import { persistor, store } from './app/store.ts';
 import { PersistGate } from 'redux-persist/integration/react';
+import { ThemeProvider } from '@emotion/react';
+import theme from './theme.ts';
 
 const httpLink = new HttpLink({
   uri: 'http://localhost:3000/graphql',
@@ -43,7 +45,9 @@ createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
       <PersistGate persistor={persistor}>
         <ApolloProvider client={client}>
-          <App />
+          <ThemeProvider theme={theme}>
+            <App />
+          </ThemeProvider>
         </ApolloProvider>
       </PersistGate>
     </Provider>
