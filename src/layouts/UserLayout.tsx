@@ -6,9 +6,9 @@ const UserLayout: React.FC = () => {
   return (
     <>
       <div className="flex flex-col h-screen ">
-        <Navbar />
+        <Navbar sidebarID={"sidebar_drawer"}/>
         <div className="h-full max-h-full" style={{ overflowY: "auto" }}>
-          <Sidebar />
+          <Sidebar sidebarID={"sidebar_drawer"}/>
         </div>
       </div>
     </>

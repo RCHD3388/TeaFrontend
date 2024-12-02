@@ -2,9 +2,10 @@ import React from "react";
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
 import LoginPage from "../pages/public_pages/LoginPage";
 import PrivateRoute from "./PrivateRoute";
-import Dashboard from "../pages/private_pages/Dashboard";
 import PublicRoute from "./PublicRoute";
 import NotFoundPage from "../pages/NotFoundPage";
+import DashboardPage from "../pages/private_pages/DashboardPage";
+import CategoryPage from "../pages/private_pages/CategoryPage";
 
 const AppRoutes: React.FC = () => {
   const router = createBrowserRouter([
@@ -22,16 +23,16 @@ const AppRoutes: React.FC = () => {
       element: <PrivateRoute />,
       children: [
         { index: true, element: <Navigate to={"/appuser/dashboard"} /> },
-        { path: "dashboard", element: <Dashboard /> },
-        { path: "project", element: <Dashboard /> },
-        { path: "inventory", element: <Dashboard /> },
-        { path: "purchasing", element: <Dashboard /> },
-        { path: "supplier", element: <Dashboard /> },
-        { path: "employee", element: <Dashboard /> },
-        { path: "user", element: <Dashboard /> },
-        { path: "request", element: <Dashboard /> },
-        { path: "approval", element: <Dashboard /> },
-        { path: "category", element: <Dashboard /> },
+        { path: "dashboard", element: <DashboardPage /> },
+        { path: "project", element: <DashboardPage /> },
+        { path: "inventory", element: <DashboardPage /> },
+        { path: "purchasing", element: <DashboardPage /> },
+        { path: "supplier", element: <DashboardPage /> },
+        { path: "employee", element: <DashboardPage /> },
+        { path: "user", element: <DashboardPage /> },
+        { path: "request", element: <DashboardPage /> },
+        { path: "approval", element: <DashboardPage /> },
+        { path: "category", element: <CategoryPage /> },
       ]
     },
     {
