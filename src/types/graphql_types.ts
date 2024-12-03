@@ -14,6 +14,21 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type CategoryData = {
+  __typename?: 'CategoryData';
+  _id: Scalars['ID']['output'];
+  already_used: Scalars['Boolean']['output'];
+  description: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  type: Scalars['String']['output'];
+};
+
+export type CreateCategoryInput = {
+  description: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  type: Scalars['String']['input'];
+};
+
 export type LoginInput = {
   password: Scalars['String']['input'];
   username: Scalars['String']['input'];
@@ -28,8 +43,21 @@ export type LoginResponse = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createCategory: CategoryData;
   create_project: Scalars['String']['output'];
+  deleteCategory: CategoryData;
   login: LoginResponse;
+  updateCategory: CategoryData;
+};
+
+
+export type MutationCreateCategoryArgs = {
+  createCategoryInput: CreateCategoryInput;
+};
+
+
+export type MutationDeleteCategoryArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -37,7 +65,19 @@ export type MutationLoginArgs = {
   data: LoginInput;
 };
 
+
+export type MutationUpdateCategoryArgs = {
+  id: Scalars['String']['input'];
+  updateCategoryInput: UpdateCategoryInput;
+};
+
 export type Query = {
   __typename?: 'Query';
+  getCategories: Array<CategoryData>;
   getHello: Scalars['String']['output'];
+};
+
+export type UpdateCategoryInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };

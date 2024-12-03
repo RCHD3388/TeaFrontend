@@ -1,0 +1,9 @@
+query GetCategories {
+  getCategories {
+    _id
+    name
+    description
+    type
+    already_used
+  }
+}
