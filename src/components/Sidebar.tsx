@@ -18,7 +18,7 @@ const Sidebar: React.FC<SidebarProps> = ({sidebarID}) => {
 
           </Outlet>
         </div>
-        <div className="drawer-side border-t-2 border-gray-400 shadow-lg h-full max-h-full" style={{ overflowY: "auto" }}>
+        <div className="drawer-side border-t-2 border-gray-400 shadow-lg h-full max-h-full" style={{ overflowY: "auto", zIndex: 2 }}>
           <label htmlFor={sidebarID} aria-label="close sidebar" className="drawer-overlay"></label>
           <ul className="menu bg-light text-primary-content min-h-full w-60 p-4">
             <div className="flex items-center justify-between mb-2 lg:hidden">

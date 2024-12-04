@@ -1,10 +1,30 @@
-import * as React from 'react';
 import StickyHeadTable, { StickyHeadTableColumn } from '../../components/global_features/StickyHeadTable';
-import { Button } from '@mui/material';
-import { useQuery } from '@apollo/client';
-import { GetCategoriesDocument } from '../../graphql/category.generated';
+import { Alert, Box, Button, CircularProgress, MenuItem, Modal, Snackbar, Stack, TextField, Typography } from '@mui/material';
+import { useMutation, useQuery } from '@apollo/client';
+import { CreateCategoryDocument, DeleteCategoryDocument, GetCategoriesDocument, UpdateCategoryDocument } from '../../graphql/category.generated';
+import React, { useEffect, useRef, useState } from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { toast, ToastContainer } from 'react-toastify';
 
+interface CreateCategoryValues {
+  name: string
+  description: string
+  type: string
+}
+
+const modalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 interface RowData {
+  _id: string;
   name: string;
   description: string;
   type: string;
@@ -17,21 +37,106 @@ const columns: StickyHeadTableColumn<RowData>[] = [
   {
     id: 'action',
     label: 'Action',
-    actionLabel: 'Edit',
+    actionLabel: 'Ubah',
     align: "center",
     buttonColor: (row) => 'secondary'
   },
 ];
 
-export default function CategoryPage() {
-  let { data, loading, refetch } = useQuery(GetCategoriesDocument, {variables: {requiresAuth: true}});
+const typeDropdownValues: string[] = ["project_cost", "priority", "completion_status", "item", "attendance_status", "person_status"]
 
-  function handleAddCategory() {
-    console.log("add category")
+export default function CategoryPage() {
+  let { data, loading, refetch } = useQuery(GetCategoriesDocument, { variables: { requiresAuth: true } });
+  let [createCategory] = useMutation(CreateCategoryDocument)
+  let [updateCategory] = useMutation(UpdateCategoryDocument)
+  let [deleteCategory] = useMutation(DeleteCategoryDocument)
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [openAddModal, setOpenAddModal] = React.useState(false);
+  const [openEditModal, setOpenEditModal] = React.useState(false);
+  const handleCloseAddModal = () => { setOpenAddModal(false) }
+  const handleOpenAddModal = () => { setOpenAddModal(true) }
+  const handleCloseEditModal = () => { setOpenEditModal(false) }
+  const handleOpenEditModal = () => { setOpenEditModal(true) }
+  const [selectedRow, setSelectedRow] = React.useState<RowData | null>(null)
+  const nameRef = React.useRef<HTMLInputElement>(null)
+  const descriptionRef = React.useRef<HTMLInputElement>(null)
+  const [nameErr, setNameErr] = useState("")
+  const [descriptionErr, setDescriptionErr] = useState("")
+  const [deleteErr, setDeleteErr] = useState("")
+  const [openSnackBar, setOpenSnackBar] = useState<boolean>(false);
+  const [snackBarMsg, setSnackBarMsg] = useState("");
+
+  const { handleSubmit, control, formState: { errors }, reset } = useForm<CreateCategoryValues>({
+    defaultValues: {
+      name: '',
+      description: '',
+      type: '',
+    },
+  });
+
+  const handleAddCategory: SubmitHandler<CreateCategoryValues> = async (data) => {
+    setIsSubmitting(true)
+    try {
+      await createCategory({ variables: { input: { ...data }, requiresAuth: true } })
+      await refetch()
+      reset()
+      handleCloseAddModal();
+      setOpenSnackBar(true);
+      setSnackBarMsg("Berhasil Tambah Kategori")
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
-  function handleEdit(row: RowData, column: StickyHeadTableColumn<RowData>) {
-    refetch()
+  const handleTableAction = (row: RowData, column: StickyHeadTableColumn<RowData>) => {
+    setSelectedRow(row)
+    handleOpenEditModal();
+  }
+
+  const handleEditCategory = () => {
+    let name = nameRef.current?.value.trim() || ""
+    let description = descriptionRef.current?.value.trim() || "";
+    setNameErr(""); setDescriptionErr("");
+    if (!name) setNameErr("Nama tidak boleh kosong")
+    if (!description) setDescriptionErr("description tidak boleh kosong")
+    if (name != "" && description != "") {
+      updateCategory({
+        variables: {
+          id: selectedRow?._id || "",
+          updateCategoryInput: { name, description },
+          requiresAuth: true
+        }
+      }).then((response) => {
+        setOpenSnackBar(true);
+        setSnackBarMsg("Berhasil Ubah Kategori")
+        refetch()
+        handleCloseEditModal()
+      }).catch((err) => {
+        setOpenSnackBar(true);
+        setSnackBarMsg("Gagal Ubah Kategori")
+      })
+    }
+  }
+
+  const handleDeleteCategory = () => {
+    setDeleteErr("");
+    if (selectedRow && openEditModal) {
+      deleteCategory({ variables: { id: selectedRow._id, requiresAuth: true } })
+        .then((response) => {
+          setOpenSnackBar(true);
+          setSnackBarMsg("Berhasil Hapus Kategori")
+          refetch()
+          handleCloseEditModal()
+        }).catch((err) => {
+          setOpenSnackBar(true);
+          setSnackBarMsg("Kategori Sudah Digunakan, Tidak dapat dihapus")
+        })
+    } else {
+      setOpenSnackBar(true);
+      setSnackBarMsg("Gagal Hapus Kategori")
+    }
   }
 
   return (
@@ -44,15 +149,143 @@ export default function CategoryPage() {
           variant="contained"
           color='secondary'
           style={{ marginBottom: "1rem" }}
-          onClick={() => { handleAddCategory() }}
+          onClick={() => { handleOpenAddModal() }}
         >Tambah Kategori</Button>
         {!loading && <StickyHeadTable
           columns={columns}
           rows={data?.getCategories ?? []}
           withIndex={true}
-          onActionClick={handleEdit}
+          onActionClick={handleTableAction}
         />}
       </div>
+
+      <Modal
+        open={openAddModal}
+        onClose={handleCloseAddModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={modalStyle}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            <b>TAMBAH KATEGORI BARU</b>
+          </Typography>
+          {/* FIELD START */}
+          <Controller
+            name="name" control={control} rules={{ required: 'Name is required' }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                sx={{ width: "100%", mb: 1 }} label="Name" size='small' variant="outlined"
+                error={!!errors.name}
+                helperText={errors.name ? errors.name.message : ''}
+              />
+            )}
+          />
+          <Controller
+            name="description" control={control} rules={{ required: 'Description is required' }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                sx={{ width: "100%", mb: 1 }} label="Description" size='small' variant="outlined"
+                error={!!errors.name}
+                helperText={errors.name ? errors.name.message : ''}
+              />
+            )}
+          />
+          <Controller
+            name="type" control={control} rules={{ required: 'Type is required' }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                select sx={{ width: "100%", mb: 1 }}
+                label="Type" size="small" variant="outlined"
+                error={!!errors.type}
+                helperText={errors.type ? errors.type.message : ''}
+              >
+                {typeDropdownValues.map((value, index) => {
+                  return <MenuItem key={index} value={value}>{value}</MenuItem>
+                })}
+              </TextField>
+            )}
+          />
+          {/* FIELD END */}
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Button
+              onClick={handleCloseAddModal}
+              variant="contained"
+              color="info"
+              disabled={loading || isSubmitting}
+            >
+              Kembali
+            </Button>
+            <Button
+              onClick={handleSubmit(handleAddCategory)}
+              variant="contained"
+              color="primary"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : ("Tambah")}
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+
+      <Modal
+        open={openEditModal}
+        onClose={handleCloseEditModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={modalStyle}>
+          <Typography id="modal-modal-description" variant="h6" component="h2">
+            <b>UBAH KATEGORI</b>
+          </Typography>
+          <Typography id="modal-modal-description" variant="h6" component="h2">
+            <div className='flex judtify-center items-center mb-3'>
+              {selectedRow?.name ?? ""} <div className=' ml-2 badge badge-neutral'>{selectedRow?.type}</div>
+            </div>
+          </Typography>
+
+          {/* FIELD START */}
+          <TextField sx={{ width: "100%", mb: 1 }} label="Name" size='small'
+            variant="outlined" inputRef={nameRef}
+            defaultValue={selectedRow?.name ?? ""}
+            error={nameErr != ""}
+            helperText={nameErr}
+          />
+          <TextField sx={{ width: "100%", mb: 1 }} label="Description" size='small'
+            variant="outlined" inputRef={descriptionRef}
+            defaultValue={selectedRow?.description ?? ""}
+            error={descriptionErr != ""}
+            helperText={descriptionErr}
+          />
+          {/* FIELD END */}
+          <span className='text-error'>{deleteErr}</span>
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Button onClick={handleCloseEditModal}
+              variant="contained" color="info" disabled={loading || isSubmitting}
+            >
+              Kembali
+            </Button>
+            <Button onClick={() => { handleDeleteCategory() }}
+              variant="contained" color="error" disabled={loading || isSubmitting}
+            >
+              Hapus
+            </Button>
+            <Button onClick={() => { handleEditCategory() }}
+              variant="contained" color="primary" disabled={isSubmitting}
+            >
+              {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : ("Ubah")}
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+      <Snackbar
+        open={openSnackBar}
+        autoHideDuration={1500}
+        onClose={() => { setOpenSnackBar(false) }}
+        message={snackBarMsg}
+      />
     </div>
-  );
+      );
 }

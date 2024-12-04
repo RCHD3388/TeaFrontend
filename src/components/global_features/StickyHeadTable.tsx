@@ -49,97 +49,99 @@ export default function StickyHeadTable<T extends object>({
   };
 
   return (
-    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <TableContainer sx={{ maxHeight: 440 }}>
-        <Table stickyHeader aria-label="flexible table">
-          <TableHead>
-            <TableRow>
-              {withIndex && (
-                <TableCell key="no" align="left">
-                  No
-                </TableCell>
-              )}
-              {columns
-                .filter((column) => !column.hidden) // Hanya tampilkan kolom yang tidak hidden
-                .map((column) => (
-                  <TableCell
-                    key={column.id.toString()}
-                    align={column.align}
-                    style={{ minWidth: column.minWidth }}
-                  >
-                    {column.label}
+    <div>
+      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+        <TableContainer sx={{ maxHeight: 550 }}>
+          <Table stickyHeader aria-label="flexible table">
+            <TableHead>
+              <TableRow>
+                {withIndex && (
+                  <TableCell key="no" align="left">
+                    No
                   </TableCell>
-                ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row, rowIndex) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                  {withIndex && (
-                    <TableCell key="no" align="left">
-                      {rowIndex + 1}
+                )}
+                {columns
+                  .filter((column) => !column.hidden) // Hanya tampilkan kolom yang tidak hidden
+                  .map((column) => (
+                    <TableCell
+                      key={column.id.toString()}
+                      align={column.align}
+                      style={{ minWidth: column.minWidth }}
+                    >
+                      {column.label}
                     </TableCell>
-                  )}
-                  {columns
-                    .filter((column) => !column.hidden) // Hanya tampilkan kolom yang tidak hidden
-                    .map((column) => {
-                      if (column.id === 'action' && column.actionLabel) {
-                        const buttonStyle = column.buttonStyle ? column.buttonStyle(row) : {};
-                        const buttonColor = column.buttonColor ? column.buttonColor(row) : 'primary';
-                        const buttonLabel = column.buttonLabel
-                          ? column.buttonLabel(row)
-                          : column.actionLabel;
+                  ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, rowIndex) => (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                    {withIndex && (
+                      <TableCell key="no" align="left">
+                        {(page * rowsPerPage) + rowIndex + 1}
+                      </TableCell>
+                    )}
+                    {columns
+                      .filter((column) => !column.hidden) // Hanya tampilkan kolom yang tidak hidden
+                      .map((column) => {
+                        if (column.id === 'action' && column.actionLabel) {
+                          const buttonStyle = column.buttonStyle ? column.buttonStyle(row) : {};
+                          const buttonColor = column.buttonColor ? column.buttonColor(row) : 'primary';
+                          const buttonLabel = column.buttonLabel
+                            ? column.buttonLabel(row)
+                            : column.actionLabel;
 
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            <Button
-                              variant="contained"
-                              color={buttonColor}
-                              style={buttonStyle}
-                              onClick={() => onActionClick && onActionClick(row, column)}
-                            >
-                              {buttonLabel}
-                            </Button>
-                          </TableCell>
-                        );
-                      }
+                          return (
+                            <TableCell key={column.id} align={column.align}>
+                              <Button
+                                variant="contained"
+                                color={buttonColor}
+                                style={buttonStyle}
+                                onClick={() => onActionClick && onActionClick(row, column)}
+                              >
+                                {buttonLabel}
+                              </Button>
+                            </TableCell>
+                          );
+                        }
 
-                      // Cek jika kolom memiliki renderComponent
-                      if (column.renderComponent) {
+                        // Cek jika kolom memiliki renderComponent
+                        if (column.renderComponent) {
+                          return (
+                            <TableCell key={String(column.id)} align={column.align}>
+                              {column.renderComponent(row)} {/* Render komponen kustom */}
+                            </TableCell>
+                          );
+                        }
+
+                        const value = row[column.id as keyof T];
                         return (
                           <TableCell key={String(column.id)} align={column.align}>
-                            {column.renderComponent(row)} {/* Render komponen kustom */}
+                            {column.format && value !== undefined
+                              ? column.format(value)
+                              : value !== undefined
+                                ? String(value)
+                                : ''}
                           </TableCell>
                         );
-                      }
-
-                      const value = row[column.id as keyof T];
-                      return (
-                        <TableCell key={String(column.id)} align={column.align}>
-                          {column.format && value !== undefined
-                            ? column.format(value)
-                            : value !== undefined
-                              ? String(value)
-                              : ''}
-                        </TableCell>
-                      );
-                    })}
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
+                      })}
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={rows.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
+    </div>
   );
 }

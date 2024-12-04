@@ -10,6 +10,7 @@ import { ThemeProvider } from '@emotion/react';
 import { onError } from '@apollo/client/link/error';
 import theme from './theme.ts';
 import { CustomGraphQLError } from './types/apollo_client.types.ts';
+import { ToastContainer } from 'react-toastify';
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {
@@ -17,12 +18,12 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 
       const code = err?.code || err.extensions?.code;
       console.log(code);
-      // if (code === 'UNAUTHENTICATED') {
-      //   localStorage.removeItem('persist:user');
-      //   window.location.href = '/appuser/dashboard';
-      // } else {
-      //   console.error(`GraphQL error [${code}]:`, err.message);
-      // }
+      if (code === 'UNAUTHENTICATED') {
+        localStorage.removeItem('persist:user');
+        window.location.href = '/';
+      } else {
+        console.error(`GraphQL error [${code}]:`, err.message);
+      }
     }
   }
 

@@ -7,3 +7,29 @@ query GetCategories {
     already_used
   }
 }
+
+mutation CreateCategory($input: CreateCategoryInput!) {
+  createCategory(createCategoryInput: $input) {
+    name
+    description
+    type
+  }
+}
+
+mutation UpdateCategory($id: String!, $updateCategoryInput: UpdateCategoryInput!) {
+  updateCategory(id: $id, updateCategoryInput: $updateCategoryInput) {
+    _id
+    name
+    description
+    type
+  }
+}
+
+mutation DeleteCategory($id: String!) {
+  deleteCategory(id: $id) {
+    _id
+    name
+    description
+    type
+  }
+}

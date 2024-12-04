@@ -51,14 +51,14 @@ const Navbar: React.FC<NavbarProps> = ({sidebarID}) => {
           <div className="dropdown dropdown-end">
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar placeholder">
               <div className="bg-secondary text-secondary-content w-12 rounded-full">
-                <span>RI</span>
+                <span>{user.username?.toUpperCase()[0]}{user.username?.toUpperCase()[1]}</span>
               </div>
             </div>
             <ul
               tabIndex={0}
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-              <p className="font text-base">Richard Rafer Guy</p>
-              <p className="font-bold text-sm">Admin</p>
+              <p className="font text-base">{user.username}</p>
+              <p className="font-bold text-sm">{user.role}</p>
               <hr className="my-2 border-t-2 border-gray-300" />
               <li className="btn bg-important btn-sm" onClick={() => { logoutHandling() }}>Logout</li>
             </ul>
