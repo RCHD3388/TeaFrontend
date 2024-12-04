@@ -1,10 +1,9 @@
-import StickyHeadTable, { StickyHeadTableColumn } from '../../components/global_features/StickyHeadTable';
+import StickyHeadTable, { StickyHeadTableColumn } from '../../../components/global_features/StickyHeadTable';
 import { Alert, Box, Button, CircularProgress, MenuItem, Modal, Snackbar, Stack, TextField, Typography } from '@mui/material';
 import { useMutation, useQuery } from '@apollo/client';
-import { CreateCategoryDocument, DeleteCategoryDocument, GetCategoriesDocument, UpdateCategoryDocument } from '../../graphql/category.generated';
+import { CreateCategoryDocument, DeleteCategoryDocument, GetCategoriesDocument, UpdateCategoryDocument } from '../../../graphql/category.generated';
 import React, { useEffect, useRef, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { toast, ToastContainer } from 'react-toastify';
 
 interface CreateCategoryValues {
   name: string

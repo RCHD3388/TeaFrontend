@@ -26,7 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({sidebarID}) => {
 
   return (
     <>
-      <div className="navbar bg-light shadow-lg h-16">
+      <div className="navbar bg-light shadow-lg h-16" style={{zIndex: 1}}>
         <div className="flex-1">
           <label htmlFor={sidebarID} className="btn btn-primary drawer-button lg:hidden">
             <svg
