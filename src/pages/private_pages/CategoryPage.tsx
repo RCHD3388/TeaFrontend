@@ -24,7 +24,7 @@ const columns: StickyHeadTableColumn<RowData>[] = [
 ];
 
 export default function CategoryPage() {
-  let { data, loading, refetch } = useQuery(GetCategoriesDocument);
+  let { data, loading, refetch } = useQuery(GetCategoriesDocument, {variables: {requiresAuth: true}});
 
   function handleAddCategory() {
     console.log("add category")
@@ -48,7 +48,7 @@ export default function CategoryPage() {
         >Tambah Kategori</Button>
         {!loading && <StickyHeadTable
           columns={columns}
-          rows={data.getCategories}
+          rows={data?.getCategories ?? []}
           withIndex={true}
           onActionClick={handleEdit}
         />}
