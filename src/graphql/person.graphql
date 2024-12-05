@@ -1,0 +1,20 @@
+query GetAllEmployees {
+  getAllEmployees {
+    _id
+    id
+    person {
+      name
+    }
+    hire_date
+    salary
+    status
+    role {
+      id
+      name
+    }
+    skill {
+      id
+      name
+    }
+  }
+}
