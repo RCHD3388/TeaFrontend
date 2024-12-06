@@ -25,6 +25,21 @@ export type GetAllRoleQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 export type GetAllRoleQuery = { __typename?: 'Query', getAllRole: Array<{ __typename?: 'EmployeeRole', _id: string, id: string, name: string, description: string }> };
 
+export type CreateEmployeeSkillMutationVariables = Types.Exact<{
+  input: Types.CreateEmployeeSkillInput;
+}>;
+
+
+export type CreateEmployeeSkillMutation = { __typename?: 'Mutation', createEmployeeSkill: { __typename?: 'EmployeeSkill', _id: string, id: string, name: string, description: string } };
+
+export type UpdateEmployeeSkillMutationVariables = Types.Exact<{
+  id: Types.Scalars['String']['input'];
+  input: Types.CreateEmployeeSkillInput;
+}>;
+
+
+export type UpdateEmployeeSkillMutation = { __typename?: 'Mutation', updateEmployeeSkill: { __typename?: 'EmployeeSkill', _id: string, id: string, name: string, description: string } };
+
 
 export const GetAllEmployeesDocument = gql`
     query GetAllEmployees {
@@ -212,3 +227,76 @@ export type GetAllRoleQueryHookResult = ReturnType<typeof useGetAllRoleQuery>;
 export type GetAllRoleLazyQueryHookResult = ReturnType<typeof useGetAllRoleLazyQuery>;
 export type GetAllRoleSuspenseQueryHookResult = ReturnType<typeof useGetAllRoleSuspenseQuery>;
 export type GetAllRoleQueryResult = Apollo.QueryResult<GetAllRoleQuery, GetAllRoleQueryVariables>;
+export const CreateEmployeeSkillDocument = gql`
+    mutation CreateEmployeeSkill($input: CreateEmployeeSkillInput!) {
+  createEmployeeSkill(createEmployeeSkillInput: $input) {
+    _id
+    id
+    name
+    description
+  }
+}
+    `;
+export type CreateEmployeeSkillMutationFn = Apollo.MutationFunction<CreateEmployeeSkillMutation, CreateEmployeeSkillMutationVariables>;
+
+/**
+ * __useCreateEmployeeSkillMutation__
+ *
+ * To run a mutation, you first call `useCreateEmployeeSkillMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateEmployeeSkillMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createEmployeeSkillMutation, { data, loading, error }] = useCreateEmployeeSkillMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateEmployeeSkillMutation(baseOptions?: Apollo.MutationHookOptions<CreateEmployeeSkillMutation, CreateEmployeeSkillMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateEmployeeSkillMutation, CreateEmployeeSkillMutationVariables>(CreateEmployeeSkillDocument, options);
+      }
+export type CreateEmployeeSkillMutationHookResult = ReturnType<typeof useCreateEmployeeSkillMutation>;
+export type CreateEmployeeSkillMutationResult = Apollo.MutationResult<CreateEmployeeSkillMutation>;
+export type CreateEmployeeSkillMutationOptions = Apollo.BaseMutationOptions<CreateEmployeeSkillMutation, CreateEmployeeSkillMutationVariables>;
+export const UpdateEmployeeSkillDocument = gql`
+    mutation UpdateEmployeeSkill($id: String!, $input: CreateEmployeeSkillInput!) {
+  updateEmployeeSkill(id: $id, updateEmployeeSkillInput: $input) {
+    _id
+    id
+    name
+    description
+  }
+}
+    `;
+export type UpdateEmployeeSkillMutationFn = Apollo.MutationFunction<UpdateEmployeeSkillMutation, UpdateEmployeeSkillMutationVariables>;
+
+/**
+ * __useUpdateEmployeeSkillMutation__
+ *
+ * To run a mutation, you first call `useUpdateEmployeeSkillMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateEmployeeSkillMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateEmployeeSkillMutation, { data, loading, error }] = useUpdateEmployeeSkillMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateEmployeeSkillMutation(baseOptions?: Apollo.MutationHookOptions<UpdateEmployeeSkillMutation, UpdateEmployeeSkillMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateEmployeeSkillMutation, UpdateEmployeeSkillMutationVariables>(UpdateEmployeeSkillDocument, options);
+      }
+export type UpdateEmployeeSkillMutationHookResult = ReturnType<typeof useUpdateEmployeeSkillMutation>;
+export type UpdateEmployeeSkillMutationResult = Apollo.MutationResult<UpdateEmployeeSkillMutation>;
+export type UpdateEmployeeSkillMutationOptions = Apollo.BaseMutationOptions<UpdateEmployeeSkillMutation, UpdateEmployeeSkillMutationVariables>;

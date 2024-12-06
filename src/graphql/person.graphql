@@ -57,3 +57,21 @@ query GetAllRole {
     description
   }
 }
+
+mutation CreateEmployeeSkill($input: CreateEmployeeSkillInput!) {
+  createEmployeeSkill(createEmployeeSkillInput: $input) {
+    _id
+    id
+    name
+    description
+  }
+}
+
+mutation UpdateEmployeeSkill($id: String!, $input: CreateEmployeeSkillInput!) {
+  updateEmployeeSkill(id: $id, updateEmployeeSkillInput: $input) {
+    _id
+    id
+    name
+    description
+  }
+}

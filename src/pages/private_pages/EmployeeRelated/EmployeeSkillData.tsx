@@ -33,7 +33,7 @@ const EmployeeSkillData: React.FC = () => {
   return (
     <div className="flex flex-col">
       <div className="text-4xl font-bold mb-2">Data Skill Pegawai Perusahaan</div>
-      <AddEmployeeSkill />
+      <AddEmployeeSkill refetchSkill={refetch}/>
       {!loading && <div>
         <StickyHeadTable
           columns={columns}

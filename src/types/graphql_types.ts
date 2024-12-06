@@ -39,6 +39,11 @@ export type CreateEmployeeInput = {
   status: Scalars['String']['input'];
 };
 
+export type CreateEmployeeSkillInput = {
+  description: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+};
+
 export type Employee = {
   __typename?: 'Employee';
   _id: Scalars['String']['output'];
@@ -90,11 +95,13 @@ export type Mutation = {
   __typename?: 'Mutation';
   createCategory: CategoryData;
   createEmployee: Employee;
+  createEmployeeSkill: EmployeeSkill;
   create_project: Scalars['String']['output'];
   deleteCategory: CategoryData;
   login: LoginResponse;
   updateCategory: CategoryData;
   updateEmployee: Employee;
+  updateEmployeeSkill: EmployeeSkill;
 };
 
 
@@ -105,6 +112,11 @@ export type MutationCreateCategoryArgs = {
 
 export type MutationCreateEmployeeArgs = {
   createEmployeeInput: CreateEmployeeInput;
+};
+
+
+export type MutationCreateEmployeeSkillArgs = {
+  createEmployeeSkillInput: CreateEmployeeSkillInput;
 };
 
 
@@ -127,6 +139,12 @@ export type MutationUpdateCategoryArgs = {
 export type MutationUpdateEmployeeArgs = {
   id: Scalars['String']['input'];
   updateEmployeeInput: UpdateEmployeeInput;
+};
+
+
+export type MutationUpdateEmployeeSkillArgs = {
+  id: Scalars['String']['input'];
+  updateEmployeeSkillInput: CreateEmployeeSkillInput;
 };
 
 export type Person = {

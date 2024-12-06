@@ -3,6 +3,8 @@ import { Box, Button, CircularProgress, InputAdornment, MenuItem, Modal, TextFie
 import React, { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { modalStyle } from "../../theme";
+import { CreateEmployeeSkillDocument, GetAllSkillQuery, GetAllSkillQueryVariables } from "../../graphql/person.generated";
+import { CustomGraphQLError } from "../../types/apollo_client.types";
 
 interface CreateEmployeeSkillValues {
   name: string
@@ -10,15 +12,16 @@ interface CreateEmployeeSkillValues {
 }
 
 interface AddEmployeeSkillProps {
-  // refetchEmployee: (variables?: GetAllEmployeesQueryVariables) => Promise<ApolloQueryResult<GetAllEmployeesQuery>>;
+  refetchSkill: (variables?: GetAllSkillQueryVariables) => Promise<ApolloQueryResult<GetAllSkillQuery>>;
 }
 
-const AddEmployeeSkill: React.FC<AddEmployeeSkillProps> = ({  }) => {
+const AddEmployeeSkill: React.FC<AddEmployeeSkillProps> = ({ refetchSkill }) => {
+  const [createEmployeeSkill] = useMutation(CreateEmployeeSkillDocument)
   const [isSubmitting, setIsSubmitting] = useState(false);
-
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => { setOpenModal(true) }
   const handleCloseModal = () => { setOpenModal(false) }
+  const [errorMsg, setErrorMsg] = useState("");
 
   const { handleSubmit, control, formState: { errors }, reset } = useForm<CreateEmployeeSkillValues>({
     defaultValues: {
@@ -29,10 +32,23 @@ const AddEmployeeSkill: React.FC<AddEmployeeSkillProps> = ({  }) => {
 
   const handleAddEmployeeSkill: SubmitHandler<CreateEmployeeSkillValues> = async (data) => {
     setIsSubmitting(true)
+    setErrorMsg("");
     try {
+      await createEmployeeSkill({
+        variables: {
+          input: { name: data.name, description: data.description },
+          requiresAuth: true
+        }
+      });
       reset()
+      refetchSkill()
       handleCloseModal()
     } catch (error: any) {
+      let errCode = error?.graphQLErrors[0]?.code || "";
+      if (errCode == "BAD_REQUEST") {
+        let msg = error.original?.message || error.message || "";
+        setErrorMsg(msg)
+      }
       console.log(error.graphQLErrors[0]);
     } finally {
       setIsSubmitting(false)
@@ -42,8 +58,8 @@ const AddEmployeeSkill: React.FC<AddEmployeeSkillProps> = ({  }) => {
   return (
     <>
       <Button variant="contained" color='secondary' style={{ marginBottom: "1rem" }}
-        onClick={async () => { 
-          handleOpenModal() 
+        onClick={async () => {
+          handleOpenModal()
         }}
       >Tambah Skill Pegawai</Button>
 
@@ -74,7 +90,7 @@ const AddEmployeeSkill: React.FC<AddEmployeeSkillProps> = ({  }) => {
             />)}
           />
           {/* FIELD END */}
-
+          <Box component="section" sx={{ mb: 1, color: "red" }} >{errorMsg}</Box>
           <Box display="flex" justifyContent="space-between" alignItems="center">
             <Button
               onClick={handleCloseModal}
