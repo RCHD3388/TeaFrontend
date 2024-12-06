@@ -1,5 +1,7 @@
 import * as React from 'react';
-import StickyHeadTable, { StickyHeadTableColumn } from '../../components/global_features/StickyHeadTable';
+import StickyHeadTable, {
+  StickyHeadTableColumn,
+} from '../../components/global_features/StickyHeadTable';
 import { Button } from '@mui/material';
 import { useQuery } from '@apollo/client';
 import { GetCategoriesDocument } from '../../graphql/category.generated';
@@ -11,47 +13,54 @@ interface RowData {
 }
 
 const columns: StickyHeadTableColumn<RowData>[] = [
-  { id: 'name', label: 'Nama', minWidth: 50, align: "center" },
-  { id: 'description', label: 'Deskripsi', minWidth: 200, align: "center" },
-  { id: 'type', label: 'Status', minWidth: 50, align: "center" },
+  { id: 'name', label: 'Nama', minWidth: 50, align: 'center' },
+  { id: 'description', label: 'Deskripsi', minWidth: 200, align: 'center' },
+  { id: 'type', label: 'Status', minWidth: 50, align: 'center' },
   {
     id: 'action',
     label: 'Action',
     actionLabel: 'Edit',
-    align: "center",
-    buttonColor: (row) => 'secondary'
+    align: 'center',
+    buttonColor: (row) => 'secondary',
   },
 ];
 
 export default function CategoryPage() {
-  let { data, loading, refetch } = useQuery(GetCategoriesDocument, {variables: {requiresAuth: true}});
+  let { data, loading, refetch } = useQuery(GetCategoriesDocument, {
+    variables: { requiresAuth: true },
+  });
 
   function handleAddCategory() {
-    console.log("add category")
+    console.log('add category');
   }
 
   function handleEdit(row: RowData, column: StickyHeadTableColumn<RowData>) {
-    refetch()
+    refetch();
   }
 
   return (
-    <div className="p-5" style={{ height: "100%" }}>
-      <div className="flex flex-col" style={{ maxHeight: "100%" }}>
+    <div className='p-5' style={{ height: '100%' }}>
+      <div className='flex flex-col' style={{ maxHeight: '100%' }}>
         {/* page header title */}
-        <div className="text-4xl font-bold mb-2">Kategori Data Perusahaan</div>
+        <div className='text-4xl font-bold mb-2'>Kategori Data Perusahaan</div>
         {/* main content */}
         <Button
-          variant="contained"
+          variant='contained'
           color='secondary'
-          style={{ marginBottom: "1rem" }}
-          onClick={() => { handleAddCategory() }}
-        >Tambah Kategori</Button>
-        {!loading && <StickyHeadTable
-          columns={columns}
-          rows={data?.getCategories ?? []}
-          withIndex={true}
-          onActionClick={handleEdit}
-        />}
+          style={{ marginBottom: '1rem' }}
+          onClick={() => {
+            handleAddCategory();
+          }}>
+          Tambah Kategori
+        </Button>
+        {!loading && (
+          <StickyHeadTable
+            columns={columns}
+            rows={data?.getCategories ?? []}
+            withIndex={true}
+            onActionClick={handleEdit}
+          />
+        )}
       </div>
     </div>
   );

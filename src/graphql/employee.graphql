@@ -1,0 +1,21 @@
+mutation CreateEmployee($data: CreateEmployeeInput!) {
+  createEmployee(data: $data) {
+    person {
+      name
+      email
+      phone_number
+      address
+    }
+    hire_date
+    salary
+    status
+    role {
+      id
+      name
+    }
+    skill {
+      id
+      name
+    }
+  }
+}

@@ -12,72 +12,235 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  DateTime: { input: any; output: any; }
 };
 
-export type CategoryData = {
-  __typename?: 'CategoryData';
-  _id: Scalars['ID']['output'];
-  already_used: Scalars['Boolean']['output'];
+export type Attendance = {
+  __typename?: 'Attendance';
+  attendance_detail?: Maybe<Array<AttendanceDetail>>;
+  created_by: Scalars['String']['output'];
+  date: Scalars['DateTime']['output'];
   description: Scalars['String']['output'];
-  name: Scalars['String']['output'];
-  type: Scalars['String']['output'];
 };
 
-export type CreateCategoryInput = {
+export type AttendanceDetail = {
+  __typename?: 'AttendanceDetail';
+  check_in: Scalars['Boolean']['output'];
+  check_out: Scalars['Boolean']['output'];
+  employee: Scalars['String']['output'];
+  note?: Maybe<Scalars['String']['output']>;
+};
+
+export type CreateAttendanceDetailDto = {
+  check_in: Scalars['Boolean']['input'];
+  check_out: Scalars['Boolean']['input'];
+  employee: Scalars['String']['input'];
+  note?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CreateAttendanceDto = {
+  created_by?: InputMaybe<Scalars['String']['input']>;
+  date: Scalars['DateTime']['input'];
   description: Scalars['String']['input'];
+};
+
+export type CreateEmployeeInput = {
+  hire_date: Scalars['DateTime']['input'];
+  person: CreatePersonInput;
+  role: RoleInput;
+  salary: Scalars['Float']['input'];
+  skill?: InputMaybe<Array<SkillInput>>;
+  status: Scalars['String']['input'];
+};
+
+export type CreatePersonInput = {
+  address: Scalars['String']['input'];
+  email: Scalars['String']['input'];
   name: Scalars['String']['input'];
-  type: Scalars['String']['input'];
+  phone: Scalars['String']['input'];
 };
 
-export type LoginInput = {
-  password: Scalars['String']['input'];
-  username: Scalars['String']['input'];
+export type CreateProjectInput = {
+  created_at?: InputMaybe<Scalars['DateTime']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  finished_at?: InputMaybe<Scalars['DateTime']['input']>;
+  location: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  priority: Scalars['String']['input'];
+  status: Scalars['String']['input'];
+  target_date?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
-export type LoginResponse = {
-  __typename?: 'LoginResponse';
-  access_token: Scalars['String']['output'];
-  role: Scalars['String']['output'];
-  username: Scalars['String']['output'];
+export type Employee = {
+  __typename?: 'Employee';
+  hire_date: Scalars['DateTime']['output'];
+  person: Person;
+  role: EmployeeRole;
+  salary: Scalars['Float']['output'];
+  skill: Array<EmployeeSkill>;
+  status: Scalars['String']['output'];
+};
+
+export type EmployeeRole = {
+  __typename?: 'EmployeeRole';
+  description: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type EmployeeSkill = {
+  __typename?: 'EmployeeSkill';
+  description: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createCategory: CategoryData;
-  create_project: Scalars['String']['output'];
-  deleteCategory: CategoryData;
-  login: LoginResponse;
-  updateCategory: CategoryData;
+  createAttendance: Attendance;
+  createAttendanceDetail: AttendanceDetail;
+  createEmployee: Employee;
+  createProject: Project;
+  deleteAttendance: Scalars['Boolean']['output'];
+  deleteAttendanceDetail: Scalars['Boolean']['output'];
+  deleteEmployee: Scalars['Boolean']['output'];
+  deleteProject: Scalars['Boolean']['output'];
+  updateAttendance: Attendance;
+  updateAttendanceDetail: AttendanceDetail;
+  updateProject: Project;
 };
 
 
-export type MutationCreateCategoryArgs = {
-  createCategoryInput: CreateCategoryInput;
+export type MutationCreateAttendanceArgs = {
+  createAttendanceInput: CreateAttendanceDto;
 };
 
 
-export type MutationDeleteCategoryArgs = {
+export type MutationCreateAttendanceDetailArgs = {
+  attendanceId: Scalars['String']['input'];
+  createAttendanceDetailInput: CreateAttendanceDetailDto;
+};
+
+
+export type MutationCreateEmployeeArgs = {
+  data: CreateEmployeeInput;
+};
+
+
+export type MutationCreateProjectArgs = {
+  data: CreateProjectInput;
+};
+
+
+export type MutationDeleteAttendanceArgs = {
   id: Scalars['String']['input'];
 };
 
 
-export type MutationLoginArgs = {
-  data: LoginInput;
+export type MutationDeleteAttendanceDetailArgs = {
+  attendanceDetailId: Scalars['String']['input'];
+  attendanceId: Scalars['String']['input'];
 };
 
 
-export type MutationUpdateCategoryArgs = {
+export type MutationDeleteEmployeeArgs = {
   id: Scalars['String']['input'];
-  updateCategoryInput: UpdateCategoryInput;
+};
+
+
+export type MutationDeleteProjectArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateAttendanceArgs = {
+  id: Scalars['String']['input'];
+  updateAttendanceInput: CreateAttendanceDto;
+};
+
+
+export type MutationUpdateAttendanceDetailArgs = {
+  attendanceDetailId: Scalars['String']['input'];
+  updateAttendanceDetailInput: CreateAttendanceDetailDto;
+};
+
+
+export type MutationUpdateProjectArgs = {
+  data: UpdateProjectInput;
+  id: Scalars['String']['input'];
+};
+
+export type Person = {
+  __typename?: 'Person';
+  address: Scalars['String']['output'];
+  email: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  phone_number: Scalars['String']['output'];
+};
+
+export type Project = {
+  __typename?: 'Project';
+  _id: Scalars['ID']['output'];
+  attendance?: Maybe<Array<Scalars['String']['output']>>;
+  created_at?: Maybe<Scalars['DateTime']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  finished_at?: Maybe<Scalars['DateTime']['output']>;
+  location: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  priority: Scalars['String']['output'];
+  status: Scalars['String']['output'];
+  target_date?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type Query = {
   __typename?: 'Query';
-  getCategories: Array<CategoryData>;
+  employee: Employee;
+  employees: Array<Employee>;
+  findAllAttendance: Array<Attendance>;
+  findAttendanceById: Attendance;
+  findAttendanceDetails: Array<AttendanceDetail>;
   getHello: Scalars['String']['output'];
+  project: Project;
+  projects: Array<Project>;
 };
 
-export type UpdateCategoryInput = {
+
+export type QueryEmployeeArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryFindAttendanceByIdArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryFindAttendanceDetailsArgs = {
+  attendanceId: Scalars['String']['input'];
+};
+
+
+export type QueryProjectArgs = {
+  id: Scalars['String']['input'];
+};
+
+export type RoleInput = {
+  id: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+};
+
+export type SkillInput = {
+  id: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+};
+
+export type UpdateProjectInput = {
+  created_at?: InputMaybe<Scalars['DateTime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  finished_at?: InputMaybe<Scalars['DateTime']['input']>;
+  location?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  priority?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+  target_date?: InputMaybe<Scalars['DateTime']['input']>;
 };

@@ -1,11 +1,16 @@
-import React from "react";
-import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
-import LoginPage from "../pages/public_pages/LoginPage";
-import PrivateRoute from "./PrivateRoute";
-import PublicRoute from "./PublicRoute";
-import NotFoundPage from "../pages/NotFoundPage";
-import DashboardPage from "../pages/private_pages/DashboardPage";
-import CategoryPage from "../pages/private_pages/CategoryPage";
+import React from 'react';
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from 'react-router-dom';
+import LoginPage from '../pages/public_pages/LoginPage';
+import PrivateRoute from './PrivateRoute';
+import PublicRoute from './PublicRoute';
+import NotFoundPage from '../pages/NotFoundPage';
+import DashboardPage from '../pages/private_pages/DashboardPage';
+import CategoryPage from '../pages/private_pages/CategoryPage';
+import Projectpage from '../pages/private_pages/ProjectPage';
 
 const AppRoutes: React.FC = () => {
   const router = createBrowserRouter([
@@ -13,37 +18,35 @@ const AppRoutes: React.FC = () => {
     {
       element: <PublicRoute />,
       children: [
-        { path: "/", element: <Navigate to={"/login"} /> },
-        { path: "/login", element: <LoginPage /> },
-      ]
+        { path: '/', element: <Navigate to={'/login'} /> },
+        { path: '/login', element: <LoginPage /> },
+      ],
     },
-    // Private Route 
+    // Private Route
     {
-      path: "appuser",
+      path: 'appuser',
       element: <PrivateRoute />,
       children: [
-        { index: true, element: <Navigate to={"/appuser/dashboard"} /> },
-        { path: "dashboard", element: <DashboardPage /> },
-        { path: "project", element: <DashboardPage /> },
-        { path: "inventory", element: <DashboardPage /> },
-        { path: "purchasing", element: <DashboardPage /> },
-        { path: "supplier", element: <DashboardPage /> },
-        { path: "employee", element: <DashboardPage /> },
-        { path: "user", element: <DashboardPage /> },
-        { path: "request", element: <DashboardPage /> },
-        { path: "approval", element: <DashboardPage /> },
-        { path: "category", element: <CategoryPage /> },
-      ]
+        { index: true, element: <Navigate to={'/appuser/dashboard'} /> },
+        { path: 'dashboard', element: <DashboardPage /> },
+        { path: 'project', element: <Projectpage></Projectpage> },
+        { path: 'inventory', element: <DashboardPage /> },
+        { path: 'purchasing', element: <DashboardPage /> },
+        { path: 'supplier', element: <DashboardPage /> },
+        { path: 'employee', element: <DashboardPage /> },
+        { path: 'user', element: <DashboardPage /> },
+        { path: 'request', element: <DashboardPage /> },
+        { path: 'approval', element: <DashboardPage /> },
+        { path: 'category', element: <CategoryPage /> },
+      ],
     },
     {
-      path: "*",
-      element: <NotFoundPage/>
-    }
+      path: '*',
+      element: <NotFoundPage />,
+    },
   ]);
 
-  return (
-    <RouterProvider router={router} />
-  )
-}
+  return <RouterProvider router={router} />;
+};
 
-export default AppRoutes
+export default AppRoutes;

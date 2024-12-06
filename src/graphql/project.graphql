@@ -1,0 +1,25 @@
+query GetProjects {
+  projects {
+    _id
+    name
+    location
+    description
+    created_at
+    finished_at
+    target_date
+    priority
+    status
+  }
+}
+mutation CreateProject($data: CreateProjectInput!) {
+  createProject(data: $data) {
+    name
+    location
+    description
+    created_at
+    finished_at
+    target_date
+    priority
+    status
+  }
+}
