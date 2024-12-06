@@ -4,6 +4,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { CreateCategoryDocument, DeleteCategoryDocument, GetCategoriesDocument, UpdateCategoryDocument } from '../../../graphql/category.generated';
 import React, { useEffect, useRef, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { modalStyle } from '../../../theme';
 
 interface CreateCategoryValues {
   name: string
@@ -11,17 +12,6 @@ interface CreateCategoryValues {
   type: string
 }
 
-const modalStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
 interface RowData {
   _id: string;
   name: string;

@@ -8,9 +8,9 @@ import { persistor, store } from './app/store.ts';
 import { PersistGate } from 'redux-persist/integration/react';
 import { ThemeProvider } from '@emotion/react';
 import { onError } from '@apollo/client/link/error';
-import theme from './theme.ts';
 import { CustomGraphQLError } from './types/apollo_client.types.ts';
 import { ToastContainer } from 'react-toastify';
+import { theme } from './theme.ts';
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors) {

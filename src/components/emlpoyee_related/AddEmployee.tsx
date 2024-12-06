@@ -1,18 +1,13 @@
-import { Box, Button, Modal, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import { ApolloQueryResult, useMutation, useQuery } from "@apollo/client";
+import { Box, Button, InputAdornment, MenuItem, Modal, TextField, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-
-const modalStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
+import { CreateEmployeeDocument, GetAllEmployeesQuery, GetAllEmployeesQueryVariables, GetAllRoleDocument, GetAllSkillDocument } from "../../graphql/person.generated";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
+import { modalStyle } from "../../theme";
 
 interface CreateEmployeeValues {
   name: string
@@ -26,9 +21,16 @@ interface CreateEmployeeValues {
   skill_id: string
 }
 
-interface AddEmployeeProps { }
+interface AddEmployeeProps {
+  refetchEmployee: (variables?: GetAllEmployeesQueryVariables) => Promise<ApolloQueryResult<GetAllEmployeesQuery>>;
+}
 
-const AddEmployee: React.FC<AddEmployeeProps> = ({ }) => {
+const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
+  const { data: rolesData, loading: rolesLoading } = useQuery(GetAllRoleDocument, { variables: { requiresAuth: true } })
+  const { data: skillsData, loading: skillsLoading, refetch } = useQuery(GetAllSkillDocument, { variables: { requiresAuth: true } })
+  const [createEmployee] = useMutation(CreateEmployeeDocument);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => { setOpenModal(true) }
   const handleCloseModal = () => { setOpenModal(false) }
@@ -48,13 +50,39 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ }) => {
   });
 
   const handleAddEmployee: SubmitHandler<CreateEmployeeValues> = async (data) => {
-    console.log("submit data")
+    setIsSubmitting(true)
+    try {
+      await createEmployee({
+        variables: {
+          input: {
+            hire_date: data.hire_date,
+            person: {
+              address: data.address,
+              email: data.email,
+              name: data.name,
+              phone_number: data.phone_number,
+            },
+            role: { id: data.role_id },
+            salary: Number(data.salary),
+            skill: { id: data.skill_id },
+            status: data.status
+          }, requiresAuth: true
+        }
+      })
+      reset()
+      refetchEmployee()
+      handleCloseModal()
+    } catch (error: any) {
+      console.log(error.graphQLErrors[0]);
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
     <>
       <Button variant="contained" color='secondary' style={{ marginBottom: "1rem" }}
-        onClick={() => { handleOpenModal() }}
+        onClick={() => { refetch(); handleOpenModal() }}
       >Tambah Pegawai</Button>
 
 
@@ -84,7 +112,11 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ }) => {
             />)}
           />
           <Controller
-            name="phone_number" control={control} rules={{ required: 'Phone is required' }}
+            name="phone_number" control={control} rules={{
+              required: 'Phone is required',
+              validate: (value) =>
+                /^(\+62|62|0)[2-9]{1}[0-9]{7,12}$/.test(value) || 'Invalid phone number format',
+            }}
             render={({ field }) => (<TextField
               {...field}
               sx={{ width: "100%", mb: 1 }} label="Phone" size='small' variant="outlined"
@@ -99,6 +131,93 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ }) => {
               error={!!errors.address} helperText={errors.address ? errors.address.message : ''}
             />)}
           />
+          <div className="flex">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <Controller
+                name="hire_date" control={control}
+                rules={{
+                  required: 'Hire date is required',
+                  validate: (value) => {
+                    if (value && dayjs(value).isAfter(dayjs())) { return 'Hire date cannot be in the future'; }
+                    return true; 
+                  },
+                }}
+                render={({ field, fieldState }) => (
+                  <DatePicker
+                    {...field}
+                    label="Hire Date"
+                    sx={{ mb: 1, mr: 0.5 }}
+                    value={field.value ? dayjs(field.value) : null}
+                    onChange={(date) => field.onChange(date?.format('YYYY-MM-DD') || null)}
+                    slotProps={{
+                      textField: {
+                        error: !!fieldState.error,
+                        helperText: fieldState.error ? fieldState.error.message : null,
+                        size: 'small',
+                        fullWidth: true,
+                      },
+                    }}
+                  />
+                )}
+              />
+            </LocalizationProvider>
+            <Controller
+              name="salary" control={control} rules={{
+                required: 'Valid Gaji value is required',
+                validate: (value) => value >= 50000 || 'Gaji harus minimal Rp. 50,000'
+              }}
+              render={({ field }) => (<TextField
+                type="number"
+                {...field}
+                sx={{ width: "100%", mb: 1, ml: 0.5 }} label="Gaji" size='small' variant="outlined"
+                error={!!errors.salary} helperText={errors.salary ? errors.salary.message : ''}
+                InputProps={{ startAdornment: (<InputAdornment position="start">Rp.</InputAdornment>), }}
+              />)}
+            />
+          </div>
+          <div className="flex">
+            <Controller
+              name="role_id" control={control} rules={{ required: 'Role is required' }}
+              render={({ field }) => (
+                <TextField
+                  {...field} select sx={{ width: "100%", mb: 1, mr: 0.5 }} label="Role" size="small" variant="outlined"
+                  error={!!errors.role_id}
+                  helperText={errors.role_id ? errors.role_id.message : ''}
+                >
+                  {!rolesLoading && rolesData.getAllRole.map((value: any, index: number) => {
+                    return <MenuItem key={index} value={value.id}>{value.name}</MenuItem>
+                  })}
+                </TextField>
+              )}
+            />
+            <Controller
+              name="skill_id" control={control} rules={{ required: 'Skill is required' }}
+              render={({ field }) => (
+                <TextField
+                  {...field} select sx={{ width: "100%", mb: 1, ml: 0.5 }} label="Skill" size="small" variant="outlined"
+                  error={!!errors.skill_id}
+                  helperText={errors.skill_id ? errors.skill_id.message : ''}
+                >
+                  {!skillsLoading && skillsData.getAllSkill.map((value: any, index: number) => {
+                    return <MenuItem key={index} value={value.id}>{value.name}</MenuItem>
+                  })}
+                </TextField>
+              )}
+            />
+          </div>
+          <Controller
+            name="status" control={control} rules={{ required: 'Status is required' }}
+            render={({ field }) => (
+              <TextField
+                {...field} select sx={{ width: "100%", mb: 1 }} label="Status" size="small" variant="outlined"
+                error={!!errors.status}
+                helperText={errors.status ? errors.status.message : ''}
+              >
+                <MenuItem value={"Active"}>{"Active"}</MenuItem>
+                <MenuItem value={"Inactive"}>{"Inactive"}</MenuItem>
+              </TextField>
+            )}
+          />
           {/* FIELD END */}
 
           <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -106,7 +225,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ }) => {
               onClick={handleCloseModal}
               variant="contained"
               color="info"
-              // disabled={loading || isSubmitting}
+            // disabled={loading || isSubmitting}
             >
               Kembali
             </Button>
@@ -114,7 +233,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ }) => {
               onClick={handleSubmit(handleAddEmployee)}
               variant="contained"
               color="primary"
-              // disabled={isSubmitting}
+            // disabled={isSubmitting}
             >
               {/* {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : ("Tambah")} */}
               Submit

@@ -30,6 +30,15 @@ export type CreateCategoryInput = {
   type: Scalars['String']['input'];
 };
 
+export type CreateEmployeeInput = {
+  hire_date: Scalars['String']['input'];
+  person: PersonInput;
+  role: RoleSkillEmployeeInput;
+  salary: Scalars['Float']['input'];
+  skill: RoleSkillEmployeeInput;
+  status: Scalars['String']['input'];
+};
+
 export type Employee = {
   __typename?: 'Employee';
   _id: Scalars['String']['output'];
@@ -49,6 +58,22 @@ export type EmployeeProjectHistory = {
   project: Scalars['String']['output'];
 };
 
+export type EmployeeRole = {
+  __typename?: 'EmployeeRole';
+  _id: Scalars['String']['output'];
+  description: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
+export type EmployeeSkill = {
+  __typename?: 'EmployeeSkill';
+  _id: Scalars['String']['output'];
+  description: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type LoginInput = {
   password: Scalars['String']['input'];
   username: Scalars['String']['input'];
@@ -64,15 +89,22 @@ export type LoginResponse = {
 export type Mutation = {
   __typename?: 'Mutation';
   createCategory: CategoryData;
+  createEmployee: Employee;
   create_project: Scalars['String']['output'];
   deleteCategory: CategoryData;
   login: LoginResponse;
   updateCategory: CategoryData;
+  updateEmployee: Employee;
 };
 
 
 export type MutationCreateCategoryArgs = {
   createCategoryInput: CreateCategoryInput;
+};
+
+
+export type MutationCreateEmployeeArgs = {
+  createEmployeeInput: CreateEmployeeInput;
 };
 
 
@@ -91,6 +123,12 @@ export type MutationUpdateCategoryArgs = {
   updateCategoryInput: UpdateCategoryInput;
 };
 
+
+export type MutationUpdateEmployeeArgs = {
+  id: Scalars['String']['input'];
+  updateEmployeeInput: UpdateEmployeeInput;
+};
+
 export type Person = {
   __typename?: 'Person';
   address: Scalars['String']['output'];
@@ -99,11 +137,26 @@ export type Person = {
   phone_number: Scalars['String']['output'];
 };
 
+export type PersonInput = {
+  address: Scalars['String']['input'];
+  email: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  phone_number: Scalars['String']['input'];
+};
+
 export type Query = {
   __typename?: 'Query';
   getAllEmployees: Array<Employee>;
+  getAllRole: Array<EmployeeRole>;
+  getAllSkill: Array<EmployeeSkill>;
   getCategories: Array<CategoryData>;
+  getEmployeeById: Employee;
   getHello: Scalars['String']['output'];
+};
+
+
+export type QueryGetEmployeeByIdArgs = {
+  id: Scalars['String']['input'];
 };
 
 export type RoleSkillEmployee = {
@@ -112,7 +165,27 @@ export type RoleSkillEmployee = {
   name: Scalars['String']['output'];
 };
 
+export type RoleSkillEmployeeInput = {
+  id: Scalars['String']['input'];
+};
+
+export type RoleSkillEmployeeUpdateInput = {
+  id: Scalars['String']['input'];
+};
+
 export type UpdateCategoryInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateEmployeeInput = {
+  address?: InputMaybe<Scalars['String']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  hire_date?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  phone_number?: InputMaybe<Scalars['String']['input']>;
+  role?: InputMaybe<RoleSkillEmployeeUpdateInput>;
+  salary?: InputMaybe<Scalars['Float']['input']>;
+  skills?: InputMaybe<Array<RoleSkillEmployeeUpdateInput>>;
+  status?: InputMaybe<Scalars['String']['input']>;
 };

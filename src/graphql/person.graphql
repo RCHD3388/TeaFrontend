@@ -18,3 +18,42 @@ query GetAllEmployees {
     }
   }
 }
+
+mutation CreateEmployee($input: CreateEmployeeInput!) {
+  createEmployee(createEmployeeInput: $input) {
+    _id
+    id
+    person {
+      name
+    }
+    hire_date
+    salary
+    status
+    role {
+      id
+      name
+    }
+    skill {
+      id
+      name
+    }
+  }
+}
+
+query GetAllSkill {
+  getAllSkill {
+    _id
+    id
+    name
+    description
+  }
+}
+
+query GetAllRole {
+  getAllRole {
+    _id
+    id
+    name
+    description
+  }
+}

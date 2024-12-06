@@ -35,7 +35,7 @@ const columns: StickyHeadTableColumn<RowData>[] = [
     renderComponent: (row) => {
       return (
         <>
-          {row.status == "active" ?
+          {row.status == "Active" ?
             <div className="badge badge-success gap-2">Active</div> :
             <div className="badge badge-warning gap-2">Inactive</div>}
         </>
@@ -69,7 +69,7 @@ const EmployeeMainData: React.FC = () => {
   return (
     <div className="flex flex-col">
       <div className="text-4xl font-bold mb-2">Data Pegawai Perusahaan</div>
-      <AddEmployee />
+      <AddEmployee refetchEmployee={refetch}/>
       {!loading && <div>
         <StickyHeadTable
           columns={columns}
