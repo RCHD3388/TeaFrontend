@@ -1,5 +1,5 @@
 import { ApolloQueryResult, useMutation, useQuery } from "@apollo/client";
-import { Box, Button, InputAdornment, MenuItem, Modal, TextField, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, InputAdornment, MenuItem, Modal, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { CreateEmployeeDocument, GetAllEmployeesQuery, GetAllEmployeesQueryVariables, GetAllRoleDocument, GetAllSkillDocument } from "../../graphql/person.generated";
@@ -82,7 +82,10 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
   return (
     <>
       <Button variant="contained" color='secondary' style={{ marginBottom: "1rem" }}
-        onClick={() => { refetch(); handleOpenModal() }}
+        onClick={async () => { 
+          await refetch(); 
+          handleOpenModal() 
+        }}
       >Tambah Pegawai</Button>
 
 
@@ -225,7 +228,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
               onClick={handleCloseModal}
               variant="contained"
               color="info"
-            // disabled={loading || isSubmitting}
+              disabled={isSubmitting}
             >
               Kembali
             </Button>
@@ -233,10 +236,9 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
               onClick={handleSubmit(handleAddEmployee)}
               variant="contained"
               color="primary"
-            // disabled={isSubmitting}
+            disabled={isSubmitting}
             >
-              {/* {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : ("Tambah")} */}
-              Submit
+              {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : ("Tambah")}
             </Button>
           </Box>
         </Box>
