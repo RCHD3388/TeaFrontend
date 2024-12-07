@@ -8,13 +8,12 @@ import { formatCurrency, formatDateToLong } from "../../../utils/service/FormatS
 
 interface RowData {
   _id: string,
-  id: string,
   person: { name: string },
   hire_date: string,
   salary: number,
   status: string,
-  role: { id: string, name: string },
-  skill: [{ id: string, name: string }]
+  role: { _id: string, name: string },
+  skill: [{ _id: string, name: string }]
 }
 
 const columns: StickyHeadTableColumn<RowData>[] = [

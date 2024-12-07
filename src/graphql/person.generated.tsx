@@ -6,46 +6,52 @@ const defaultOptions = {} as const;
 export type GetAllEmployeesQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetAllEmployeesQuery = { __typename?: 'Query', getAllEmployees: Array<{ __typename?: 'Employee', _id: string, id: string, hire_date: any, salary: number, status: string, person: { __typename?: 'Person', name: string }, role: { __typename?: 'RoleSkillEmployee', id: string, name: string }, skill: Array<{ __typename?: 'RoleSkillEmployee', id: string, name: string }> }> };
+export type GetAllEmployeesQuery = { __typename?: 'Query', getAllEmployees: Array<{ __typename?: 'Employee', _id: string, hire_date: any, salary: number, status: string, person: { __typename?: 'Person', name: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string }> }> };
 
 export type CreateEmployeeMutationVariables = Types.Exact<{
   input: Types.CreateEmployeeInput;
 }>;
 
 
-export type CreateEmployeeMutation = { __typename?: 'Mutation', createEmployee: { __typename?: 'Employee', _id: string, id: string, hire_date: any, salary: number, status: string, person: { __typename?: 'Person', name: string }, role: { __typename?: 'RoleSkillEmployee', id: string, name: string }, skill: Array<{ __typename?: 'RoleSkillEmployee', id: string, name: string }> } };
+export type CreateEmployeeMutation = { __typename?: 'Mutation', createEmployee: { __typename?: 'Employee', _id: string, hire_date: any, salary: number, status: string, person: { __typename?: 'Person', name: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string }> } };
 
 export type GetAllSkillQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetAllSkillQuery = { __typename?: 'Query', getAllSkill: Array<{ __typename?: 'EmployeeSkill', _id: string, id: string, name: string, description: string }> };
+export type GetAllSkillQuery = { __typename?: 'Query', getAllSkill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string, description: string }> };
 
 export type GetAllRoleQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetAllRoleQuery = { __typename?: 'Query', getAllRole: Array<{ __typename?: 'EmployeeRole', _id: string, id: string, name: string, description: string }> };
+export type GetAllRoleQuery = { __typename?: 'Query', getAllRole: Array<{ __typename?: 'EmployeeRole', _id: string, name: string, description: string }> };
 
 export type CreateEmployeeSkillMutationVariables = Types.Exact<{
   input: Types.CreateEmployeeSkillInput;
 }>;
 
 
-export type CreateEmployeeSkillMutation = { __typename?: 'Mutation', createEmployeeSkill: { __typename?: 'EmployeeSkill', _id: string, id: string, name: string, description: string } };
+export type CreateEmployeeSkillMutation = { __typename?: 'Mutation', createEmployeeSkill: { __typename?: 'EmployeeSkill', _id: string, name: string, description: string } };
 
 export type UpdateEmployeeSkillMutationVariables = Types.Exact<{
   id: Types.Scalars['String']['input'];
-  input: Types.CreateEmployeeSkillInput;
+  updateEmployeeSkillInput: Types.CreateEmployeeSkillInput;
 }>;
 
 
-export type UpdateEmployeeSkillMutation = { __typename?: 'Mutation', updateEmployeeSkill: { __typename?: 'EmployeeSkill', _id: string, id: string, name: string, description: string } };
+export type UpdateEmployeeSkillMutation = { __typename?: 'Mutation', updateEmployeeSkill: { __typename?: 'EmployeeSkill', _id: string, name: string, description: string } };
+
+export type DeleteEmployeeSkillMutationVariables = Types.Exact<{
+  id: Types.Scalars['String']['input'];
+}>;
+
+
+export type DeleteEmployeeSkillMutation = { __typename?: 'Mutation', deleteEmployeeSkill: { __typename?: 'EmployeeSkill', _id: string, name: string, description: string } };
 
 
 export const GetAllEmployeesDocument = gql`
     query GetAllEmployees {
   getAllEmployees {
     _id
-    id
     person {
       name
     }
@@ -53,11 +59,11 @@ export const GetAllEmployeesDocument = gql`
     salary
     status
     role {
-      id
+      _id
       name
     }
     skill {
-      id
+      _id
       name
     }
   }
@@ -99,7 +105,6 @@ export const CreateEmployeeDocument = gql`
     mutation CreateEmployee($input: CreateEmployeeInput!) {
   createEmployee(createEmployeeInput: $input) {
     _id
-    id
     person {
       name
     }
@@ -107,11 +112,11 @@ export const CreateEmployeeDocument = gql`
     salary
     status
     role {
-      id
+      _id
       name
     }
     skill {
-      id
+      _id
       name
     }
   }
@@ -147,7 +152,6 @@ export const GetAllSkillDocument = gql`
     query GetAllSkill {
   getAllSkill {
     _id
-    id
     name
     description
   }
@@ -189,7 +193,6 @@ export const GetAllRoleDocument = gql`
     query GetAllRole {
   getAllRole {
     _id
-    id
     name
     description
   }
@@ -231,7 +234,6 @@ export const CreateEmployeeSkillDocument = gql`
     mutation CreateEmployeeSkill($input: CreateEmployeeSkillInput!) {
   createEmployeeSkill(createEmployeeSkillInput: $input) {
     _id
-    id
     name
     description
   }
@@ -264,10 +266,12 @@ export type CreateEmployeeSkillMutationHookResult = ReturnType<typeof useCreateE
 export type CreateEmployeeSkillMutationResult = Apollo.MutationResult<CreateEmployeeSkillMutation>;
 export type CreateEmployeeSkillMutationOptions = Apollo.BaseMutationOptions<CreateEmployeeSkillMutation, CreateEmployeeSkillMutationVariables>;
 export const UpdateEmployeeSkillDocument = gql`
-    mutation UpdateEmployeeSkill($id: String!, $input: CreateEmployeeSkillInput!) {
-  updateEmployeeSkill(id: $id, updateEmployeeSkillInput: $input) {
+    mutation UpdateEmployeeSkill($id: String!, $updateEmployeeSkillInput: CreateEmployeeSkillInput!) {
+  updateEmployeeSkill(
+    id: $id
+    updateEmployeeSkillInput: $updateEmployeeSkillInput
+  ) {
     _id
-    id
     name
     description
   }
@@ -289,7 +293,7 @@ export type UpdateEmployeeSkillMutationFn = Apollo.MutationFunction<UpdateEmploy
  * const [updateEmployeeSkillMutation, { data, loading, error }] = useUpdateEmployeeSkillMutation({
  *   variables: {
  *      id: // value for 'id'
- *      input: // value for 'input'
+ *      updateEmployeeSkillInput: // value for 'updateEmployeeSkillInput'
  *   },
  * });
  */
@@ -300,3 +304,38 @@ export function useUpdateEmployeeSkillMutation(baseOptions?: Apollo.MutationHook
 export type UpdateEmployeeSkillMutationHookResult = ReturnType<typeof useUpdateEmployeeSkillMutation>;
 export type UpdateEmployeeSkillMutationResult = Apollo.MutationResult<UpdateEmployeeSkillMutation>;
 export type UpdateEmployeeSkillMutationOptions = Apollo.BaseMutationOptions<UpdateEmployeeSkillMutation, UpdateEmployeeSkillMutationVariables>;
+export const DeleteEmployeeSkillDocument = gql`
+    mutation DeleteEmployeeSkill($id: String!) {
+  deleteEmployeeSkill(id: $id) {
+    _id
+    name
+    description
+  }
+}
+    `;
+export type DeleteEmployeeSkillMutationFn = Apollo.MutationFunction<DeleteEmployeeSkillMutation, DeleteEmployeeSkillMutationVariables>;
+
+/**
+ * __useDeleteEmployeeSkillMutation__
+ *
+ * To run a mutation, you first call `useDeleteEmployeeSkillMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteEmployeeSkillMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteEmployeeSkillMutation, { data, loading, error }] = useDeleteEmployeeSkillMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteEmployeeSkillMutation(baseOptions?: Apollo.MutationHookOptions<DeleteEmployeeSkillMutation, DeleteEmployeeSkillMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteEmployeeSkillMutation, DeleteEmployeeSkillMutationVariables>(DeleteEmployeeSkillDocument, options);
+      }
+export type DeleteEmployeeSkillMutationHookResult = ReturnType<typeof useDeleteEmployeeSkillMutation>;
+export type DeleteEmployeeSkillMutationResult = Apollo.MutationResult<DeleteEmployeeSkillMutation>;
+export type DeleteEmployeeSkillMutationOptions = Apollo.BaseMutationOptions<DeleteEmployeeSkillMutation, DeleteEmployeeSkillMutationVariables>;

@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
+import CustomSnackBar from "../components/CustomSnackBar";
 
 const UserLayout: React.FC = () => {
   return (
@@ -10,6 +11,7 @@ const UserLayout: React.FC = () => {
         <div className="h-full max-h-full" style={{ overflowY: "auto" }}>
           <Sidebar sidebarID={"sidebar_drawer"}/>
         </div>
+        <CustomSnackBar/>
       </div>
     </>
   )

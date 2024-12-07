@@ -6,7 +6,7 @@ const defaultOptions = {} as const;
 export type GetCategoriesQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetCategoriesQuery = { __typename?: 'Query', getCategories: Array<{ __typename?: 'CategoryData', _id: string, name: string, description: string, type: string, already_used: boolean }> };
+export type GetCategoriesQuery = { __typename?: 'Query', getCategories: Array<{ __typename?: 'CategoryData', _id: string, name: string, description: string, type: string }> };
 
 export type CreateCategoryMutationVariables = Types.Exact<{
   input: Types.CreateCategoryInput;
@@ -38,7 +38,6 @@ export const GetCategoriesDocument = gql`
     name
     description
     type
-    already_used
   }
 }
     `;

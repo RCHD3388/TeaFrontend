@@ -1,10 +1,12 @@
 import StickyHeadTable, { StickyHeadTableColumn } from '../../../components/global_features/StickyHeadTable';
-import { Alert, Box, Button, CircularProgress, MenuItem, Modal, Snackbar, Stack, TextField, Typography } from '@mui/material';
+import { Alert, AlertColor, Box, Button, CircularProgress, MenuItem, Modal, Snackbar, Stack, TextField, Typography } from '@mui/material';
 import { useMutation, useQuery } from '@apollo/client';
 import { CreateCategoryDocument, DeleteCategoryDocument, GetCategoriesDocument, UpdateCategoryDocument } from '../../../graphql/category.generated';
 import React, { useEffect, useRef, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { modalStyle } from '../../../theme';
+import { useDispatch } from 'react-redux';
+import { openSnackbar } from '../../../app/reducers/snackbarSlice';
 
 interface CreateCategoryValues {
   name: string
@@ -52,8 +54,7 @@ export default function CategoryPage() {
   const [nameErr, setNameErr] = useState("")
   const [descriptionErr, setDescriptionErr] = useState("")
   const [deleteErr, setDeleteErr] = useState("")
-  const [openSnackBar, setOpenSnackBar] = useState<boolean>(false);
-  const [snackBarMsg, setSnackBarMsg] = useState("");
+  const dispatch = useDispatch();
 
   const { handleSubmit, control, formState: { errors }, reset } = useForm<CreateCategoryValues>({
     defaultValues: {
@@ -70,9 +71,9 @@ export default function CategoryPage() {
       await refetch()
       reset()
       handleCloseAddModal();
-      setOpenSnackBar(true);
-      setSnackBarMsg("Berhasil Tambah Kategori")
+      dispatch(openSnackbar({severity: "success", message: "Berhasil Tambah Kategori"}))
     } catch (error) {
+      dispatch(openSnackbar({severity: "error", message: "Gagal Tambah Kategori, pastikan nama belum pernah digunakan"}))
       console.log(error);
     } finally {
       setIsSubmitting(false)
@@ -90,6 +91,7 @@ export default function CategoryPage() {
     setNameErr(""); setDescriptionErr("");
     if (!name) setNameErr("Nama tidak boleh kosong")
     if (!description) setDescriptionErr("description tidak boleh kosong")
+
     if (name != "" && description != "") {
       updateCategory({
         variables: {
@@ -98,13 +100,11 @@ export default function CategoryPage() {
           requiresAuth: true
         }
       }).then((response) => {
-        setOpenSnackBar(true);
-        setSnackBarMsg("Berhasil Ubah Kategori")
+        dispatch(openSnackbar({severity: "success", message: "Berhasil Ubah Kategori"}))
         refetch()
         handleCloseEditModal()
       }).catch((err) => {
-        setOpenSnackBar(true);
-        setSnackBarMsg("Gagal Ubah Kategori")
+        dispatch(openSnackbar({severity: "error", message: "Gagal Ubah Kategori, pastikan nama kategori belum digunakan"}))
       })
     }
   }
@@ -114,17 +114,14 @@ export default function CategoryPage() {
     if (selectedRow && openEditModal) {
       deleteCategory({ variables: { id: selectedRow._id, requiresAuth: true } })
         .then((response) => {
-          setOpenSnackBar(true);
-          setSnackBarMsg("Berhasil Hapus Kategori")
+          dispatch(openSnackbar({severity: "success", message: "Berhasil Hapus Kategori"}))
           refetch()
           handleCloseEditModal()
         }).catch((err) => {
-          setOpenSnackBar(true);
-          setSnackBarMsg("Kategori Sudah Digunakan, Tidak dapat dihapus")
+          dispatch(openSnackbar({severity: "error", message: "Gagal hapus Kategori, pastikan kategori belum pernah digunakan"}))
         })
     } else {
-      setOpenSnackBar(true);
-      setSnackBarMsg("Gagal Hapus Kategori")
+      dispatch(openSnackbar({severity: "error", message: "Gagal hapus Kategori"}))
     }
   }
 
@@ -269,12 +266,6 @@ export default function CategoryPage() {
           </Box>
         </Box>
       </Modal>
-      <Snackbar
-        open={openSnackBar}
-        autoHideDuration={1500}
-        onClose={() => { setOpenSnackBar(false) }}
-        message={snackBarMsg}
-      />
     </div>
-      );
+  );
 }

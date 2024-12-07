@@ -8,6 +8,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { modalStyle } from "../../theme";
+import { useDispatch } from "react-redux";
+import { openSnackbar } from "../../app/reducers/snackbarSlice";
 
 interface CreateEmployeeValues {
   name: string
@@ -34,6 +36,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => { setOpenModal(true) }
   const handleCloseModal = () => { setOpenModal(false) }
+  const dispatch = useDispatch()
 
   const { handleSubmit, control, formState: { errors }, reset } = useForm<CreateEmployeeValues>({
     defaultValues: {
@@ -62,18 +65,20 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
               name: data.name,
               phone_number: data.phone_number,
             },
-            role: { id: data.role_id },
+            role: data.role_id ,
             salary: Number(data.salary),
-            skill: { id: data.skill_id },
+            skill: data.skill_id,
             status: data.status
           }, requiresAuth: true
         }
       })
+      dispatch(openSnackbar({severity: "success", message: "Berhasil Tambah Pegawai"}))
       reset()
       refetchEmployee()
       handleCloseModal()
     } catch (error: any) {
       console.log(error.graphQLErrors[0]);
+      dispatch(openSnackbar({severity: "error", message: "Gagal Tambah Pegawai, pastikan data telah valid"}))
     } finally {
       setIsSubmitting(false)
     }
@@ -188,7 +193,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
                   helperText={errors.role_id ? errors.role_id.message : ''}
                 >
                   {!rolesLoading && rolesData.getAllRole.map((value: any, index: number) => {
-                    return <MenuItem key={index} value={value.id}>{value.name}</MenuItem>
+                    return <MenuItem key={index} value={value._id}>{value.name}</MenuItem>
                   })}
                 </TextField>
               )}
@@ -202,7 +207,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
                   helperText={errors.skill_id ? errors.skill_id.message : ''}
                 >
                   {!skillsLoading && skillsData.getAllSkill.map((value: any, index: number) => {
-                    return <MenuItem key={index} value={value.id}>{value.name}</MenuItem>
+                    return <MenuItem key={index} value={value._id}>{value.name}</MenuItem>
                   })}
                 </TextField>
               )}

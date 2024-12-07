@@ -1,7 +1,6 @@
 query GetAllEmployees {
   getAllEmployees {
     _id
-    id
     person {
       name
     }
@@ -9,11 +8,11 @@ query GetAllEmployees {
     salary
     status
     role {
-      id
+      _id
       name
     }
     skill {
-      id
+      _id
       name
     }
   }
@@ -22,7 +21,6 @@ query GetAllEmployees {
 mutation CreateEmployee($input: CreateEmployeeInput!) {
   createEmployee(createEmployeeInput: $input) {
     _id
-    id
     person {
       name
     }
@@ -30,11 +28,11 @@ mutation CreateEmployee($input: CreateEmployeeInput!) {
     salary
     status
     role {
-      id
+      _id
       name
     }
     skill {
-      id
+      _id
       name
     }
   }
@@ -43,7 +41,6 @@ mutation CreateEmployee($input: CreateEmployeeInput!) {
 query GetAllSkill {
   getAllSkill {
     _id
-    id
     name
     description
   }
@@ -52,7 +49,6 @@ query GetAllSkill {
 query GetAllRole {
   getAllRole {
     _id
-    id
     name
     description
   }
@@ -61,16 +57,22 @@ query GetAllRole {
 mutation CreateEmployeeSkill($input: CreateEmployeeSkillInput!) {
   createEmployeeSkill(createEmployeeSkillInput: $input) {
     _id
-    id
     name
     description
   }
 }
 
-mutation UpdateEmployeeSkill($id: String!, $input: CreateEmployeeSkillInput!) {
-  updateEmployeeSkill(id: $id, updateEmployeeSkillInput: $input) {
+mutation UpdateEmployeeSkill($id: String!, $updateEmployeeSkillInput: CreateEmployeeSkillInput!) {
+  updateEmployeeSkill(id: $id, updateEmployeeSkillInput: $updateEmployeeSkillInput) {
     _id
-    id
+    name
+    description
+  }
+}
+
+mutation DeleteEmployeeSkill($id: String!) {
+  deleteEmployeeSkill(id: $id) {
+    _id
     name
     description
   }

@@ -4,7 +4,6 @@ query GetCategories {
     name
     description
     type
-    already_used
   }
 }
 

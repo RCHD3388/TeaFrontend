@@ -9,7 +9,6 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { ThemeProvider } from '@emotion/react';
 import { onError } from '@apollo/client/link/error';
 import { CustomGraphQLError } from './types/apollo_client.types.ts';
-import { ToastContainer } from 'react-toastify';
 import { theme } from './theme.ts';
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
@@ -17,11 +16,11 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
     for (let err of graphQLErrors as CustomGraphQLError[]) {
 
       const code = err?.code || err.extensions?.code;
-      console.log(code);
       if (code === 'UNAUTHENTICATED') {
         localStorage.removeItem('persist:user');
         window.location.href = '/';
       } else {
+        console.log(err)
         console.error(`GraphQL error [${code}]:`, err.message);
       }
     }

@@ -5,6 +5,8 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { modalStyle } from "../../theme";
 import { CreateEmployeeSkillDocument, GetAllSkillQuery, GetAllSkillQueryVariables } from "../../graphql/person.generated";
 import { CustomGraphQLError } from "../../types/apollo_client.types";
+import { useDispatch } from "react-redux";
+import { openSnackbar } from "../../app/reducers/snackbarSlice";
 
 interface CreateEmployeeSkillValues {
   name: string
@@ -22,6 +24,7 @@ const AddEmployeeSkill: React.FC<AddEmployeeSkillProps> = ({ refetchSkill }) => 
   const handleOpenModal = () => { setOpenModal(true) }
   const handleCloseModal = () => { setOpenModal(false) }
   const [errorMsg, setErrorMsg] = useState("");
+  const dispatch = useDispatch();
 
   const { handleSubmit, control, formState: { errors }, reset } = useForm<CreateEmployeeSkillValues>({
     defaultValues: {
@@ -40,6 +43,7 @@ const AddEmployeeSkill: React.FC<AddEmployeeSkillProps> = ({ refetchSkill }) => 
           requiresAuth: true
         }
       });
+      dispatch(openSnackbar({severity: "success", message: "Berhasil Tambah Skill Pegawai"}))
       reset()
       refetchSkill()
       handleCloseModal()
@@ -47,7 +51,9 @@ const AddEmployeeSkill: React.FC<AddEmployeeSkillProps> = ({ refetchSkill }) => 
       let errCode = error?.graphQLErrors[0]?.code || "";
       if (errCode == "BAD_REQUEST") {
         let msg = error.original?.message || error.message || "";
-        setErrorMsg(msg)
+        dispatch(openSnackbar({severity: "error", message: "Gagal Tambah Skill, pastikan nama skill belum pernah digunakan"}))
+      }else{
+        dispatch(openSnackbar({severity: "error", message: "Gagal Tambah Skill Pegawai"}))
       }
       console.log(error.graphQLErrors[0]);
     } finally {

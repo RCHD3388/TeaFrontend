@@ -3,6 +3,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
 import localStorage from 'redux-persist/lib/storage';
 import userSlice from "./reducers/userSlice";
+import snackbarReducer  from "./reducers/snackbarSlice";
 
 const persistConfig = {
   key: 'user',
@@ -13,7 +14,8 @@ const persistedUserSlice = persistReducer(persistConfig, userSlice);
 
 export const store = configureStore({
   reducer: {
-    user: persistedUserSlice
+    user: persistedUserSlice,
+    snackbar: snackbarReducer 
   }
 });
 
