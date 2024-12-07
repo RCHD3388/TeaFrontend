@@ -5,6 +5,10 @@ import StickyHeadTable, { StickyHeadTableColumn } from "../../../components/glob
 import { useQuery } from "@apollo/client";
 import { GetAllEmployeesDocument } from "../../../graphql/person.generated";
 import { formatCurrency, formatDateToLong } from "../../../utils/service/FormatService";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../app/store";
+import { selectUser } from "../../../app/reducers/userSlice";
+import { useNavigate } from "react-router-dom";
 
 interface RowData {
   _id: string,
@@ -16,59 +20,58 @@ interface RowData {
   skill: [{ _id: string, name: string }]
 }
 
-const columns: StickyHeadTableColumn<RowData>[] = [
-  {
-    id: 'person', label: "Nama", minWidth: 50, align: "center",
-    format: (value) => String(value.name)
-  },
-  {
-    id: "hire_date", label: "Hire Date", minWidth: 50, align: "center",
-    format: (value) => formatDateToLong(value)
-  },
-  {
-    id: 'salary', label: 'Salary', minWidth: 50, align: "center",
-    format: (value) => formatCurrency(value)
-  },
-  {
-    id: 'status', label: 'Status', minWidth: 50, align: "center",
-    renderComponent: (row) => {
-      return (
-        <>
+const EmployeeMainData: React.FC = () => {
+  let { data, loading, refetch } = useQuery(GetAllEmployeesDocument, { variables: { requiresAuth: true } })
+  const user = useSelector((state: RootState) => selectUser(state))
+  const navigate = useNavigate();
+
+  const columns: StickyHeadTableColumn<RowData>[] = [
+    { id: 'person', label: "Nama", minWidth: 50, align: "center", format: (value) => String(value.name) },
+    { id: "hire_date", label: "Hire Date", minWidth: 50, align: "center", format: (value) => formatDateToLong(value) },
+    { id: 'salary', label: 'Salary', minWidth: 50, align: "center", format: (value) => formatCurrency(value) },
+    {
+      id: 'status', label: 'Status', minWidth: 50, align: "center",
+      renderComponent: (row) => {
+        return (<>
           {row.status == "Active" ?
             <div className="badge badge-success gap-2">Active</div> :
             <div className="badge badge-warning gap-2">Inactive</div>}
-        </>
-      )
-    }
-  },
-  {
-    id: 'role', label: 'Role', minWidth: 50, align: "center",
-    renderComponent: (row) => { return (<div className="badge badge-neutral gap-2">{row.role.name}</div>) }
-  },
-  {
-    id: 'skill', label: 'Skill', minWidth: 50, align: "center",
-    renderComponent: (row) => {
-      return (<div className="flex justify-center items-center">
-        <Box sx={{ maxWidth: 200, overflowX: 'auto', display: 'flex', gap: 1 }}>
-          {row.skill.map((skillname, index) => <div key={index} className="badge badge-neutral gap-2">{skillname.name}</div>)}
-        </Box>
-      </div>)
+        </>)
+      }
     },
-  },
-  { id: 'action', label: 'Action', actionLabel: 'Detail', align: "center", buttonColor: (row) => 'secondary' },
-]
+    {
+      id: 'role', label: 'Role', minWidth: 50, align: "center",
+      renderComponent: (row) => { return (<div className="badge badge-neutral gap-2">{row.role.name}</div>) }
+    },
+    {
+      id: 'skill', label: 'Skill', minWidth: 50, align: "center",
+      renderComponent: (row) => {
+        return (<div className="flex justify-center items-center">
+          <Box sx={{ maxWidth: 200, overflowX: 'auto', display: 'flex', gap: 1 }}>
+            {row.skill.map((skillname, index) => <div key={index} className="badge badge-neutral gap-2">{skillname.name}</div>)}
+          </Box>
+        </div>)
+      },
+    },
+    {
+      id: 'action', label: 'Action', actionLabel: 'Detail', align: "center", buttonColor: (row) => 'secondary',
+      buttonDisabled: (row) => {
+        let rowRole = row.role.name
+        if(user.role == "admin" && (rowRole == "owner" || rowRole == "admin")) return true
+        return false
+      }
+    },
+  ]
 
-const EmployeeMainData: React.FC = () => {
-  let { data, loading, refetch } = useQuery(GetAllEmployeesDocument, { variables: { requiresAuth: true } })
-
-  const handleActionTable = () => {
+  const handleActionTable = (row: RowData, column: StickyHeadTableColumn<RowData>) => {
+    navigate(`/appuser/employee/${row._id}`)
     refetch()
   }
 
   return (
     <div className="flex flex-col">
-      <div className="text-4xl font-bold mb-2">Data Pegawai Perusahaan</div>
-      <AddEmployee refetchEmployee={refetch}/>
+      <div className="flex justify-end"><AddEmployee refetchEmployee={refetch} /></div>
+
       {!loading && <div>
         <StickyHeadTable
           columns={columns}

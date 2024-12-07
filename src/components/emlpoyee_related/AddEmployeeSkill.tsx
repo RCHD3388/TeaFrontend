@@ -1,12 +1,12 @@
-import { ApolloQueryResult, useMutation, useQuery } from "@apollo/client";
-import { Box, Button, CircularProgress, InputAdornment, MenuItem, Modal, TextField, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { ApolloQueryResult, useMutation } from "@apollo/client";
+import { Box, Button, CircularProgress,  Modal, TextField, Typography } from "@mui/material";
+import React, { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { modalStyle } from "../../theme";
 import { CreateEmployeeSkillDocument, GetAllSkillQuery, GetAllSkillQueryVariables } from "../../graphql/person.generated";
-import { CustomGraphQLError } from "../../types/apollo_client.types";
 import { useDispatch } from "react-redux";
 import { openSnackbar } from "../../app/reducers/snackbarSlice";
+import AddIcon from '@mui/icons-material/Add';
 
 interface CreateEmployeeSkillValues {
   name: string
@@ -67,6 +67,7 @@ const AddEmployeeSkill: React.FC<AddEmployeeSkillProps> = ({ refetchSkill }) => 
         onClick={async () => {
           handleOpenModal()
         }}
+        endIcon={<AddIcon/>}
       >Tambah Skill Pegawai</Button>
 
 

@@ -7,6 +7,7 @@ import NotFoundPage from "../pages/NotFoundPage";
 import DashboardPage from "../pages/private_pages/DashboardPage";
 import CategoryPage from "../pages/private_pages/CategoryRelated/CategoryPage";
 import EmployeePage from "../pages/private_pages/EmployeeRelated/EmployeePage";
+import EmployeeDetail from "../pages/private_pages/EmployeeRelated/EmployeeDetail";
 
 const AppRoutes: React.FC = () => {
   const router = createBrowserRouter([
@@ -29,7 +30,10 @@ const AppRoutes: React.FC = () => {
         { path: "inventory", element: <DashboardPage /> },
         { path: "purchasing", element: <DashboardPage /> },
         { path: "supplier", element: <DashboardPage /> },
-        { path: "employee", element: <EmployeePage /> },
+        { path: "employee", children: [
+          { index: true, element: <EmployeePage />},
+          { path: ":employeeId", element: <EmployeeDetail/>}
+        ]},
         { path: "user", element: <DashboardPage /> },
         { path: "request", element: <DashboardPage /> },
         { path: "approval", element: <DashboardPage /> },

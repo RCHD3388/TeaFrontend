@@ -62,11 +62,11 @@ const EmployeeSkillData: React.FC = () => {
           requiresAuth: true
         }
       }).then((response) => {
-        dispatch(openSnackbar({severity: "success", message: "Berhasil Ubah Skill"}))
+        dispatch(openSnackbar({ severity: "success", message: "Berhasil Ubah Skill" }))
         refetch()
         handleCloseEditModal()
       }).catch((err) => {
-        dispatch(openSnackbar({severity: "error", message: "Gagal Ubah Skill, Pastikan nama skill belum digunakan"}))
+        dispatch(openSnackbar({ severity: "error", message: "Gagal Ubah Skill, Pastikan nama skill belum digunakan" }))
       }).finally(() => {
         setIsSubmitting(false)
       })
@@ -77,21 +77,22 @@ const EmployeeSkillData: React.FC = () => {
     if (selectedRow && editModalOpen) {
       deleteEmployeeSkill({ variables: { id: selectedRow._id, requiresAuth: true } })
         .then((response) => {
-          dispatch(openSnackbar({severity: "success", message: "Berhasil Hapus Skill Pegawai"}))
+          dispatch(openSnackbar({ severity: "success", message: "Berhasil Hapus Skill Pegawai" }))
           refetch()
           handleCloseEditModal()
         }).catch((err) => {
-          dispatch(openSnackbar({severity: "error", message: "Gagal Hapus Skill Pegawai, pastikan skill belum pernah digunakan"}))
+          dispatch(openSnackbar({ severity: "error", message: "Gagal Hapus Skill Pegawai, pastikan skill belum pernah digunakan" }))
         })
     } else {
-      dispatch(openSnackbar({severity: "error", message: "Gagal Hapus Skill Pegawai"}))
+      dispatch(openSnackbar({ severity: "error", message: "Gagal Hapus Skill Pegawai" }))
     }
   }
 
   return (
     <div className="flex flex-col">
-      <div className="text-4xl font-bold mb-2">Data Skill Pegawai Perusahaan</div>
-      <AddEmployeeSkill refetchSkill={refetch} />
+      <div className="flex justify-end">
+        <AddEmployeeSkill refetchSkill={refetch} />
+      </div>
       {!loading && <div>
         <StickyHeadTable
           columns={columns}

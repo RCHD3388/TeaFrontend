@@ -15,7 +15,6 @@ const LoginPage: React.FC = () => {
   function handleLogin(){
     let username = usernameRef?.current?.value || ""
     let password = passwordRef?.current?.value || ""
-
     setError("");
     login({ variables: { data: {username, password}, requiresAuth: false}})
     .then((response) => {

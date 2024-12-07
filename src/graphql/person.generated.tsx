@@ -15,6 +15,21 @@ export type CreateEmployeeMutationVariables = Types.Exact<{
 
 export type CreateEmployeeMutation = { __typename?: 'Mutation', createEmployee: { __typename?: 'Employee', _id: string, hire_date: any, salary: number, status: string, person: { __typename?: 'Person', name: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string }> } };
 
+export type UpdateEmployeeMutationVariables = Types.Exact<{
+  id: Types.Scalars['String']['input'];
+  updateEmployeeInput: Types.UpdateEmployeeInput;
+}>;
+
+
+export type UpdateEmployeeMutation = { __typename?: 'Mutation', updateEmployee: { __typename?: 'Employee', _id: string, hire_date: any, salary: number, status: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string, description: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string, description: string }> } };
+
+export type GetEmployeeByIdQueryVariables = Types.Exact<{
+  id: Types.Scalars['String']['input'];
+}>;
+
+
+export type GetEmployeeByIdQuery = { __typename?: 'Query', getEmployeeById: { __typename?: 'Employee', _id: string, hire_date: any, salary: number, status: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string, description: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string, description: string }> } };
+
 export type GetAllSkillQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -148,6 +163,118 @@ export function useCreateEmployeeMutation(baseOptions?: Apollo.MutationHookOptio
 export type CreateEmployeeMutationHookResult = ReturnType<typeof useCreateEmployeeMutation>;
 export type CreateEmployeeMutationResult = Apollo.MutationResult<CreateEmployeeMutation>;
 export type CreateEmployeeMutationOptions = Apollo.BaseMutationOptions<CreateEmployeeMutation, CreateEmployeeMutationVariables>;
+export const UpdateEmployeeDocument = gql`
+    mutation updateEmployee($id: String!, $updateEmployeeInput: UpdateEmployeeInput!) {
+  updateEmployee(id: $id, updateEmployeeInput: $updateEmployeeInput) {
+    _id
+    person {
+      name
+      email
+      phone_number
+      address
+    }
+    hire_date
+    salary
+    status
+    role {
+      _id
+      name
+      description
+    }
+    skill {
+      _id
+      name
+      description
+    }
+  }
+}
+    `;
+export type UpdateEmployeeMutationFn = Apollo.MutationFunction<UpdateEmployeeMutation, UpdateEmployeeMutationVariables>;
+
+/**
+ * __useUpdateEmployeeMutation__
+ *
+ * To run a mutation, you first call `useUpdateEmployeeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateEmployeeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateEmployeeMutation, { data, loading, error }] = useUpdateEmployeeMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      updateEmployeeInput: // value for 'updateEmployeeInput'
+ *   },
+ * });
+ */
+export function useUpdateEmployeeMutation(baseOptions?: Apollo.MutationHookOptions<UpdateEmployeeMutation, UpdateEmployeeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateEmployeeMutation, UpdateEmployeeMutationVariables>(UpdateEmployeeDocument, options);
+      }
+export type UpdateEmployeeMutationHookResult = ReturnType<typeof useUpdateEmployeeMutation>;
+export type UpdateEmployeeMutationResult = Apollo.MutationResult<UpdateEmployeeMutation>;
+export type UpdateEmployeeMutationOptions = Apollo.BaseMutationOptions<UpdateEmployeeMutation, UpdateEmployeeMutationVariables>;
+export const GetEmployeeByIdDocument = gql`
+    query GetEmployeeById($id: String!) {
+  getEmployeeById(id: $id) {
+    _id
+    person {
+      name
+      email
+      phone_number
+      address
+    }
+    hire_date
+    salary
+    status
+    role {
+      _id
+      name
+      description
+    }
+    skill {
+      _id
+      name
+      description
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetEmployeeByIdQuery__
+ *
+ * To run a query within a React component, call `useGetEmployeeByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetEmployeeByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetEmployeeByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetEmployeeByIdQuery(baseOptions: Apollo.QueryHookOptions<GetEmployeeByIdQuery, GetEmployeeByIdQueryVariables> & ({ variables: GetEmployeeByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetEmployeeByIdQuery, GetEmployeeByIdQueryVariables>(GetEmployeeByIdDocument, options);
+      }
+export function useGetEmployeeByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetEmployeeByIdQuery, GetEmployeeByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetEmployeeByIdQuery, GetEmployeeByIdQueryVariables>(GetEmployeeByIdDocument, options);
+        }
+export function useGetEmployeeByIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetEmployeeByIdQuery, GetEmployeeByIdQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetEmployeeByIdQuery, GetEmployeeByIdQueryVariables>(GetEmployeeByIdDocument, options);
+        }
+export type GetEmployeeByIdQueryHookResult = ReturnType<typeof useGetEmployeeByIdQuery>;
+export type GetEmployeeByIdLazyQueryHookResult = ReturnType<typeof useGetEmployeeByIdLazyQuery>;
+export type GetEmployeeByIdSuspenseQueryHookResult = ReturnType<typeof useGetEmployeeByIdSuspenseQuery>;
+export type GetEmployeeByIdQueryResult = Apollo.QueryResult<GetEmployeeByIdQuery, GetEmployeeByIdQueryVariables>;
 export const GetAllSkillDocument = gql`
     query GetAllSkill {
   getAllSkill {

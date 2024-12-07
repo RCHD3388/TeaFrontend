@@ -8,8 +8,11 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { modalStyle } from "../../theme";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { openSnackbar } from "../../app/reducers/snackbarSlice";
+import AddIcon from '@mui/icons-material/Add';
+import { RootState } from "../../app/store";
+import { selectUser } from "../../app/reducers/userSlice";
 
 interface CreateEmployeeValues {
   name: string
@@ -37,6 +40,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
   const handleOpenModal = () => { setOpenModal(true) }
   const handleCloseModal = () => { setOpenModal(false) }
   const dispatch = useDispatch()
+  const user = useSelector((state: RootState) => selectUser(state))
 
   const { handleSubmit, control, formState: { errors }, reset } = useForm<CreateEmployeeValues>({
     defaultValues: {
@@ -91,6 +95,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
           await refetch(); 
           handleOpenModal() 
         }}
+        endIcon={<AddIcon/>}
       >Tambah Pegawai</Button>
 
 
@@ -193,6 +198,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
                   helperText={errors.role_id ? errors.role_id.message : ''}
                 >
                   {!rolesLoading && rolesData.getAllRole.map((value: any, index: number) => {
+                    if(user.role == "admin" && (value.name == "admin" || value.name == "owner")) return <></>
                     return <MenuItem key={index} value={value._id}>{value.name}</MenuItem>
                   })}
                 </TextField>

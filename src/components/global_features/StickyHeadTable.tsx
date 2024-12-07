@@ -19,7 +19,8 @@ export interface StickyHeadTableColumn<T> {
   actionLabel?: string; // Label default untuk tombol di kolom action
   buttonLabel?: (row: T) => string; // Fungsi untuk label tombol dinamis
   buttonStyle?: (row: T) => React.CSSProperties; // Styling dinamis berdasarkan row
-  buttonColor?: (row: T) => 'primary' | 'secondary'; // Dinamis warna tombol
+  buttonColor?: (row: T) => 'primary' | 'secondary' | "error" | "success"; // Dinamis warna tombol
+  buttonDisabled?: (row: T) => boolean;
   renderComponent?: (row: T) => React.ReactNode; // Komponen yang dirender di kolom tertentu
 }
 
@@ -92,6 +93,7 @@ export default function StickyHeadTable<T extends object>({
                           const buttonLabel = column.buttonLabel
                             ? column.buttonLabel(row)
                             : column.actionLabel;
+                          const buttonDisabled = column.buttonDisabled ? column.buttonDisabled(row) : false;
 
                           return (
                             <TableCell key={column.id} align={column.align}>
@@ -100,6 +102,7 @@ export default function StickyHeadTable<T extends object>({
                                 color={buttonColor}
                                 style={buttonStyle}
                                 onClick={() => onActionClick && onActionClick(row, column)}
+                                disabled={buttonDisabled}
                               >
                                 {buttonLabel}
                               </Button>

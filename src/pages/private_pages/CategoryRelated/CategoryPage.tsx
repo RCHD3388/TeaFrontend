@@ -7,6 +7,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { modalStyle } from '../../../theme';
 import { useDispatch } from 'react-redux';
 import { openSnackbar } from '../../../app/reducers/snackbarSlice';
+import AddIcon from '@mui/icons-material/Add';
 
 interface CreateCategoryValues {
   name: string
@@ -71,9 +72,9 @@ export default function CategoryPage() {
       await refetch()
       reset()
       handleCloseAddModal();
-      dispatch(openSnackbar({severity: "success", message: "Berhasil Tambah Kategori"}))
+      dispatch(openSnackbar({ severity: "success", message: "Berhasil Tambah Kategori" }))
     } catch (error) {
-      dispatch(openSnackbar({severity: "error", message: "Gagal Tambah Kategori, pastikan nama belum pernah digunakan"}))
+      dispatch(openSnackbar({ severity: "error", message: "Gagal Tambah Kategori, pastikan nama belum pernah digunakan" }))
       console.log(error);
     } finally {
       setIsSubmitting(false)
@@ -100,11 +101,11 @@ export default function CategoryPage() {
           requiresAuth: true
         }
       }).then((response) => {
-        dispatch(openSnackbar({severity: "success", message: "Berhasil Ubah Kategori"}))
+        dispatch(openSnackbar({ severity: "success", message: "Berhasil Ubah Kategori" }))
         refetch()
         handleCloseEditModal()
       }).catch((err) => {
-        dispatch(openSnackbar({severity: "error", message: "Gagal Ubah Kategori, pastikan nama kategori belum digunakan"}))
+        dispatch(openSnackbar({ severity: "error", message: "Gagal Ubah Kategori, pastikan nama kategori belum digunakan" }))
       })
     }
   }
@@ -114,14 +115,14 @@ export default function CategoryPage() {
     if (selectedRow && openEditModal) {
       deleteCategory({ variables: { id: selectedRow._id, requiresAuth: true } })
         .then((response) => {
-          dispatch(openSnackbar({severity: "success", message: "Berhasil Hapus Kategori"}))
+          dispatch(openSnackbar({ severity: "success", message: "Berhasil Hapus Kategori" }))
           refetch()
           handleCloseEditModal()
         }).catch((err) => {
-          dispatch(openSnackbar({severity: "error", message: "Gagal hapus Kategori, pastikan kategori belum pernah digunakan"}))
+          dispatch(openSnackbar({ severity: "error", message: "Gagal hapus Kategori, pastikan kategori belum pernah digunakan" }))
         })
     } else {
-      dispatch(openSnackbar({severity: "error", message: "Gagal hapus Kategori"}))
+      dispatch(openSnackbar({ severity: "error", message: "Gagal hapus Kategori" }))
     }
   }
 
@@ -131,12 +132,13 @@ export default function CategoryPage() {
         {/* page header title */}
         <div className="text-4xl font-bold mb-2">Kategori Data Perusahaan</div>
         {/* main content */}
-        <Button
-          variant="contained"
-          color='secondary'
-          style={{ marginBottom: "1rem" }}
-          onClick={() => { handleOpenAddModal() }}
-        >Tambah Kategori</Button>
+        <div className='flex justify-end'>
+          <Button
+            variant="contained" color='secondary' style={{ marginBottom: "1rem" }}
+            endIcon={<AddIcon/>}
+            onClick={() => { handleOpenAddModal() }}
+          >Tambah Kategori</Button>
+        </div>
         {!loading && <StickyHeadTable
           columns={columns}
           rows={data?.getCategories ?? []}

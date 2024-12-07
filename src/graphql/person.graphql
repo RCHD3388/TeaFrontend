@@ -38,6 +38,57 @@ mutation CreateEmployee($input: CreateEmployeeInput!) {
   }
 }
 
+mutation updateEmployee($id: String!, $updateEmployeeInput: UpdateEmployeeInput!) {
+  updateEmployee(id: $id, updateEmployeeInput: $updateEmployeeInput) {
+    _id
+    person {
+      name
+      email
+      phone_number
+      address
+    }
+    hire_date
+    salary
+    status
+    role {
+			_id
+      name
+      description
+    }
+    skill {
+			_id
+      name
+      description
+    }
+  }
+}
+
+query GetEmployeeById($id: String!) {
+  getEmployeeById(id: $id) {
+    _id
+    person {
+      name
+      email
+      phone_number
+      address
+    }
+    hire_date
+    salary
+    status
+    role {
+			_id
+      name
+      description
+    }
+    skill {
+			_id
+      name
+      description
+    }
+  }
+}
+
+
 query GetAllSkill {
   getAllSkill {
     _id
