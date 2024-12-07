@@ -10,7 +10,10 @@ import PublicRoute from './PublicRoute';
 import NotFoundPage from '../pages/NotFoundPage';
 import DashboardPage from '../pages/private_pages/DashboardPage';
 import CategoryPage from '../pages/private_pages/CategoryPage';
-import Projectpage from '../pages/private_pages/ProjectPage';
+import Projectpage from '../pages/private_pages/ProjectRelated/ProjectPage';
+import Projectdetail from '../pages/private_pages/ProjectRelated/Projectdetail';
+import PurchaseOrderPage from '../pages/private_pages/PurchaseOrderRelated/PembelianPage';
+import PembelianPage from '../pages/private_pages/PurchaseOrderRelated/PembelianPage';
 
 const AppRoutes: React.FC = () => {
   const router = createBrowserRouter([
@@ -29,9 +32,16 @@ const AppRoutes: React.FC = () => {
       children: [
         { index: true, element: <Navigate to={'/appuser/dashboard'} /> },
         { path: 'dashboard', element: <DashboardPage /> },
-        { path: 'project', element: <Projectpage></Projectpage> },
+        { path: 'project', element: <Projectpage /> },
+        {
+          path: 'project/detail/:id',
+          element: <Projectdetail></Projectdetail>,
+        },
         { path: 'inventory', element: <DashboardPage /> },
-        { path: 'purchasing', element: <DashboardPage /> },
+        {
+          path: 'purchasing',
+          element: <PembelianPage />,
+        },
         { path: 'supplier', element: <DashboardPage /> },
         { path: 'employee', element: <DashboardPage /> },
         { path: 'user', element: <DashboardPage /> },

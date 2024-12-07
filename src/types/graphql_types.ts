@@ -15,51 +15,6 @@ export type Scalars = {
   DateTime: { input: any; output: any; }
 };
 
-export type Attendance = {
-  __typename?: 'Attendance';
-  attendance_detail?: Maybe<Array<AttendanceDetail>>;
-  created_by: Scalars['String']['output'];
-  date: Scalars['DateTime']['output'];
-  description: Scalars['String']['output'];
-};
-
-export type AttendanceDetail = {
-  __typename?: 'AttendanceDetail';
-  check_in: Scalars['Boolean']['output'];
-  check_out: Scalars['Boolean']['output'];
-  employee: Scalars['String']['output'];
-  note?: Maybe<Scalars['String']['output']>;
-};
-
-export type CreateAttendanceDetailDto = {
-  check_in: Scalars['Boolean']['input'];
-  check_out: Scalars['Boolean']['input'];
-  employee: Scalars['String']['input'];
-  note?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type CreateAttendanceDto = {
-  created_by?: InputMaybe<Scalars['String']['input']>;
-  date: Scalars['DateTime']['input'];
-  description: Scalars['String']['input'];
-};
-
-export type CreateEmployeeInput = {
-  hire_date: Scalars['DateTime']['input'];
-  person: CreatePersonInput;
-  role: RoleInput;
-  salary: Scalars['Float']['input'];
-  skill?: InputMaybe<Array<SkillInput>>;
-  status: Scalars['String']['input'];
-};
-
-export type CreatePersonInput = {
-  address: Scalars['String']['input'];
-  email: Scalars['String']['input'];
-  name: Scalars['String']['input'];
-  phone: Scalars['String']['input'];
-};
-
 export type CreateProjectInput = {
   created_at?: InputMaybe<Scalars['DateTime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
@@ -71,59 +26,29 @@ export type CreateProjectInput = {
   target_date?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
-export type Employee = {
-  __typename?: 'Employee';
-  hire_date: Scalars['DateTime']['output'];
-  person: Person;
-  role: EmployeeRole;
-  salary: Scalars['Float']['output'];
-  skill: Array<EmployeeSkill>;
-  status: Scalars['String']['output'];
+export type CreatePurchaseOrderDetailInput = {
+  item: Scalars['ID']['input'];
+  item_type: Scalars['String']['input'];
+  qty: Scalars['Float']['input'];
+  status: Scalars['String']['input'];
 };
 
-export type EmployeeRole = {
-  __typename?: 'EmployeeRole';
-  description: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
-  name: Scalars['String']['output'];
-};
-
-export type EmployeeSkill = {
-  __typename?: 'EmployeeSkill';
-  description: Scalars['String']['output'];
-  id: Scalars['ID']['output'];
-  name: Scalars['String']['output'];
+export type CreatePurchaseOrderInput = {
+  date: Scalars['DateTime']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  purchase_order_detail?: InputMaybe<Array<CreatePurchaseOrderDetailInput>>;
+  requested_by?: InputMaybe<Scalars['String']['input']>;
+  requested_from?: InputMaybe<Scalars['String']['input']>;
+  status: Scalars['String']['input'];
+  title: Scalars['String']['input'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createAttendance: Attendance;
-  createAttendanceDetail: AttendanceDetail;
-  createEmployee: Employee;
   createProject: Project;
-  deleteAttendance: Scalars['Boolean']['output'];
-  deleteAttendanceDetail: Scalars['Boolean']['output'];
-  deleteEmployee: Scalars['Boolean']['output'];
+  createPurchaseOrder: PurchaseOrder;
   deleteProject: Scalars['Boolean']['output'];
-  updateAttendance: Attendance;
-  updateAttendanceDetail: AttendanceDetail;
   updateProject: Project;
-};
-
-
-export type MutationCreateAttendanceArgs = {
-  createAttendanceInput: CreateAttendanceDto;
-};
-
-
-export type MutationCreateAttendanceDetailArgs = {
-  attendanceId: Scalars['String']['input'];
-  createAttendanceDetailInput: CreateAttendanceDetailDto;
-};
-
-
-export type MutationCreateEmployeeArgs = {
-  data: CreateEmployeeInput;
 };
 
 
@@ -132,19 +57,8 @@ export type MutationCreateProjectArgs = {
 };
 
 
-export type MutationDeleteAttendanceArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type MutationDeleteAttendanceDetailArgs = {
-  attendanceDetailId: Scalars['String']['input'];
-  attendanceId: Scalars['String']['input'];
-};
-
-
-export type MutationDeleteEmployeeArgs = {
-  id: Scalars['String']['input'];
+export type MutationCreatePurchaseOrderArgs = {
+  input: CreatePurchaseOrderInput;
 };
 
 
@@ -153,35 +67,14 @@ export type MutationDeleteProjectArgs = {
 };
 
 
-export type MutationUpdateAttendanceArgs = {
-  id: Scalars['String']['input'];
-  updateAttendanceInput: CreateAttendanceDto;
-};
-
-
-export type MutationUpdateAttendanceDetailArgs = {
-  attendanceDetailId: Scalars['String']['input'];
-  updateAttendanceDetailInput: CreateAttendanceDetailDto;
-};
-
-
 export type MutationUpdateProjectArgs = {
   data: UpdateProjectInput;
   id: Scalars['String']['input'];
 };
 
-export type Person = {
-  __typename?: 'Person';
-  address: Scalars['String']['output'];
-  email: Scalars['String']['output'];
-  name: Scalars['String']['output'];
-  phone_number: Scalars['String']['output'];
-};
-
 export type Project = {
   __typename?: 'Project';
   _id: Scalars['ID']['output'];
-  attendance?: Maybe<Array<Scalars['String']['output']>>;
   created_at?: Maybe<Scalars['DateTime']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   finished_at?: Maybe<Scalars['DateTime']['output']>;
@@ -192,46 +85,44 @@ export type Project = {
   target_date?: Maybe<Scalars['DateTime']['output']>;
 };
 
+export type PurchaseOrder = {
+  __typename?: 'PurchaseOrder';
+  _id: Scalars['ID']['output'];
+  date: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  handled_date?: Maybe<Scalars['DateTime']['output']>;
+  purchase_order_detail?: Maybe<Array<PurchaseOrderDetail>>;
+  requested_by: Scalars['ID']['output'];
+  requested_from: Scalars['ID']['output'];
+  status: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+};
+
+export type PurchaseOrderDetail = {
+  __typename?: 'PurchaseOrderDetail';
+  item: Scalars['ID']['output'];
+  item_type: Scalars['String']['output'];
+  qty: Scalars['Float']['output'];
+  status: Scalars['String']['output'];
+};
+
 export type Query = {
   __typename?: 'Query';
-  employee: Employee;
-  employees: Array<Employee>;
-  findAllAttendance: Array<Attendance>;
-  findAttendanceById: Attendance;
-  findAttendanceDetails: Array<AttendanceDetail>;
+  getAllPurchaseOrders: Array<PurchaseOrder>;
   getHello: Scalars['String']['output'];
+  getPurchaseOrderById: PurchaseOrder;
   project: Project;
   projects: Array<Project>;
 };
 
 
-export type QueryEmployeeArgs = {
+export type QueryGetPurchaseOrderByIdArgs = {
   id: Scalars['String']['input'];
-};
-
-
-export type QueryFindAttendanceByIdArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type QueryFindAttendanceDetailsArgs = {
-  attendanceId: Scalars['String']['input'];
 };
 
 
 export type QueryProjectArgs = {
   id: Scalars['String']['input'];
-};
-
-export type RoleInput = {
-  id: Scalars['String']['input'];
-  name: Scalars['String']['input'];
-};
-
-export type SkillInput = {
-  id: Scalars['String']['input'];
-  name: Scalars['String']['input'];
 };
 
 export type UpdateProjectInput = {

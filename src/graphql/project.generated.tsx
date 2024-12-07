@@ -15,6 +15,13 @@ export type CreateProjectMutationVariables = Types.Exact<{
 
 export type CreateProjectMutation = { __typename?: 'Mutation', createProject: { __typename?: 'Project', name: string, location: string, description?: string | null, created_at?: any | null, finished_at?: any | null, target_date?: any | null, priority: string, status: string } };
 
+export type GetProjectQueryVariables = Types.Exact<{
+  id: Types.Scalars['String']['input'];
+}>;
+
+
+export type GetProjectQuery = { __typename?: 'Query', project: { __typename?: 'Project', _id: string, name: string, location: string, description?: string | null, created_at?: any | null, finished_at?: any | null, target_date?: any | null, priority: string, status: string } };
+
 
 export const GetProjectsDocument = gql`
     query GetProjects {
@@ -103,3 +110,51 @@ export function useCreateProjectMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateProjectMutationHookResult = ReturnType<typeof useCreateProjectMutation>;
 export type CreateProjectMutationResult = Apollo.MutationResult<CreateProjectMutation>;
 export type CreateProjectMutationOptions = Apollo.BaseMutationOptions<CreateProjectMutation, CreateProjectMutationVariables>;
+export const GetProjectDocument = gql`
+    query GetProject($id: String!) {
+  project(id: $id) {
+    _id
+    name
+    location
+    description
+    created_at
+    finished_at
+    target_date
+    priority
+    status
+  }
+}
+    `;
+
+/**
+ * __useGetProjectQuery__
+ *
+ * To run a query within a React component, call `useGetProjectQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProjectQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProjectQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetProjectQuery(baseOptions: Apollo.QueryHookOptions<GetProjectQuery, GetProjectQueryVariables> & ({ variables: GetProjectQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetProjectQuery, GetProjectQueryVariables>(GetProjectDocument, options);
+      }
+export function useGetProjectLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProjectQuery, GetProjectQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetProjectQuery, GetProjectQueryVariables>(GetProjectDocument, options);
+        }
+export function useGetProjectSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetProjectQuery, GetProjectQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetProjectQuery, GetProjectQueryVariables>(GetProjectDocument, options);
+        }
+export type GetProjectQueryHookResult = ReturnType<typeof useGetProjectQuery>;
+export type GetProjectLazyQueryHookResult = ReturnType<typeof useGetProjectLazyQuery>;
+export type GetProjectSuspenseQueryHookResult = ReturnType<typeof useGetProjectSuspenseQuery>;
+export type GetProjectQueryResult = Apollo.QueryResult<GetProjectQuery, GetProjectQueryVariables>;

@@ -23,3 +23,16 @@ mutation CreateProject($data: CreateProjectInput!) {
     status
   }
 }
+query GetProject($id: String!) {
+  project(id: $id) {
+    _id
+    name
+    location
+    description
+    created_at
+    finished_at
+    target_date
+    priority
+    status
+  }
+}

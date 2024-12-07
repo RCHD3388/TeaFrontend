@@ -1,0 +1,17 @@
+query GetAllPurchaseOrders {
+  getAllPurchaseOrders {
+    _id
+    title
+    description
+    requested_from
+    requested_by
+    date
+    status
+    purchase_order_detail {
+      item
+      item_type
+      qty
+      status
+    }
+  }
+}
