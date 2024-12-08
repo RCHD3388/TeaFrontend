@@ -15,6 +15,21 @@ export type Scalars = {
   DateTime: { input: any; output: any; }
 };
 
+export type CreateMaterialInput = {
+  conversion: Scalars['Float']['input'];
+  description: Scalars['String']['input'];
+  item_category: Scalars['String']['input'];
+  merk: Scalars['String']['input'];
+  minimum_unit_measure: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  unit_measure: Scalars['String']['input'];
+};
+
+export type CreateMerkInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+};
+
 export type CreateProjectInput = {
   created_at?: InputMaybe<Scalars['DateTime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
@@ -43,12 +58,50 @@ export type CreatePurchaseOrderInput = {
   title: Scalars['String']['input'];
 };
 
+export type CreateUnitMeasureInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+};
+
+export type Material = {
+  __typename?: 'Material';
+  _id: Scalars['ID']['output'];
+  conversion: Scalars['Float']['output'];
+  description: Scalars['String']['output'];
+  item_category: Scalars['String']['output'];
+  merk: Scalars['String']['output'];
+  minimum_unit_measure: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  unit_measure: Scalars['String']['output'];
+};
+
+export type Merk = {
+  __typename?: 'Merk';
+  _id: Scalars['ID']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
+  createMaterial: Material;
+  createMerk: Merk;
   createProject: Project;
   createPurchaseOrder: PurchaseOrder;
+  createUnitMeasure: UnitMeasure;
   deleteProject: Scalars['Boolean']['output'];
   updateProject: Project;
+  updateUnitMeasure: UnitMeasure;
+};
+
+
+export type MutationCreateMaterialArgs = {
+  data: CreateMaterialInput;
+};
+
+
+export type MutationCreateMerkArgs = {
+  merk: CreateMerkInput;
 };
 
 
@@ -62,6 +115,11 @@ export type MutationCreatePurchaseOrderArgs = {
 };
 
 
+export type MutationCreateUnitMeasureArgs = {
+  data: CreateUnitMeasureInput;
+};
+
+
 export type MutationDeleteProjectArgs = {
   id: Scalars['String']['input'];
 };
@@ -69,6 +127,12 @@ export type MutationDeleteProjectArgs = {
 
 export type MutationUpdateProjectArgs = {
   data: UpdateProjectInput;
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateUnitMeasureArgs = {
+  data: UpdateUnitMeasureInput;
   id: Scalars['String']['input'];
 };
 
@@ -111,8 +175,14 @@ export type Query = {
   getAllPurchaseOrders: Array<PurchaseOrder>;
   getHello: Scalars['String']['output'];
   getPurchaseOrderById: PurchaseOrder;
+  material: Material;
+  materials: Array<Material>;
+  merk: Merk;
+  merks: Array<Merk>;
   project: Project;
   projects: Array<Project>;
+  unitMeasure: UnitMeasure;
+  unitMeasures: Array<UnitMeasure>;
 };
 
 
@@ -121,8 +191,30 @@ export type QueryGetPurchaseOrderByIdArgs = {
 };
 
 
+export type QueryMaterialArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryMerkArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type QueryProjectArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryUnitMeasureArgs = {
+  id: Scalars['String']['input'];
+};
+
+export type UnitMeasure = {
+  __typename?: 'UnitMeasure';
+  _id: Scalars['ID']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
 };
 
 export type UpdateProjectInput = {
@@ -134,4 +226,9 @@ export type UpdateProjectInput = {
   priority?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
   target_date?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type UpdateUnitMeasureInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
 };

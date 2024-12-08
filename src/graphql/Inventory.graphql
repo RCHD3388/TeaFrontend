@@ -1,0 +1,26 @@
+query GetMerks {
+  merks {
+    _id
+    name
+    description
+  }
+}
+query GetUnitMeasures {
+  unitMeasures {
+    _id
+    name
+    description
+  }
+}
+query GetMaterials {
+  materials {
+    _id
+    name
+    merk
+    description
+    unit_measure
+    minimum_unit_measure
+    conversion
+    item_category
+  }
+}
