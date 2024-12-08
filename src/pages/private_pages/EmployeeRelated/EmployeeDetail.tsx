@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { SetStateAction, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { GetAllRoleDocument, GetAllSkillDocument, GetEmployeeByIdDocument, UpdateEmployeeDocument, UpdateEmployeeSkillDocument } from "../../../graphql/person.generated";
 import { Autocomplete, Box, Button, CircularProgress, Container, IconButton, InputAdornment, MenuItem, TextField } from "@mui/material";
@@ -14,6 +14,7 @@ import { RootState } from "../../../app/store";
 import { useDispatch, useSelector } from "react-redux";
 import StickyHeadTable, { StickyHeadTableColumn } from "../../../components/global_features/StickyHeadTable";
 import { openSnackbar } from "../../../app/reducers/snackbarSlice";
+import { CustomGraphQLError } from "../../../types/apollo_client.types";
 
 interface RowData {
   _id: string,
@@ -49,7 +50,7 @@ const EmployeeDetail: React.FC = () => {
   const navigate = useNavigate();
   const { data: skillsData, loading: skillsLoading, refetch: skillDataRefetch } = useQuery(GetAllSkillDocument, { variables: { requiresAuth: true } })
   const { data: rolesData, loading: rolesLoading } = useQuery(GetAllRoleDocument, { variables: { requiresAuth: true } })
-  const { data: employeeData, loading, refetch } = useQuery(GetEmployeeByIdDocument, { variables: { id: employeeId, requiresAuth: true } })
+  const { data: employeeData, loading, refetch, error: employeeDataError } = useQuery(GetEmployeeByIdDocument, { variables: { id: employeeId, requiresAuth: true } })
   const [updateEmployee] = useMutation(UpdateEmployeeDocument)
   const [skillData, setSkillData] = useState<RowData[]>([])
   const user = useSelector((state: RootState) => selectUser(state))
@@ -71,20 +72,27 @@ const EmployeeDetail: React.FC = () => {
   });
 
   useEffect(() => {
-    if (!loading && employeeData) {
-      reset({
-        name: employeeData.getEmployeeById.person.name,
-        email: employeeData.getEmployeeById.person.email,
-        phone_number: employeeData.getEmployeeById.person.phone_number,
-        address: employeeData.getEmployeeById.person.address,
-        hire_date: employeeData.getEmployeeById.hire_date,
-        salary: Number(employeeData.getEmployeeById.salary),
-        status: employeeData.getEmployeeById.status,
-        role_id: employeeData.getEmployeeById.role._id
-      });
-      setSkillData(employeeData.getEmployeeById.skill)
+    if (employeeDataError) {
+      let graphqlErrorFetch = employeeDataError?.graphQLErrors[0] as CustomGraphQLError || null;
+      if (graphqlErrorFetch?.original?.statusCode == "404") {
+        navigate("/appuser/notfound")
+      }
+    } else {
+      if (!loading && employeeData) {
+        reset({
+          name: employeeData.getEmployeeById.person.name,
+          email: employeeData.getEmployeeById.person.email,
+          phone_number: employeeData.getEmployeeById.person.phone_number,
+          address: employeeData.getEmployeeById.person.address,
+          hire_date: employeeData.getEmployeeById.hire_date,
+          salary: Number(employeeData.getEmployeeById.salary),
+          status: employeeData.getEmployeeById.status,
+          role_id: employeeData.getEmployeeById.role._id
+        });
+        setSkillData(employeeData.getEmployeeById.skill)
+      }
     }
-  }, [loading, employeeData])
+  }, [loading, employeeData, employeeDataError])
 
   const handleEditEmployee = (data: updateEmployeValues) => {
 
@@ -124,31 +132,18 @@ const EmployeeDetail: React.FC = () => {
     }
   }
 
-  const handleAddEmployeeSkill = () => {
-    let newSkillName = selectedNewSkill.current?.value || null;
-    if(newSkillName && !skillsLoading){
-      let newSkillId = skillsData.getAllSkill.find((sk: any) => sk.name == newSkillName)._id;
-      console.log(newSkillId)
-    }
-  }
+  // HANDLE UPDATE EMPLOYEE SKILL
 
-  const handleActionTable = (row: RowData, column: StickyHeadTableColumn<RowData>) => {
-    let currentSkillData = [...skillData];
-    currentSkillData = currentSkillData.filter((sk) => sk._id !== row._id)
-    let newSkills = currentSkillData.map((sk) => sk._id);
-
+  const handleUpdateSkillData = (currentSkillData: SetStateAction<RowData[]>, updatedSkills: string[]) => {
     if (employeeData?.getEmployeeById) {
       updateEmployee({
         variables: {
-          id: employeeData.getEmployeeById._id,
-          updateEmployeeInput: {
-            skills: newSkills
-          },
+          id: employeeData.getEmployeeById._id, updateEmployeeInput: { skills: updatedSkills },
           requiresAuth: true,
         },
-      }).then((response) => {
+      }).then(() => {
         setSkillData(currentSkillData);
-        dispatch(openSnackbar({ severity: "success", message: "Berhasil hapus skill pada pegawai" }))
+        dispatch(openSnackbar({ severity: "success", message: "Berhasil perbarui skill pada pegawai" }))
       }).catch((err) => {
         let error = err.graphQLErrors[0];
         if (error.code == "BAD_REQUEST") {
@@ -158,10 +153,30 @@ const EmployeeDetail: React.FC = () => {
           if (typeof curError == "object") msg = curError[0];
           dispatch(openSnackbar({ severity: "error", message: msg }))
         } else {
-          dispatch(openSnackbar({ severity: "error", message: "Gagal hapus skill pada pegawai, Silakan coba lagi nanti" }))
+          dispatch(openSnackbar({ severity: "error", message: "Gagal perbarui skill pada pegawai, Silakan coba lagi nanti" }))
         }
       })
     }
+  }
+
+  const handleAddEmployeeSkill = () => {
+    let currentSkillData = [...skillData];
+    let newSkillName = selectedNewSkill.current?.value || null;
+    if (newSkillName && !skillsLoading) {
+      let newSkill = skillsData?.getAllSkill?.find((sk: any) => sk.name == newSkillName) || null;
+      if (newSkill) {
+        currentSkillData.push({ _id: newSkill._id, name: newSkill.name, description: newSkill.description });
+        let updatedSkill = currentSkillData.map((sk) => sk._id)
+        handleUpdateSkillData(currentSkillData, updatedSkill);
+      }
+    }
+  }
+
+  const handleActionTable = (row: RowData, column: StickyHeadTableColumn<RowData>) => {
+    let currentSkillData = [...skillData];
+    currentSkillData = currentSkillData.filter((sk) => sk._id !== row._id)
+    let updatedSkills = currentSkillData.map((sk) => sk._id);
+    handleUpdateSkillData(currentSkillData, updatedSkills)
   }
 
   return (
@@ -307,12 +322,12 @@ const EmployeeDetail: React.FC = () => {
 
             {/* PEGAWAI HANDLER */}
             <div className="text-xl font-bold mb-2">Skill Pegawai</div>
-            <Box display={"flex"} gap={2} sx={{mb: 2}}>
+            <Box display={"flex"} gap={2} sx={{ mb: 2 }}>
               <Autocomplete
                 disablePortal
                 options={skillsLoading ? [] : skillsData.getAllSkill.map((sk: any) => { return { label: sk.name, value: sk._id } })}
                 sx={{ width: 300 }}
-                renderInput={(params) => <TextField {...params} size="small" label="Skill Pegawai" inputRef={selectedNewSkill}/>}
+                renderInput={(params) => <TextField {...params} size="small" label="Skill Pegawai" inputRef={selectedNewSkill} />}
               />
               <Button
                 onClick={handleAddEmployeeSkill}

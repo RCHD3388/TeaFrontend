@@ -8,6 +8,7 @@ import DashboardPage from "../pages/private_pages/DashboardPage";
 import CategoryPage from "../pages/private_pages/CategoryRelated/CategoryPage";
 import EmployeePage from "../pages/private_pages/EmployeeRelated/EmployeePage";
 import EmployeeDetail from "../pages/private_pages/EmployeeRelated/EmployeeDetail";
+import ErrorPage from "../pages/ErrorPage";
 
 const AppRoutes: React.FC = () => {
   const router = createBrowserRouter([
@@ -23,6 +24,7 @@ const AppRoutes: React.FC = () => {
     {
       path: "appuser",
       element: <PrivateRoute />,
+      errorElement: <ErrorPage/>,
       children: [
         { index: true, element: <Navigate to={"/appuser/dashboard"} /> },
         { path: "dashboard", element: <DashboardPage /> },
@@ -38,6 +40,7 @@ const AppRoutes: React.FC = () => {
         { path: "request", element: <DashboardPage /> },
         { path: "approval", element: <DashboardPage /> },
         { path: "category", element: <CategoryPage /> },
+        { path: "*", element: <NotFoundPage/>}
       ]
     },
     {
