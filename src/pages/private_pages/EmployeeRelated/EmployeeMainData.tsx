@@ -48,7 +48,7 @@ const EmployeeMainData: React.FC = () => {
       renderComponent: (row) => {
         return (<div className="flex justify-center items-center">
           <Box sx={{ maxWidth: 200, overflowX: 'auto', display: 'flex', gap: 1 }}>
-            {row.skill.map((skillname, index) => <div key={index} className="badge badge-neutral gap-2">{skillname.name}</div>)}
+            {row.skill.map((skillname, index) => <div key={index} className="badge badge-neutral whitespace-nowrap gap-2">{skillname.name}</div>)}
           </Box>
         </div>)
       },

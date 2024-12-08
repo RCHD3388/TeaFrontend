@@ -1,8 +1,8 @@
 import { useMutation, useQuery } from "@apollo/client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { GetAllRoleDocument, GetEmployeeByIdDocument, UpdateEmployeeDocument, UpdateEmployeeSkillDocument } from "../../../graphql/person.generated";
-import { Box, Button, Container, IconButton, InputAdornment, MenuItem, TextField } from "@mui/material";
+import { GetAllRoleDocument, GetAllSkillDocument, GetEmployeeByIdDocument, UpdateEmployeeDocument, UpdateEmployeeSkillDocument } from "../../../graphql/person.generated";
+import { Autocomplete, Box, Button, CircularProgress, Container, IconButton, InputAdornment, MenuItem, TextField } from "@mui/material";
 import ReplyAllIcon from '@mui/icons-material/ReplyAll';
 import { theme } from "../../../theme";
 import { Controller, useForm } from "react-hook-form";
@@ -47,13 +47,15 @@ interface updateEmployeValues {
 const EmployeeDetail: React.FC = () => {
   const { employeeId } = useParams();
   const navigate = useNavigate();
+  const { data: skillsData, loading: skillsLoading, refetch: skillDataRefetch } = useQuery(GetAllSkillDocument, { variables: { requiresAuth: true } })
   const { data: rolesData, loading: rolesLoading } = useQuery(GetAllRoleDocument, { variables: { requiresAuth: true } })
   const { data: employeeData, loading, refetch } = useQuery(GetEmployeeByIdDocument, { variables: { id: employeeId, requiresAuth: true } })
   const [updateEmployee] = useMutation(UpdateEmployeeDocument)
   const [skillData, setSkillData] = useState<RowData[]>([])
   const user = useSelector((state: RootState) => selectUser(state))
   const dispatch = useDispatch()
-  const getEmployeeData = () => employeeData.getEmployeeById
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const selectedNewSkill = useRef<HTMLInputElement | null>(null)
 
   const { handleSubmit, control, formState: { errors }, reset } = useForm<updateEmployeValues>({
     defaultValues: {
@@ -84,22 +86,80 @@ const EmployeeDetail: React.FC = () => {
     }
   }, [loading, employeeData])
 
-  const handleActionTable = (row: RowData, column: StickyHeadTableColumn<RowData>) => {
-    let currentSkillData = [...skillData]; 
-    currentSkillData = currentSkillData.filter((sk) => sk._id !== row._id)
+  const handleEditEmployee = (data: updateEmployeValues) => {
 
-    if(employeeData?.getEmployeeById){
-      updateEmployee({variables: {
-        id: employeeData.getEmployeeById._id,
-        updateEmployeeInput: {
-          skills: currentSkillData.map((sk) => {sk._id})  
+    if (employeeData?.getEmployeeById) {
+      setIsSubmitting(true)
+      updateEmployee({
+        variables: {
+          id: employeeData.getEmployeeById._id,
+          updateEmployeeInput: {
+            name: data.name,
+            email: data.email,
+            phone_number: data.phone_number,
+            address: data.address,
+            status: data.status,
+            salary: Number(data.salary),
+            hire_date: data.hire_date,
+          },
+          requiresAuth: true
+        }
+      }).then((response) => {
+        dispatch(openSnackbar({ severity: "success", message: "Berhasil hapus skill pada pegawai" }))
+        refetch()
+        setIsSubmitting(false)
+      }).catch((err) => {
+        let error = err.graphQLErrors[0];
+        if (error.code == "BAD_REQUEST") {
+          let curError = error.original?.message || error.message;
+          let msg = ""
+          if (typeof curError == "string") msg = curError;
+          if (typeof curError == "object") msg = curError[0];
+          dispatch(openSnackbar({ severity: "error", message: msg }))
+        } else {
+          dispatch(openSnackbar({ severity: "error", message: "Gagal perbarui data pegawai, Silakan coba lagi nanti" }))
+        }
+        setIsSubmitting(false)
+      })
+    }
+  }
+
+  const handleAddEmployeeSkill = () => {
+    let newSkillName = selectedNewSkill.current?.value || null;
+    if(newSkillName && !skillsLoading){
+      let newSkillId = skillsData.getAllSkill.find((sk: any) => sk.name == newSkillName)._id;
+      console.log(newSkillId)
+    }
+  }
+
+  const handleActionTable = (row: RowData, column: StickyHeadTableColumn<RowData>) => {
+    let currentSkillData = [...skillData];
+    currentSkillData = currentSkillData.filter((sk) => sk._id !== row._id)
+    let newSkills = currentSkillData.map((sk) => sk._id);
+
+    if (employeeData?.getEmployeeById) {
+      updateEmployee({
+        variables: {
+          id: employeeData.getEmployeeById._id,
+          updateEmployeeInput: {
+            skills: newSkills
+          },
+          requiresAuth: true,
         },
-        requiresAuth: true,
-      }}).then((response) => {
+      }).then((response) => {
         setSkillData(currentSkillData);
         dispatch(openSnackbar({ severity: "success", message: "Berhasil hapus skill pada pegawai" }))
       }).catch((err) => {
-        dispatch(openSnackbar({ severity: "error", message: "Gagal hapus skill pada pegawai" }))
+        let error = err.graphQLErrors[0];
+        if (error.code == "BAD_REQUEST") {
+          let curError = error.original?.message || error.message;
+          let msg = ""
+          if (typeof curError == "string") msg = curError;
+          if (typeof curError == "object") msg = curError[0];
+          dispatch(openSnackbar({ severity: "error", message: msg }))
+        } else {
+          dispatch(openSnackbar({ severity: "error", message: "Gagal hapus skill pada pegawai, Silakan coba lagi nanti" }))
+        }
       })
     }
   }
@@ -119,6 +179,7 @@ const EmployeeDetail: React.FC = () => {
         </Box>
         <Container sx={{ paddingTop: 4 }}>
           {!loading && <div>
+            {/* FIELD START */}
             <Controller
               name="name" control={control} rules={{ required: 'Name is required' }}
               render={({ field }) => (<TextField
@@ -229,7 +290,38 @@ const EmployeeDetail: React.FC = () => {
                 )}
               />
             </div>
+            {/* FIELD END */}
+
+            {/* BUTTON SUBMIT */}
+            <div className="flex justify-end">
+              <Button
+                onClick={handleSubmit(handleEditEmployee)}
+                variant="contained"
+                color="secondary"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : ("Perbarui")}
+              </Button>
+            </div>
+            {/* BUTTON SUBMIT END */}
+
+            {/* PEGAWAI HANDLER */}
             <div className="text-xl font-bold mb-2">Skill Pegawai</div>
+            <Box display={"flex"} gap={2} sx={{mb: 2}}>
+              <Autocomplete
+                disablePortal
+                options={skillsLoading ? [] : skillsData.getAllSkill.map((sk: any) => { return { label: sk.name, value: sk._id } })}
+                sx={{ width: 300 }}
+                renderInput={(params) => <TextField {...params} size="small" label="Skill Pegawai" inputRef={selectedNewSkill}/>}
+              />
+              <Button
+                onClick={handleAddEmployeeSkill}
+                variant="contained"
+                color="secondary"
+              >
+                Tambah Skill
+              </Button>
+            </Box>
             <StickyHeadTable
               columns={columns}
               rows={skillData ?? []}
