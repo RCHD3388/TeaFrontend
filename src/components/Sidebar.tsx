@@ -2,12 +2,17 @@ import React, { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import SidebarLink from "./global_features/SidebarLink";
 import { SIDEBAR_ITEMS } from "../constants/sidebarConstant";
+import { useSelector } from "react-redux";
+import { RootState } from "../app/store";
+import { selectUser } from "../app/reducers/userSlice";
 
 interface SidebarProps {
   sidebarID: string
 }
 
 const Sidebar: React.FC<SidebarProps> = ({sidebarID}) => {
+
+  const user = useSelector((state: RootState) => selectUser(state))
 
   return (
     <>
@@ -25,10 +30,14 @@ const Sidebar: React.FC<SidebarProps> = ({sidebarID}) => {
               <label htmlFor={sidebarID} className="btn btn-sm btn-outline">Back</label>
             </div>
             {/* Sidebar content here */}
-            {SIDEBAR_ITEMS.map((item, index) => {
-              return (
-                <li key={index}><SidebarLink key={index} link_to={item.link_to} link_name={item.link_name} icon={item.icon}></SidebarLink></li>
-              )
+            {user?.loggedIn && SIDEBAR_ITEMS.map((item, index) => {
+              if(item.role.includes(user.role || "")){
+                return (
+                  <li key={index}><SidebarLink key={index} link_to={item.link_to} link_name={item.link_name} icon={item.icon}></SidebarLink></li>
+                )
+              }else{
+                return (<></>)
+              }
             })}
           </ul>
         </div>

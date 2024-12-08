@@ -115,6 +115,7 @@ const EmployeeDetail: React.FC = () => {
             status: data.status,
             salary: Number(data.salary),
             hire_date: data.hire_date,
+            role: data.role_id
           },
           requiresAuth: true
         }
