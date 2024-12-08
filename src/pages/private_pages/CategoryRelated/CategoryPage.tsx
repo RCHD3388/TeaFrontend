@@ -25,7 +25,11 @@ interface RowData {
 const columns: StickyHeadTableColumn<RowData>[] = [
   { id: 'name', label: 'Nama', minWidth: 50, align: "center" },
   { id: 'description', label: 'Deskripsi', minWidth: 200, align: "center" },
-  { id: 'type', label: 'Status', minWidth: 50, align: "center" },
+  { id: 'type', label: 'Type', minWidth: 50, align: "center", 
+    renderComponent: (row: any) => {
+      return (<div className="badge badge-neutral gap-2">{row.type}</div>)
+    }
+  },
   {
     id: 'action',
     label: 'Action',
@@ -162,7 +166,7 @@ export default function CategoryPage() {
             name="name" control={control} rules={{ required: 'Name is required' }}
             render={({ field }) => (
               <TextField
-                {...field}
+                {...field} color="secondary"
                 sx={{ width: "100%", mb: 1 }} label="Name" size='small' variant="outlined"
                 error={!!errors.name}
                 helperText={errors.name ? errors.name.message : ''}
@@ -173,7 +177,7 @@ export default function CategoryPage() {
             name="description" control={control} rules={{ required: 'Description is required' }}
             render={({ field }) => (
               <TextField
-                {...field}
+                {...field} color="secondary"
                 sx={{ width: "100%", mb: 1 }} label="Description" size='small' variant="outlined"
                 error={!!errors.name}
                 helperText={errors.name ? errors.name.message : ''}
@@ -184,7 +188,7 @@ export default function CategoryPage() {
             name="type" control={control} rules={{ required: 'Type is required' }}
             render={({ field }) => (
               <TextField
-                {...field}
+                {...field} color="secondary"
                 select sx={{ width: "100%", mb: 1 }}
                 label="Type" size="small" variant="outlined"
                 error={!!errors.type}
@@ -236,12 +240,14 @@ export default function CategoryPage() {
 
           {/* FIELD START */}
           <TextField sx={{ width: "100%", mb: 1 }} label="Name" size='small'
+            color="secondary"
             variant="outlined" inputRef={nameRef}
             defaultValue={selectedRow?.name ?? ""}
             error={nameErr != ""}
             helperText={nameErr}
           />
           <TextField sx={{ width: "100%", mb: 1 }} label="Description" size='small'
+            color="secondary"
             variant="outlined" inputRef={descriptionRef}
             defaultValue={selectedRow?.description ?? ""}
             error={descriptionErr != ""}

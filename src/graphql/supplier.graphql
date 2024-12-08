@@ -1,0 +1,55 @@
+query getAllSuppliers {
+  getAllSuppliers {
+    _id
+    name
+    person {
+      name
+      email
+      phone_number
+      address
+    }
+    status
+  }
+}
+
+mutation createSupplier($input: CreateSupplierInput!) {
+  createSupplier(createSupplierInput: $input) {
+    _id
+    name
+    person {
+      name
+      email
+      phone_number
+      address
+    }
+    status
+  }
+}
+
+mutation updateSupplier($id: String!, $updateSupplierInput: UpdateSupplierInput!) {
+  updateSupplier(id: $id, updateSupplierInput: $updateSupplierInput) {
+    _id
+    name
+    person {
+      name
+      email
+      phone_number
+      address
+    }
+    status
+  }
+}
+
+query GetSupplierById($id: String!) {
+  getSupplierById(id: $id) {
+    _id
+    name
+    person {
+      name
+      email
+      phone_number
+      address
+    }
+    status
+  }
+}

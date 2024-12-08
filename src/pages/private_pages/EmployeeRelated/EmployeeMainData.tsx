@@ -34,7 +34,7 @@ const EmployeeMainData: React.FC = () => {
       renderComponent: (row) => {
         return (<>
           {row.status == "Active" ?
-            <div className="badge badge-success gap-2">Active</div> :
+            <div className="badge badge-success text-white gap-2">Active</div> :
             <div className="badge badge-warning gap-2">Inactive</div>}
         </>)
       }

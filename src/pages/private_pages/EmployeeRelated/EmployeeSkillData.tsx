@@ -118,13 +118,13 @@ const EmployeeSkillData: React.FC = () => {
           </Typography>
 
           {/* FIELD START */}
-          <TextField sx={{ width: "100%", mb: 1 }} label="Name" size='small'
+          <TextField sx={{ width: "100%", mb: 1 }} label="Name" size='small' color="secondary"
             variant="outlined" inputRef={nameRef}
             defaultValue={selectedRow?.name ?? ""}
             error={nameErr != ""}
             helperText={nameErr}
           />
-          <TextField sx={{ width: "100%", mb: 1 }} label="Description" size='small'
+          <TextField sx={{ width: "100%", mb: 1 }} label="Description" size='small' color="secondary"
             variant="outlined" inputRef={descriptionRef}
             defaultValue={selectedRow?.description ?? ""}
             error={descriptionErr != ""}

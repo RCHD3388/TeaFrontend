@@ -10,7 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import Button from '@mui/material/Button';
 
 export interface StickyHeadTableColumn<T> {
-  id: keyof T | 'action' | 'no';
+  id: keyof T | 'action' | 'no' | string;
   label: string;
   hidden?: boolean; // Menandakan apakah kolom ini hidden
   minWidth?: number;

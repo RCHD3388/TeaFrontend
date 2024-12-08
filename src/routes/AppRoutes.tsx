@@ -9,6 +9,9 @@ import CategoryPage from "../pages/private_pages/CategoryRelated/CategoryPage";
 import EmployeePage from "../pages/private_pages/EmployeeRelated/EmployeePage";
 import EmployeeDetail from "../pages/private_pages/EmployeeRelated/EmployeeDetail";
 import ErrorPage from "../pages/ErrorPage";
+import SupplierPage from "../pages/private_pages/SupplierRelated/SupplierPage";
+import SupplierDetail from "../pages/private_pages/SupplierRelated/SupplierDetail";
+import UserPage from "../pages/private_pages/UserRelated/UserPage";
 
 const AppRoutes: React.FC = () => {
   const router = createBrowserRouter([
@@ -31,12 +34,15 @@ const AppRoutes: React.FC = () => {
         { path: "project", element: <DashboardPage /> },
         { path: "inventory", element: <DashboardPage /> },
         { path: "purchasing", element: <DashboardPage /> },
-        { path: "supplier", element: <DashboardPage /> },
+        { path: "supplier", children: [
+          { index: true, element: <SupplierPage />},
+          { path: ":supplierId", element: <SupplierDetail/>}
+        ] },
         { path: "employee", children: [
           { index: true, element: <EmployeePage />},
           { path: ":employeeId", element: <EmployeeDetail/>}
         ]},
-        { path: "user", element: <DashboardPage /> },
+        { path: "user", element: <UserPage /> },
         { path: "request", element: <DashboardPage /> },
         { path: "approval", element: <DashboardPage /> },
         { path: "category", element: <CategoryPage /> },

@@ -83,7 +83,7 @@ const AddEmployeeSkill: React.FC<AddEmployeeSkillProps> = ({ refetchSkill }) => 
           <Controller
             name="name" control={control} rules={{ required: 'Name is required' }}
             render={({ field }) => (<TextField
-              {...field}
+              {...field} color="secondary"
               sx={{ width: "100%", mb: 1 }} label="Name" size='small' variant="outlined"
               error={!!errors.name} helperText={errors.name ? errors.name.message : ''}
             />)}
@@ -91,7 +91,7 @@ const AddEmployeeSkill: React.FC<AddEmployeeSkillProps> = ({ refetchSkill }) => 
           <Controller
             name="description" control={control} rules={{ required: 'Name is required' }}
             render={({ field }) => (<TextField
-              {...field}
+              {...field} color="secondary"
               sx={{ width: "100%", mb: 1 }} label="Description" size='small' variant="outlined"
               error={!!errors.description} helperText={errors.description ? errors.description.message : ''}
             />)}

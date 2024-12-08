@@ -69,20 +69,20 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
               name: data.name,
               phone_number: data.phone_number,
             },
-            role: data.role_id ,
+            role: data.role_id,
             salary: Number(data.salary),
             skill: data.skill_id,
             status: data.status
           }, requiresAuth: true
         }
       })
-      dispatch(openSnackbar({severity: "success", message: "Berhasil Tambah Pegawai"}))
+      dispatch(openSnackbar({ severity: "success", message: "Berhasil Tambah Pegawai" }))
       reset()
       refetchEmployee()
       handleCloseModal()
     } catch (error: any) {
       console.log(error.graphQLErrors[0]);
-      dispatch(openSnackbar({severity: "error", message: "Gagal Tambah Pegawai, pastikan data telah valid"}))
+      dispatch(openSnackbar({ severity: "error", message: "Gagal Tambah Pegawai, pastikan data telah valid" }))
     } finally {
       setIsSubmitting(false)
     }
@@ -91,11 +91,11 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
   return (
     <>
       <Button variant="contained" color='secondary' style={{ marginBottom: "1rem" }}
-        onClick={async () => { 
-          await refetch(); 
-          handleOpenModal() 
+        onClick={async () => {
+          await refetch();
+          handleOpenModal()
         }}
-        endIcon={<AddIcon/>}
+        endIcon={<AddIcon />}
       >Tambah Pegawai</Button>
 
 
@@ -111,7 +111,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
           <Controller
             name="name" control={control} rules={{ required: 'Name is required' }}
             render={({ field }) => (<TextField
-              {...field}
+              {...field} color="secondary"
               sx={{ width: "100%", mb: 1 }} label="Name" size='small' variant="outlined"
               error={!!errors.name} helperText={errors.name ? errors.name.message : ''}
             />)}
@@ -119,7 +119,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
           <Controller
             name="email" control={control} rules={{ required: 'Email is required' }}
             render={({ field }) => (<TextField
-              {...field}
+              {...field} color="secondary"
               sx={{ width: "100%", mb: 1 }} label="Email" size='small' variant="outlined"
               error={!!errors.email} helperText={errors.email ? errors.email.message : ''}
             />)}
@@ -131,7 +131,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
                 /^(\+62|62|0)[2-9]{1}[0-9]{7,12}$/.test(value) || 'Invalid phone number format',
             }}
             render={({ field }) => (<TextField
-              {...field}
+              {...field} color="secondary"
               sx={{ width: "100%", mb: 1 }} label="Phone" size='small' variant="outlined"
               error={!!errors.phone_number} helperText={errors.phone_number ? errors.phone_number.message : ''}
             />)}
@@ -139,7 +139,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
           <Controller
             name="address" control={control} rules={{ required: 'Address is required' }}
             render={({ field }) => (<TextField
-              {...field}
+              {...field} color="secondary"
               sx={{ width: "100%", mb: 1 }} label="Address" size='small' variant="outlined"
               error={!!errors.address} helperText={errors.address ? errors.address.message : ''}
             />)}
@@ -152,7 +152,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
                   required: 'Hire date is required',
                   validate: (value) => {
                     if (value && dayjs(value).isAfter(dayjs())) { return 'Hire date cannot be in the future'; }
-                    return true; 
+                    return true;
                   },
                 }}
                 render={({ field, fieldState }) => (
@@ -168,6 +168,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
                         helperText: fieldState.error ? fieldState.error.message : null,
                         size: 'small',
                         fullWidth: true,
+                        color: "secondary"
                       },
                     }}
                   />
@@ -181,7 +182,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
               }}
               render={({ field }) => (<TextField
                 type="number"
-                {...field}
+                {...field} color="secondary"
                 sx={{ width: "100%", mb: 1, ml: 0.5 }} label="Gaji" size='small' variant="outlined"
                 error={!!errors.salary} helperText={errors.salary ? errors.salary.message : ''}
                 InputProps={{ startAdornment: (<InputAdornment position="start">Rp.</InputAdornment>), }}
@@ -193,13 +194,16 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
               name="role_id" control={control} rules={{ required: 'Role is required' }}
               render={({ field }) => (
                 <TextField
-                  {...field} select sx={{ width: "100%", mb: 1, mr: 0.5 }} label="Role" size="small" variant="outlined"
+                  {...field} color="secondary"
+                  select sx={{ width: "100%", mb: 1, mr: 0.5 }} label="Role" size="small" variant="outlined"
                   error={!!errors.role_id}
                   helperText={errors.role_id ? errors.role_id.message : ''}
                 >
                   {!rolesLoading && rolesData.getAllRole.map((value: any, index: number) => {
-                    if(user.role == "admin" && (value.name == "admin" || value.name == "owner")) return <></>
-                    return <MenuItem key={index} value={value._id}>{value.name}</MenuItem>
+                    if (user.role == "admin" && (value.name == "admin" || value.name == "owner")) return <></>
+                    return <MenuItem key={index} value={value._id}>
+                      <div className="badge badge-neutral gap-2">{value.name}</div>
+                    </MenuItem>
                   })}
                 </TextField>
               )}
@@ -208,12 +212,15 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
               name="skill_id" control={control} rules={{ required: 'Skill is required' }}
               render={({ field }) => (
                 <TextField
-                  {...field} select sx={{ width: "100%", mb: 1, ml: 0.5 }} label="Skill" size="small" variant="outlined"
+                  {...field} color="secondary"
+                  select sx={{ width: "100%", mb: 1, ml: 0.5 }} label="Skill" size="small" variant="outlined"
                   error={!!errors.skill_id}
                   helperText={errors.skill_id ? errors.skill_id.message : ''}
                 >
                   {!skillsLoading && skillsData.getAllSkill.map((value: any, index: number) => {
-                    return <MenuItem key={index} value={value._id}>{value.name}</MenuItem>
+                    return <MenuItem key={index} value={value._id}>
+                      <div className="badge badge-neutral gap-2">{value.name}</div>
+                    </MenuItem>
                   })}
                 </TextField>
               )}
@@ -223,12 +230,13 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
             name="status" control={control} rules={{ required: 'Status is required' }}
             render={({ field }) => (
               <TextField
-                {...field} select sx={{ width: "100%", mb: 1 }} label="Status" size="small" variant="outlined"
+                {...field} color="secondary"
+                select sx={{ width: "100%", mb: 1 }} label="Status" size="small" variant="outlined"
                 error={!!errors.status}
                 helperText={errors.status ? errors.status.message : ''}
               >
-                <MenuItem value={"Active"}>{"Active"}</MenuItem>
-                <MenuItem value={"Inactive"}>{"Inactive"}</MenuItem>
+                <MenuItem value={"Active"}><div className="badge badge-success text-white gap-2">Active</div></MenuItem>
+                <MenuItem value={"Inactive"}><div className="badge badge-warning gap-2">Inactive</div></MenuItem>
               </TextField>
             )}
           />
@@ -247,7 +255,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
               onClick={handleSubmit(handleAddEmployee)}
               variant="contained"
               color="primary"
-            disabled={isSubmitting}
+              disabled={isSubmitting}
             >
               {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : ("Tambah")}
             </Button>
