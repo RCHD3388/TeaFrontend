@@ -3,6 +3,8 @@ query GetAllEmployees {
     _id
     person {
       name
+      email
+      phone_number
     }
     hire_date
     salary

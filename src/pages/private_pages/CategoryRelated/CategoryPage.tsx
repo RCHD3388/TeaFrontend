@@ -27,7 +27,7 @@ const columns: StickyHeadTableColumn<RowData>[] = [
   { id: 'description', label: 'Deskripsi', minWidth: 200, align: "center" },
   { id: 'type', label: 'Type', minWidth: 50, align: "center", 
     renderComponent: (row: any) => {
-      return (<div className="badge badge-neutral gap-2">{row.type}</div>)
+      return (<div className="badge badge-neutral p-3 gap-2">{row.type}</div>)
     }
   },
   {
@@ -234,7 +234,7 @@ export default function CategoryPage() {
           </Typography>
           <Typography id="modal-modal-description" variant="h6" component="h2">
             <div className='flex judtify-center items-center mb-3'>
-              {selectedRow?.name ?? ""} <div className=' ml-2 badge badge-neutral'>{selectedRow?.type}</div>
+              {selectedRow?.name ?? ""} <div className=' ml-2 badge badge-neutral p-3'>{selectedRow?.type}</div>
             </div>
           </Typography>
 

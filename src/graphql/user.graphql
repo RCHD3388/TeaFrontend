@@ -5,3 +5,81 @@ mutation Login($data: LoginInput!) {
     access_token
   }
 }
+
+mutation CreateUser($createUserInput: CreateUserInput!) {
+  createUser(createUserInput: $createUserInput) {
+    _id
+    username
+    employee{
+        person{
+            name
+            email
+        }
+    }
+    status
+  }
+}
+
+mutation UpdateUser($id: String!, $updateUserInput: UpdateUserInput!) {
+  updateUser(id: $id, updateUserInput: $updateUserInput) {
+    username
+    status
+    employee{
+        person{
+            name
+            email
+            phone_number
+        }
+    }
+  }
+}
+
+query GetAllUsers {
+  getAllUsers {
+    _id
+    username
+    employee{
+      _id
+      person{
+          name
+          email
+          phone_number
+      }
+      role{
+        _id
+        name
+      }
+    }
+    status
+  }
+}
+
+query GetUserById($id: String!) {
+  getUserById(id: $id) {
+    _id
+    username
+    employee{
+        person{
+            name
+            email
+            phone_number
+        }
+    }
+    status
+  }
+}
+
+mutation DeleteUser($id: String!) {
+  deleteUserPassword(id: $id) {
+    _id
+    username
+    employee{
+        person{
+            name
+            phone_number
+            email
+        }
+    }
+  }
+}
+

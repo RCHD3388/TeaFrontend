@@ -34,8 +34,8 @@ const columns: StickyHeadTableColumn<RowData>[] = [
     renderComponent: (row) => {
       return (<>
         {row.status == "Active" ?
-          <div className="badge badge-success text-white gap-2">Active</div> :
-          <div className="badge badge-warning gap-2">Inactive</div>}
+          <div className="badge badge-success p-3 text-white gap-2">Active</div> :
+          <div className="badge badge-warning p-3 gap-2">Inactive</div>}
       </>)
     }
   },

@@ -6,7 +6,7 @@ const defaultOptions = {} as const;
 export type GetAllEmployeesQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetAllEmployeesQuery = { __typename?: 'Query', getAllEmployees: Array<{ __typename?: 'Employee', _id: string, hire_date: any, salary: number, status: string, person: { __typename?: 'Person', name: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string }> }> };
+export type GetAllEmployeesQuery = { __typename?: 'Query', getAllEmployees: Array<{ __typename?: 'Employee', _id: string, hire_date: any, salary: number, status: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string }> }> };
 
 export type CreateEmployeeMutationVariables = Types.Exact<{
   input: Types.CreateEmployeeInput;
@@ -69,6 +69,8 @@ export const GetAllEmployeesDocument = gql`
     _id
     person {
       name
+      email
+      phone_number
     }
     hire_date
     salary

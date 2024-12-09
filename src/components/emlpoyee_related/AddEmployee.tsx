@@ -202,7 +202,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
                   {!rolesLoading && rolesData.getAllRole.map((value: any, index: number) => {
                     if (user.role == "admin" && (value.name == "admin" || value.name == "owner")) return <></>
                     return <MenuItem key={index} value={value._id}>
-                      <div className="badge badge-neutral gap-2">{value.name}</div>
+                      <div className="badge badge-neutral p-3 gap-2">{value.name}</div>
                     </MenuItem>
                   })}
                 </TextField>
@@ -219,7 +219,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
                 >
                   {!skillsLoading && skillsData.getAllSkill.map((value: any, index: number) => {
                     return <MenuItem key={index} value={value._id}>
-                      <div className="badge badge-neutral gap-2">{value.name}</div>
+                      <div className="badge badge-neutral p-3 gap-2">{value.name}</div>
                     </MenuItem>
                   })}
                 </TextField>
@@ -235,8 +235,8 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
                 error={!!errors.status}
                 helperText={errors.status ? errors.status.message : ''}
               >
-                <MenuItem value={"Active"}><div className="badge badge-success text-white gap-2">Active</div></MenuItem>
-                <MenuItem value={"Inactive"}><div className="badge badge-warning gap-2">Inactive</div></MenuItem>
+                <MenuItem value={"Active"}><div className="badge badge-success p-3 text-white gap-2">Active</div></MenuItem>
+                <MenuItem value={"Inactive"}><div className="badge badge-warning p-3 gap-2">Inactive</div></MenuItem>
               </TextField>
             )}
           />

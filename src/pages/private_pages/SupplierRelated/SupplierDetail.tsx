@@ -165,8 +165,8 @@ const SupplierDetail: React.FC = () => {
                   error={!!errors.status}
                   helperText={errors.status ? errors.status.message : ''}
                 >
-                  <MenuItem value={"Active"}><div className="badge badge-success text-white gap-2">Active</div></MenuItem>
-                  <MenuItem value={"Inactive"}><div className="badge badge-warning gap-2">Inactive</div></MenuItem>
+                  <MenuItem value={"Active"}><div className="badge badge-success p-3 text-white gap-2">Active</div></MenuItem>
+                  <MenuItem value={"Inactive"}><div className="badge badge-warning p-3 gap-2">Inactive</div></MenuItem>
                 </TextField>
               )}
             />

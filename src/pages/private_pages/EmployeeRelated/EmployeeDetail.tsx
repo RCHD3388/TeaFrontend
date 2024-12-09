@@ -193,7 +193,7 @@ const EmployeeDetail: React.FC = () => {
           <IconButton
             style={{ backgroundColor: theme.palette.secondary.main, height: 40, width: 40, borderRadius: 8, color: 'white' }}
             sx={{ mr: 1 }}
-            onClick={() => { navigate("/appuser/employee") }}
+            onClick={() => { navigate(-1) }}
           >
             <ReplyAllIcon fontSize="medium"></ReplyAllIcon>
           </IconButton>
@@ -308,8 +308,8 @@ const EmployeeDetail: React.FC = () => {
                         error={!!errors.status}
                         helperText={errors.status ? errors.status.message : ''}
                       >
-                        <MenuItem value={"Active"}><div className="badge badge-success text-white gap-2">Active</div></MenuItem>
-                        <MenuItem value={"Inactive"}><div className="badge badge-success text-white gap-2">Inactive</div></MenuItem>
+                        <MenuItem value={"Active"}><div className="badge badge-success p-3 text-white gap-2">Active</div></MenuItem>
+                        <MenuItem value={"Inactive"}><div className="badge badge-success p-3 text-white gap-2">Inactive</div></MenuItem>
                       </TextField>
                     )}
                   />
@@ -324,7 +324,7 @@ const EmployeeDetail: React.FC = () => {
                       >
                         {!rolesLoading && rolesData.getAllRole.map((value: any, index: number) => {
                           if (user.role == "admin" && (value.name == "admin" || value.name == "owner")) return <></>
-                          return <MenuItem key={index} value={value._id}><div className="badge badge-neutral gap-2">{value.name}</div></MenuItem>
+                          return <MenuItem key={index} value={value._id}><div className="badge badge-neutral p-3 gap-2">{value.name}</div></MenuItem>
                         })}
                       </TextField>
                     )}

@@ -49,6 +49,12 @@ export type CreateSupplierInput = {
   status: Scalars['String']['input'];
 };
 
+export type CreateUserInput = {
+  employee: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+  username: Scalars['String']['input'];
+};
+
 export type Employee = {
   __typename?: 'Employee';
   _id: Scalars['String']['output'];
@@ -99,14 +105,18 @@ export type Mutation = {
   createEmployee: Employee;
   createEmployeeSkill: EmployeeSkill;
   createSupplier: Supplier;
+  createUser: User;
   create_project: Scalars['String']['output'];
   deleteCategory: CategoryData;
   deleteEmployeeSkill: EmployeeSkill;
+  deleteUserPassword: User;
   login: LoginResponse;
   updateCategory: CategoryData;
   updateEmployee: Employee;
   updateEmployeeSkill: EmployeeSkill;
   updateSupplier: Supplier;
+  updateUser: User;
+  updateUserPassword: User;
 };
 
 
@@ -130,12 +140,22 @@ export type MutationCreateSupplierArgs = {
 };
 
 
+export type MutationCreateUserArgs = {
+  createUserInput: CreateUserInput;
+};
+
+
 export type MutationDeleteCategoryArgs = {
   id: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteEmployeeSkillArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteUserPasswordArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -168,6 +188,18 @@ export type MutationUpdateSupplierArgs = {
   updateSupplierInput: UpdateSupplierInput;
 };
 
+
+export type MutationUpdateUserArgs = {
+  id: Scalars['String']['input'];
+  updateUserInput: UpdateUserInput;
+};
+
+
+export type MutationUpdateUserPasswordArgs = {
+  id: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+};
+
 export type Person = {
   __typename?: 'Person';
   address: Scalars['String']['output'];
@@ -189,10 +221,12 @@ export type Query = {
   getAllRole: Array<EmployeeRole>;
   getAllSkill: Array<EmployeeSkill>;
   getAllSuppliers: Array<Supplier>;
+  getAllUsers: Array<User>;
   getCategories: Array<CategoryData>;
   getEmployeeById: Employee;
   getHello: Scalars['String']['output'];
   getSupplierById: Supplier;
+  getUserById: User;
 };
 
 
@@ -202,6 +236,11 @@ export type QueryGetEmployeeByIdArgs = {
 
 
 export type QueryGetSupplierByIdArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGetUserByIdArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -237,4 +276,18 @@ export type UpdateSupplierInput = {
   name?: InputMaybe<Scalars['String']['input']>;
   phone_number?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateUserInput = {
+  password?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+  username?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type User = {
+  __typename?: 'User';
+  _id: Scalars['String']['output'];
+  employee: Employee;
+  status: Scalars['String']['output'];
+  username: Scalars['String']['output'];
 };
