@@ -11,6 +11,7 @@ import { useForm, Controller } from 'react-hook-form';
 import {
   useGetMerksQuery,
   useGetUnitMeasuresQuery,
+  useCreateMaterialMutation,
 } from '../../../graphql/Inventory.generated'; // Adjust the path to where your queries are defined
 import { modalStyle } from '../../../theme';
 
@@ -48,14 +49,33 @@ const MaterialModal: React.FC<MaterialModalProps> = ({ open, onClose }) => {
     error: unitMeasuresError,
   } = useGetUnitMeasuresQuery();
 
+  const [createMaterialMutation, { loading: createLoading }] =
+    useCreateMaterialMutation();
+
   const handleCloseModal = () => {
     reset(); // Reset form when modal closes
     onClose();
   };
 
-  const onSubmit = (data: any) => {
-    console.log(data);
-    handleCloseModal();
+  const onSubmit = async (data: any) => {
+    try {
+      await createMaterialMutation({
+        variables: {
+          data: {
+            name: data.name,
+            merk: data.merk,
+            description: data.deskripsi,
+            unit_measure: data.satuanUnit,
+            minimum_unit_measure: data.satuanMinimumUnit,
+            conversion: parseFloat(data.konversi),
+            item_category: data.kategori,
+          },
+        },
+      });
+      handleCloseModal();
+    } catch (error) {
+      console.error('Error creating material:', error);
+    }
   };
 
   return (
@@ -85,7 +105,7 @@ const MaterialModal: React.FC<MaterialModalProps> = ({ open, onClose }) => {
             )}
           />
 
-          {/* Merk Field (ComboBox) */}
+          {/* Merk Field */}
           <Controller
             name='merk'
             control={control}
@@ -155,7 +175,7 @@ const MaterialModal: React.FC<MaterialModalProps> = ({ open, onClose }) => {
             )}
           />
 
-          {/* Satuan Unit Field (ComboBox) */}
+          {/* Satuan Unit Field */}
           <Controller
             name='satuanUnit'
             control={control}
@@ -188,41 +208,56 @@ const MaterialModal: React.FC<MaterialModalProps> = ({ open, onClose }) => {
             )}
           />
 
-          {/* Satuan Minimum Unit and Konversi (Two fields side by side) */}
-          <div className='flex gap-4'>
-            <Controller
-              name='satuanMinimumUnit'
-              control={control}
-              rules={{ required: 'Satuan Minimum Unit harus diisi' }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label='Satuan Minimum Unit'
-                  variant='outlined'
-                  margin='normal'
-                  fullWidth
-                  error={!!errors.satuanMinimumUnit}
-                  helperText={errors.satuanMinimumUnit?.message}
-                />
-              )}
-            />
-            <Controller
-              name='konversi'
-              control={control}
-              rules={{ required: 'Konversi harus diisi' }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label='Konversi'
-                  variant='outlined'
-                  margin='normal'
-                  fullWidth
-                  error={!!errors.konversi}
-                  helperText={errors.konversi?.message}
-                />
-              )}
-            />
-          </div>
+          {/* Satuan Minimum Unit Field */}
+          <Controller
+            name='satuanMinimumUnit'
+            control={control}
+            rules={{ required: 'Satuan Minimum Unit harus diisi' }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                select
+                label='Satuan Minimum Unit'
+                variant='outlined'
+                margin='normal'
+                fullWidth
+                error={!!errors.satuanMinimumUnit}
+                helperText={errors.satuanMinimumUnit?.message}
+                disabled={unitMeasuresLoading || unitMeasuresError}>
+                {unitMeasuresLoading ? (
+                  <MenuItem disabled>
+                    <CircularProgress size={24} />
+                  </MenuItem>
+                ) : unitMeasuresError ? (
+                  <MenuItem disabled>Error loading options</MenuItem>
+                ) : (
+                  unitMeasuresData?.unitMeasures.map((option) => (
+                    <MenuItem key={option._id} value={option._id}>
+                      {option.name}
+                    </MenuItem>
+                  ))
+                )}
+              </TextField>
+            )}
+          />
+
+          {/* Konversi Field */}
+          <Controller
+            name='konversi'
+            control={control}
+            rules={{ required: 'Konversi harus diisi' }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label='Konversi'
+                variant='outlined'
+                margin='normal'
+                fullWidth
+                error={!!errors.konversi}
+                helperText={errors.konversi?.message}
+              />
+            )}
+          />
 
           {/* Buttons */}
           <div className='flex justify-between mt-4'>
@@ -237,8 +272,9 @@ const MaterialModal: React.FC<MaterialModalProps> = ({ open, onClose }) => {
               type='submit'
               variant='contained'
               color='success'
-              sx={{ width: '48%' }}>
-              Tambahkan
+              sx={{ width: '48%' }}
+              disabled={createLoading}>
+              {createLoading ? <CircularProgress size={24} /> : 'Tambahkan'}
             </Button>
           </div>
         </form>

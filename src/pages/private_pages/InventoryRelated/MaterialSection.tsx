@@ -65,9 +65,9 @@ const MaterialSection: React.FC = () => {
     data?.materials.map((material: any) => ({
       name: material.name,
       deskripsi: material.description,
-      merk: material.merk || '-',
-      satuan: material.unit_measure || '-',
-      satuan_minimum: material.minimum_unit_measure || '-',
+      merk: material.merk.name || '-',
+      satuan: material.unit_measure.name || '-',
+      satuan_minimum: material.minimum_unit_measure.name || '-',
       konversi: material.conversion || 0,
       kategori: material.item_category || '-',
     })) || [];
@@ -79,7 +79,7 @@ const MaterialSection: React.FC = () => {
         <Button
           variant='contained'
           color='primary'
-          onClick={() => console.log(data)}>
+          onClick={() => handleAddMaterial()}>
           Tambah Material
         </Button>
       </div>

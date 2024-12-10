@@ -16,7 +16,14 @@ export type GetUnitMeasuresQuery = { __typename?: 'Query', unitMeasures: Array<{
 export type GetMaterialsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetMaterialsQuery = { __typename?: 'Query', materials: Array<{ __typename?: 'Material', _id: string, name: string, merk: string, description: string, unit_measure: string, minimum_unit_measure: string, conversion: number, item_category: string }> };
+export type GetMaterialsQuery = { __typename?: 'Query', materials: Array<{ __typename?: 'Material', _id: string, name: string, description?: string | null, conversion: number, merk: { __typename?: 'Merk', _id: string, name: string }, unit_measure: { __typename?: 'UnitMeasure', _id: string, name: string }, minimum_unit_measure: { __typename?: 'UnitMeasure', _id: string, name: string } }> };
+
+export type CreateMaterialMutationVariables = Types.Exact<{
+  data: Types.CreateMaterialInput;
+}>;
+
+
+export type CreateMaterialMutation = { __typename?: 'Mutation', createMaterial: { __typename?: 'Material', _id: string, name: string, description?: string | null, conversion: number, merk: { __typename?: 'Merk', _id: string, name: string }, unit_measure: { __typename?: 'UnitMeasure', _id: string, name: string, description?: string | null }, minimum_unit_measure: { __typename?: 'UnitMeasure', _id: string, name: string, description?: string | null } } };
 
 
 export const GetMerksDocument = gql`
@@ -106,12 +113,20 @@ export const GetMaterialsDocument = gql`
   materials {
     _id
     name
-    merk
+    merk {
+      _id
+      name
+    }
     description
-    unit_measure
-    minimum_unit_measure
+    unit_measure {
+      _id
+      name
+    }
+    minimum_unit_measure {
+      _id
+      name
+    }
     conversion
-    item_category
   }
 }
     `;
@@ -147,3 +162,53 @@ export type GetMaterialsQueryHookResult = ReturnType<typeof useGetMaterialsQuery
 export type GetMaterialsLazyQueryHookResult = ReturnType<typeof useGetMaterialsLazyQuery>;
 export type GetMaterialsSuspenseQueryHookResult = ReturnType<typeof useGetMaterialsSuspenseQuery>;
 export type GetMaterialsQueryResult = Apollo.QueryResult<GetMaterialsQuery, GetMaterialsQueryVariables>;
+export const CreateMaterialDocument = gql`
+    mutation CreateMaterial($data: CreateMaterialInput!) {
+  createMaterial(data: $data) {
+    _id
+    name
+    merk {
+      _id
+      name
+    }
+    description
+    unit_measure {
+      _id
+      name
+      description
+    }
+    minimum_unit_measure {
+      _id
+      name
+      description
+    }
+    conversion
+  }
+}
+    `;
+export type CreateMaterialMutationFn = Apollo.MutationFunction<CreateMaterialMutation, CreateMaterialMutationVariables>;
+
+/**
+ * __useCreateMaterialMutation__
+ *
+ * To run a mutation, you first call `useCreateMaterialMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateMaterialMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createMaterialMutation, { data, loading, error }] = useCreateMaterialMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateMaterialMutation(baseOptions?: Apollo.MutationHookOptions<CreateMaterialMutation, CreateMaterialMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateMaterialMutation, CreateMaterialMutationVariables>(CreateMaterialDocument, options);
+      }
+export type CreateMaterialMutationHookResult = ReturnType<typeof useCreateMaterialMutation>;
+export type CreateMaterialMutationResult = Apollo.MutationResult<CreateMaterialMutation>;
+export type CreateMaterialMutationOptions = Apollo.BaseMutationOptions<CreateMaterialMutation, CreateMaterialMutationVariables>;

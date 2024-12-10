@@ -67,12 +67,12 @@ export type Material = {
   __typename?: 'Material';
   _id: Scalars['ID']['output'];
   conversion: Scalars['Float']['output'];
-  description: Scalars['String']['output'];
+  description?: Maybe<Scalars['String']['output']>;
   item_category: Scalars['String']['output'];
-  merk: Scalars['String']['output'];
-  minimum_unit_measure: Scalars['String']['output'];
+  merk: Merk;
+  minimum_unit_measure: UnitMeasure;
   name: Scalars['String']['output'];
-  unit_measure: Scalars['String']['output'];
+  unit_measure: UnitMeasure;
 };
 
 export type Merk = {

@@ -16,11 +16,41 @@ query GetMaterials {
   materials {
     _id
     name
-    merk
+    merk {
+      _id
+      name
+    }
     description
-    unit_measure
-    minimum_unit_measure
+    unit_measure {
+      _id
+      name
+    }
+    minimum_unit_measure {
+      _id
+      name
+    }
     conversion
-    item_category
+  }
+}
+mutation CreateMaterial($data: CreateMaterialInput!) {
+  createMaterial(data: $data) {
+    _id
+    name
+    merk {
+      _id
+      name
+    }
+    description
+    unit_measure {
+      _id
+      name
+      description
+    }
+    minimum_unit_measure {
+      _id
+      name
+      description
+    }
+    conversion
   }
 }
