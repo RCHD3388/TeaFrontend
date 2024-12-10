@@ -201,7 +201,7 @@ const EmployeeDetail: React.FC = () => {
         </Box>
 
         <Box sx={{ width: '100%' }}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider', position: "sticky", top: "0%", backgroundColor: "white" }}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider', top: "0%", backgroundColor: "white" }}>
             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" indicatorColor='secondary'>
               <Tab label="Informasi Personal" {...a11yProps(0)} sx={{
                 color: value === 0 ? 'secondary.main' : 'inherit',

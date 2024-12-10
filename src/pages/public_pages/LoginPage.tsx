@@ -1,11 +1,12 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { LoginDocument } from '../../graphql/user.generated';
-import { useMutation } from '@apollo/client';
+import { useApolloClient, useMutation } from '@apollo/client';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../app/store';
 import { setUser } from '../../app/reducers/userSlice';
 
 const LoginPage: React.FC = () => {
+  const client = useApolloClient();
   const usernameRef = useRef<HTMLInputElement | null>(null)
   const passwordRef = useRef<HTMLInputElement | null>(null)
   const dispatch = useDispatch<AppDispatch>();
@@ -32,6 +33,10 @@ const LoginPage: React.FC = () => {
       }
     })
   }
+
+  useEffect(() => {
+    client.clearStore()
+  }, [])
 
   return (
     <div className="h-screen flex flex-col md:flex-row">

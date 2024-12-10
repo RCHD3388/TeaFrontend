@@ -12,6 +12,8 @@ import ErrorPage from "../pages/ErrorPage";
 import SupplierPage from "../pages/private_pages/SupplierRelated/SupplierPage";
 import SupplierDetail from "../pages/private_pages/SupplierRelated/SupplierDetail";
 import UserPage from "../pages/private_pages/UserRelated/UserPage";
+import ProjectPage from "../pages/private_pages/ProjectRelated/ProjectPage";
+import DetailProject from "../pages/private_pages/ProjectRelated/DetailProject";
 
 const AppRoutes: React.FC = () => {
   const router = createBrowserRouter([
@@ -31,7 +33,10 @@ const AppRoutes: React.FC = () => {
       children: [
         { index: true, element: <Navigate to={"/appuser/dashboard"} /> },
         { path: "dashboard", element: <DashboardPage /> },
-        { path: "project", element: <DashboardPage /> },
+        { path: "project", children: [
+          { index: true, element: <ProjectPage/>},
+          { path: ":projectId", element: <DetailProject/>}
+        ] },
         { path: "inventory", element: <DashboardPage /> },
         { path: "purchasing", element: <DashboardPage /> },
         { path: "supplier", children: [

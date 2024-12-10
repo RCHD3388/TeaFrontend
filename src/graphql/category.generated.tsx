@@ -3,7 +3,9 @@ import * as Types from '../types/graphql_types';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type GetCategoriesQueryVariables = Types.Exact<{ [key: string]: never; }>;
+export type GetCategoriesQueryVariables = Types.Exact<{
+  categoryFilter?: Types.InputMaybe<Types.CategoryFilter>;
+}>;
 
 
 export type GetCategoriesQuery = { __typename?: 'Query', getCategories: Array<{ __typename?: 'CategoryData', _id: string, name: string, description: string, type: string }> };
@@ -32,8 +34,8 @@ export type DeleteCategoryMutation = { __typename?: 'Mutation', deleteCategory: 
 
 
 export const GetCategoriesDocument = gql`
-    query GetCategories {
-  getCategories {
+    query GetCategories($categoryFilter: CategoryFilter) {
+  getCategories(categoryFilter: $categoryFilter) {
     _id
     name
     description
@@ -54,6 +56,7 @@ export const GetCategoriesDocument = gql`
  * @example
  * const { data, loading, error } = useGetCategoriesQuery({
  *   variables: {
+ *      categoryFilter: // value for 'categoryFilter'
  *   },
  * });
  */

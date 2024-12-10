@@ -1,0 +1,90 @@
+query FindAllProjects {
+  findAllProjects {
+    _id
+    name
+    location
+    createdAt
+    status {
+      _id
+      name
+    }
+    priority {
+      _id
+      name
+    }
+    project_leader{
+      _id
+      person{
+        name
+      }  
+    }
+  }
+}
+
+query FindProjectById($id: String!){
+  findProjectById(id: $id) {
+    _id
+    name
+    location
+    description
+    target_date
+    status {
+      _id
+      name
+    }
+    priority {
+      _id
+      name
+    }
+    project_leader{
+      _id
+      person{
+        name
+      }  
+    }
+    createdAt
+    finished_at
+    project_closing{
+      closed_by{
+        person{
+            name
+        }
+      }
+    }
+  }
+}
+
+
+mutation CreateProject($createProjectInput: CreateProjectInput!){
+  createProject(createProjectInput: $createProjectInput) {
+    _id
+    name
+    location
+    project_leader {
+      _id
+      person {
+        name
+        address
+        email
+      }
+    }
+  }
+}
+
+mutation UpdateProject($id: String!, $updateProjectInput: UpdateProjectInput!) {
+  updateProject(id: $id, updateProjectInput: $updateProjectInput) {
+    _id
+    name
+    location
+    project_leader {
+      _id
+      person {
+        name
+        address
+        email
+      }
+    }
+  }
+}
+
+

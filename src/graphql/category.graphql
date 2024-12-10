@@ -1,5 +1,5 @@
-query GetCategories {
-  getCategories {
+query GetCategories($categoryFilter: CategoryFilter) {
+  getCategories(categoryFilter: $categoryFilter) {
     _id
     name
     description

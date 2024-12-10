@@ -1,5 +1,5 @@
-query GetAllEmployees {
-  getAllEmployees {
+query GetAllEmployees($employeeFilter: EmployeeFilter) {
+  getAllEmployees (employeeFilter: $employeeFilter){
     _id
     person {
       name

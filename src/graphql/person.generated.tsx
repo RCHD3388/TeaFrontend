@@ -3,7 +3,9 @@ import * as Types from '../types/graphql_types';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type GetAllEmployeesQueryVariables = Types.Exact<{ [key: string]: never; }>;
+export type GetAllEmployeesQueryVariables = Types.Exact<{
+  employeeFilter?: Types.InputMaybe<Types.EmployeeFilter>;
+}>;
 
 
 export type GetAllEmployeesQuery = { __typename?: 'Query', getAllEmployees: Array<{ __typename?: 'Employee', _id: string, hire_date: any, salary: number, status: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string }> }> };
@@ -64,8 +66,8 @@ export type DeleteEmployeeSkillMutation = { __typename?: 'Mutation', deleteEmplo
 
 
 export const GetAllEmployeesDocument = gql`
-    query GetAllEmployees {
-  getAllEmployees {
+    query GetAllEmployees($employeeFilter: EmployeeFilter) {
+  getAllEmployees(employeeFilter: $employeeFilter) {
     _id
     person {
       name
@@ -99,6 +101,7 @@ export const GetAllEmployeesDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllEmployeesQuery({
  *   variables: {
+ *      employeeFilter: // value for 'employeeFilter'
  *   },
  * });
  */

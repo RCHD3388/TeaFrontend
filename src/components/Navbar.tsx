@@ -26,7 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({sidebarID}) => {
 
   return (
     <>
-      <div className="navbar bg-light shadow-lg h-16" style={{zIndex: 1}}>
+      <div className="navbar bg-light shadow-lg h-16" style={{zIndex: 3}}>
         <div className="flex-1">
           <label htmlFor={sidebarID} className="btn btn-primary drawer-button lg:hidden">
             <svg
@@ -47,7 +47,7 @@ const Navbar: React.FC<NavbarProps> = ({sidebarID}) => {
             <p className="leading-none">Home</p>
           </div>
         </div>
-        <div className="flex-none gap-2">
+        <div className="flex gap-2" style={{zIndex: 3}}>
           <div className="dropdown dropdown-end">
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar placeholder">
               <div className="bg-secondary text-secondary-content w-12 rounded-full">

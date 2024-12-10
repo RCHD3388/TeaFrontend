@@ -15,12 +15,32 @@ export type Scalars = {
   DateTime: { input: any; output: any; }
 };
 
+export type Attendance = {
+  __typename?: 'Attendance';
+  attendance_detail: Array<AttendanceDetail>;
+  created_by: Employee;
+  date: Scalars['DateTime']['output'];
+  description: Scalars['String']['output'];
+};
+
+export type AttendanceDetail = {
+  __typename?: 'AttendanceDetail';
+  check_in: Scalars['Boolean']['output'];
+  check_out: Scalars['Boolean']['output'];
+  employee: Employee;
+  note: Scalars['String']['output'];
+};
+
 export type CategoryData = {
   __typename?: 'CategoryData';
   _id: Scalars['ID']['output'];
   description: Scalars['String']['output'];
   name: Scalars['String']['output'];
   type: Scalars['String']['output'];
+};
+
+export type CategoryFilter = {
+  filter?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type CreateCategoryInput = {
@@ -41,6 +61,16 @@ export type CreateEmployeeInput = {
 export type CreateEmployeeSkillInput = {
   description: Scalars['String']['input'];
   name: Scalars['String']['input'];
+};
+
+export type CreateProjectInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  location: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  priority: Scalars['String']['input'];
+  project_leader: Scalars['String']['input'];
+  status: Scalars['String']['input'];
+  target_date?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
 export type CreateSupplierInput = {
@@ -67,9 +97,15 @@ export type Employee = {
   status: Scalars['String']['output'];
 };
 
+export type EmployeeFilter = {
+  filter?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
 export type EmployeeProjectHistory = {
   __typename?: 'EmployeeProjectHistory';
+  description: Scalars['String']['output'];
   join_at: Scalars['DateTime']['output'];
+  left_at?: Maybe<Scalars['DateTime']['output']>;
   project: Scalars['String']['output'];
 };
 
@@ -104,9 +140,9 @@ export type Mutation = {
   createCategory: CategoryData;
   createEmployee: Employee;
   createEmployeeSkill: EmployeeSkill;
+  createProject: Project;
   createSupplier: Supplier;
   createUser: User;
-  create_project: Scalars['String']['output'];
   deleteCategory: CategoryData;
   deleteEmployeeSkill: EmployeeSkill;
   deleteUserPassword: User;
@@ -114,6 +150,7 @@ export type Mutation = {
   updateCategory: CategoryData;
   updateEmployee: Employee;
   updateEmployeeSkill: EmployeeSkill;
+  updateProject: Project;
   updateSupplier: Supplier;
   updateUser: User;
   updateUserPassword: User;
@@ -132,6 +169,11 @@ export type MutationCreateEmployeeArgs = {
 
 export type MutationCreateEmployeeSkillArgs = {
   createEmployeeSkillInput: CreateEmployeeSkillInput;
+};
+
+
+export type MutationCreateProjectArgs = {
+  createProjectInput: CreateProjectInput;
 };
 
 
@@ -183,6 +225,12 @@ export type MutationUpdateEmployeeSkillArgs = {
 };
 
 
+export type MutationUpdateProjectArgs = {
+  id: Scalars['String']['input'];
+  updateProjectInput: UpdateProjectInput;
+};
+
+
 export type MutationUpdateSupplierArgs = {
   id: Scalars['String']['input'];
   updateSupplierInput: UpdateSupplierInput;
@@ -215,8 +263,35 @@ export type PersonInput = {
   phone_number: Scalars['String']['input'];
 };
 
+export type Project = {
+  __typename?: 'Project';
+  _id: Scalars['String']['output'];
+  attendace: Array<Attendance>;
+  createdAt: Scalars['DateTime']['output'];
+  description: Scalars['String']['output'];
+  finished_at?: Maybe<Scalars['DateTime']['output']>;
+  location: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  priority: CategoryData;
+  project_closing?: Maybe<ProjectClosing>;
+  project_leader: Employee;
+  status: CategoryData;
+  target_date?: Maybe<Scalars['DateTime']['output']>;
+  worker: Array<Employee>;
+};
+
+export type ProjectClosing = {
+  __typename?: 'ProjectClosing';
+  closed_by: Employee;
+  document?: Maybe<Scalars['String']['output']>;
+  note?: Maybe<Scalars['String']['output']>;
+  status: CategoryData;
+};
+
 export type Query = {
   __typename?: 'Query';
+  findAllProjects: Array<Project>;
+  findProjectById: Project;
   getAllEmployees: Array<Employee>;
   getAllRole: Array<EmployeeRole>;
   getAllSkill: Array<EmployeeSkill>;
@@ -227,6 +302,21 @@ export type Query = {
   getHello: Scalars['String']['output'];
   getSupplierById: Supplier;
   getUserById: User;
+};
+
+
+export type QueryFindProjectByIdArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGetAllEmployeesArgs = {
+  employeeFilter?: InputMaybe<EmployeeFilter>;
+};
+
+
+export type QueryGetCategoriesArgs = {
+  categoryFilter?: InputMaybe<CategoryFilter>;
 };
 
 
@@ -269,6 +359,16 @@ export type UpdateEmployeeInput = {
   status?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UpdateProjectInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  location?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  priority?: InputMaybe<Scalars['String']['input']>;
+  project_leader?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+  target_date?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
 export type UpdateSupplierInput = {
   address?: InputMaybe<Scalars['String']['input']>;
   company_name?: InputMaybe<Scalars['String']['input']>;
@@ -279,7 +379,6 @@ export type UpdateSupplierInput = {
 };
 
 export type UpdateUserInput = {
-  password?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
 };
