@@ -3,6 +3,7 @@ mutation Login($data: LoginInput!) {
     username
     role
     access_token
+    name
   }
 }
 

@@ -5,7 +5,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { Box, Button, CircularProgress, MenuItem, Modal, TextField, Typography } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { modalStyle } from "../../theme";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -32,7 +32,7 @@ interface AddProjectProps {
 const AddProject: React.FC<AddProjectProps> = ({ refetchProject }) => {
   const { data: empData, loading: empLoading, error: empError, refetch: empRefetch } = useQuery(GetAllEmployeesDocument, {
     variables: {
-      employeeFilter: { filter: ["mandor"] },
+      employeeFilter: { filter: ["mandor"], status: true },
       requiresAuth: true
     }
   })
@@ -97,6 +97,9 @@ const AddProject: React.FC<AddProjectProps> = ({ refetchProject }) => {
       setIsSubmitting(false)
     }
   }
+
+  useEffect(() => { if (empData) empRefetch() }, [empData, empRefetch]); 
+  useEffect(() => { if (catData) catRefetch() }, [catData, catRefetch]); 
 
   return (<>
     <Button variant="contained" color='secondary' style={{ marginBottom: "1rem" }}

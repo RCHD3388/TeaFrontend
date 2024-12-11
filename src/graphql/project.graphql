@@ -40,6 +40,7 @@ query FindProjectById($id: String!){
       _id
       person{
         name
+        email
       }  
     }
     createdAt
@@ -53,7 +54,6 @@ query FindProjectById($id: String!){
     }
   }
 }
-
 
 mutation CreateProject($createProjectInput: CreateProjectInput!){
   createProject(createProjectInput: $createProjectInput) {
@@ -87,4 +87,83 @@ mutation UpdateProject($id: String!, $updateProjectInput: UpdateProjectInput!) {
   }
 }
 
+# PROJECT EMPLOYEE HANDLER
 
+query GetAllProjectEmployees ($id: String!){
+    getAllProjectEmployees(id: $id) {
+        registered {
+            _id
+            person {
+                name
+                email
+                phone_number
+                address
+            }
+            skill {
+                _id
+                name
+            }
+            role {
+                _id
+                name
+            }
+        }
+        unregistered {
+            _id
+            person {
+                name
+                email
+                phone_number
+                address
+            }
+            role {
+                _id
+                name
+            }
+            skill {
+                _id
+                name
+            }
+        }
+    }
+}
+
+mutation AddNewProjectEmployee ($id: String!, $employees: [String!]!){
+    addNewProjectEmployee(id: $id, employees: $employees) {
+        _id
+        person {
+            name
+            email
+            phone_number
+            address
+        }
+        role {
+            _id
+            name
+        }
+        skill {
+            _id
+            name
+        }
+    }
+}
+
+mutation RemoveProjectEmployee ($id: String!, $employee: String!, $description: String!){
+    removeProjectEmployee(id: $id, employee: $employee, description: $description) {
+        _id
+        person {
+            name
+            email
+            phone_number
+            address
+        }
+        role {
+            _id
+            name
+        }
+        skill {
+            _id
+            name
+        }
+    }
+}

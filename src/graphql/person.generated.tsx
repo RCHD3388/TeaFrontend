@@ -8,14 +8,14 @@ export type GetAllEmployeesQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetAllEmployeesQuery = { __typename?: 'Query', getAllEmployees: Array<{ __typename?: 'Employee', _id: string, hire_date: any, salary: number, status: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string }> }> };
+export type GetAllEmployeesQuery = { __typename?: 'Query', getAllEmployees: Array<{ __typename?: 'Employee', _id: string, hire_date: any, salary?: number | null, status: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string }> }> };
 
 export type CreateEmployeeMutationVariables = Types.Exact<{
   input: Types.CreateEmployeeInput;
 }>;
 
 
-export type CreateEmployeeMutation = { __typename?: 'Mutation', createEmployee: { __typename?: 'Employee', _id: string, hire_date: any, salary: number, status: string, person: { __typename?: 'Person', name: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string }> } };
+export type CreateEmployeeMutation = { __typename?: 'Mutation', createEmployee: { __typename?: 'Employee', _id: string, hire_date: any, salary?: number | null, status: string, person: { __typename?: 'Person', name: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string }> } };
 
 export type UpdateEmployeeMutationVariables = Types.Exact<{
   id: Types.Scalars['String']['input'];
@@ -23,14 +23,14 @@ export type UpdateEmployeeMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateEmployeeMutation = { __typename?: 'Mutation', updateEmployee: { __typename?: 'Employee', _id: string, hire_date: any, salary: number, status: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string, description: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string, description: string }> } };
+export type UpdateEmployeeMutation = { __typename?: 'Mutation', updateEmployee: { __typename?: 'Employee', _id: string, hire_date: any, salary?: number | null, status: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string, description: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string, description: string }> } };
 
 export type GetEmployeeByIdQueryVariables = Types.Exact<{
   id: Types.Scalars['String']['input'];
 }>;
 
 
-export type GetEmployeeByIdQuery = { __typename?: 'Query', getEmployeeById: { __typename?: 'Employee', _id: string, hire_date: any, salary: number, status: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string, description: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string, description: string }> } };
+export type GetEmployeeByIdQuery = { __typename?: 'Query', getEmployeeById: { __typename?: 'Employee', _id: string, hire_date: any, salary?: number | null, status: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string, description: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string, description: string }> } };
 
 export type GetAllSkillQueryVariables = Types.Exact<{ [key: string]: never; }>;
 

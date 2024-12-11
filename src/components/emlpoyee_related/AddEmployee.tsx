@@ -31,7 +31,7 @@ interface AddEmployeeProps {
 }
 
 const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
-  const { data: rolesData, loading: rolesLoading } = useQuery(GetAllRoleDocument, { variables: { requiresAuth: true } })
+  const { data: rolesData, loading: rolesLoading, refetch: rolesRefetch } = useQuery(GetAllRoleDocument, { variables: { requiresAuth: true } })
   const { data: skillsData, loading: skillsLoading, refetch } = useQuery(GetAllSkillDocument, { variables: { requiresAuth: true } })
   const [createEmployee] = useMutation(CreateEmployeeDocument);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -55,6 +55,9 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
       skill_id: ""
     },
   });
+
+  useEffect(() => { if (rolesData) rolesRefetch }, [rolesData, rolesRefetch])
+  useEffect(() => { if (skillsData) refetch }, [skillsData, refetch])
 
   const handleAddEmployee: SubmitHandler<CreateEmployeeValues> = async (data) => {
     setIsSubmitting(true)

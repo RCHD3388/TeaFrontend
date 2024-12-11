@@ -47,6 +47,8 @@ export default function UserPage() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
+  useEffect(() => {if(data) refetch()}, [data, refetch])
+
   const columns: StickyHeadTableColumn<RowData>[] = [
     { id: 'username', label: "Username", minWidth: 50, align: "center" },
     {

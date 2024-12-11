@@ -92,13 +92,14 @@ export type Employee = {
   person: Person;
   project_history: Array<EmployeeProjectHistory>;
   role: EmployeeRole;
-  salary: Scalars['Float']['output'];
+  salary?: Maybe<Scalars['Float']['output']>;
   skill: Array<EmployeeSkill>;
   status: Scalars['String']['output'];
 };
 
 export type EmployeeFilter = {
   filter?: InputMaybe<Array<Scalars['String']['input']>>;
+  status?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type EmployeeProjectHistory = {
@@ -123,6 +124,12 @@ export type EmployeeSkill = {
   name: Scalars['String']['output'];
 };
 
+export type GetAllProjectEmployeeDto = {
+  __typename?: 'GetAllProjectEmployeeDto';
+  registered: Array<Employee>;
+  unregistered?: Maybe<Array<Employee>>;
+};
+
 export type LoginInput = {
   password: Scalars['String']['input'];
   username: Scalars['String']['input'];
@@ -131,12 +138,14 @@ export type LoginInput = {
 export type LoginResponse = {
   __typename?: 'LoginResponse';
   access_token: Scalars['String']['output'];
+  name: Scalars['String']['output'];
   role: Scalars['String']['output'];
   username: Scalars['String']['output'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addNewProjectEmployee: Array<Employee>;
   createCategory: CategoryData;
   createEmployee: Employee;
   createEmployeeSkill: EmployeeSkill;
@@ -147,6 +156,7 @@ export type Mutation = {
   deleteEmployeeSkill: EmployeeSkill;
   deleteUserPassword: User;
   login: LoginResponse;
+  removeProjectEmployee: Employee;
   updateCategory: CategoryData;
   updateEmployee: Employee;
   updateEmployeeSkill: EmployeeSkill;
@@ -154,6 +164,12 @@ export type Mutation = {
   updateSupplier: Supplier;
   updateUser: User;
   updateUserPassword: User;
+};
+
+
+export type MutationAddNewProjectEmployeeArgs = {
+  employees: Array<Scalars['String']['input']>;
+  id: Scalars['String']['input'];
 };
 
 
@@ -204,6 +220,13 @@ export type MutationDeleteUserPasswordArgs = {
 
 export type MutationLoginArgs = {
   data: LoginInput;
+};
+
+
+export type MutationRemoveProjectEmployeeArgs = {
+  description: Scalars['String']['input'];
+  employee: Scalars['String']['input'];
+  id: Scalars['String']['input'];
 };
 
 
@@ -293,6 +316,7 @@ export type Query = {
   findAllProjects: Array<Project>;
   findProjectById: Project;
   getAllEmployees: Array<Employee>;
+  getAllProjectEmployees: GetAllProjectEmployeeDto;
   getAllRole: Array<EmployeeRole>;
   getAllSkill: Array<EmployeeSkill>;
   getAllSuppliers: Array<Supplier>;
@@ -312,6 +336,11 @@ export type QueryFindProjectByIdArgs = {
 
 export type QueryGetAllEmployeesArgs = {
   employeeFilter?: InputMaybe<EmployeeFilter>;
+};
+
+
+export type QueryGetAllProjectEmployeesArgs = {
+  id: Scalars['String']['input'];
 };
 
 

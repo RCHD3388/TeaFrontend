@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, CircularProgress, Container, MenuItem, TextField } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FindAllProjectsQuery, FindProjectByIdQueryVariables, UpdateProjectDocument } from "../../../../graphql/project.generated";
 import { CustomGraphQLError } from "../../../../types/apollo_client.types";
 import { openSnackbar } from "../../../../app/reducers/snackbarSlice";
@@ -14,6 +14,8 @@ import dayjs from 'dayjs';
 import { GetAllEmployeesDocument } from "../../../../graphql/person.generated";
 import { GetCategoriesDocument } from "../../../../graphql/category.generated";
 import { formatDateToLong } from "../../../../utils/service/FormatService";
+import { RootState } from "../../../../app/store";
+import { selectUser } from "../../../../app/reducers/userSlice";
 
 interface updateProjectValues {
   name: string;
@@ -33,11 +35,13 @@ interface MainDetailProjectProps {
 }
 
 const MainDetailProject: React.FC<MainDetailProjectProps> = ({ dataProject, loadingProject, errorProject, refetchDetailProject }) => {
+  const user = useSelector((state: RootState) => selectUser(state))
   const { data: empData, loading: empLoading, error: empError, refetch: empRefetch } = useQuery(GetAllEmployeesDocument, {
     variables: {
       employeeFilter: { filter: ["mandor"] },
       requiresAuth: true
-    }
+    },
+    skip: user.role == "mandor"
   })
   const { data: catData, loading: catLoading, error: catError, refetch: catRefetch } = useQuery(GetCategoriesDocument, {
     variables: {
@@ -238,14 +242,14 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({ dataProject, load
               name="project_leader" control={control} rules={{ required: 'Mandor is required' }}
               render={({ field }) => (
                 <>
-                  {!empLoading && !empError && (
+                  {user.role != "mandor" && !empLoading && !empError && (
                     <TextField
                       {...field} color="secondary"
                       select sx={{ width: "100%", mb: 4 }} label="Mandor" size="small" variant="outlined"
                       error={!!errors.status}
                       helperText={errors.status ? errors.status.message : ''}
                     >
-                      {empData.getAllEmployees.map((data: any, index: number) => {
+                      {empData?.getAllEmployees.map((data: any, index: number) => {
                         return <MenuItem key={index} value={data._id}><div className="badge p-3 gap-2">{data.person.name} ({data.person.email})</div></MenuItem>
                       })}
                     </TextField>

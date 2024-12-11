@@ -6,9 +6,11 @@ import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { modalStyle } from "../../theme";
 import { GetAllEmployeesDocument } from "../../graphql/person.generated";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { openSnackbar } from "../../app/reducers/snackbarSlice";
 import { generateRandomString } from "../../utils/service/GeneratorService";
+import { RootState } from "../../app/store";
+import { selectUser } from "../../app/reducers/userSlice";
 
 interface CreateUserValues {
   username: string
@@ -21,7 +23,11 @@ interface AddUserProps {
 }
 
 const AddUser: React.FC<AddUserProps> = ({ refetchUser }) => {
-  let { data, error, loading, refetch } = useQuery(GetAllEmployeesDocument, { variables: { requiresAuth: true } })
+  const user = useSelector((state: RootState) => selectUser(state))
+  let { data, error, loading, refetch } = useQuery(GetAllEmployeesDocument, { variables: { employeeFilter: {
+    filter: ["admin", "staff_pembelian", "mandor", "owner"],
+    status: true
+  }, requiresAuth: true } })
   const [createUser] = useMutation(CreateUserDocument);
   const [openModal, setOpenModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -65,6 +71,12 @@ const AddUser: React.FC<AddUserProps> = ({ refetchUser }) => {
       setIsSubmitting(false)
     }
   }
+
+  useEffect(() => {
+    if (data) {
+      refetch();  
+    }
+  }, [data, refetch]); 
 
   return (<>
     <Button variant="contained" color='secondary' style={{ marginBottom: "1rem" }}
@@ -122,7 +134,10 @@ const AddUser: React.FC<AddUserProps> = ({ refetchUser }) => {
               helperText={errors.employee ? errors.employee.message : ''}
             >
               {!loading && !error && data?.getAllEmployees?.map((value: any, index: number) => {
-                return <MenuItem key={index} value={value._id}>{value.person.name} ({value.person.email})</MenuItem>
+                // check kalau owner
+                if(!(user.role != "owner" && value.role.name == "owner") && !(user.role != "owner" && user.name == value.person.name)){
+                  return <MenuItem key={index} value={value._id}>{value.person.name} ({value.person.email})</MenuItem>
+                }
               })}
             </TextField>
           )}

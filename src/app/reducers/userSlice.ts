@@ -5,6 +5,7 @@ import { RootState } from '../store';
 interface UserState {
   username: string | null;
   role: string | null;
+  name: string | null;
   access_token: string | null;
   loggedIn: boolean;
 }
@@ -12,6 +13,7 @@ interface UserState {
 const initialState: UserState = {
   username: null,
   role: null,
+  name: null,
   access_token: null,
   loggedIn: false
 };
@@ -20,10 +22,11 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<{ username: string; role: string; access_token: string }>) => {
-      const { username, role, access_token } = action.payload;
+    setUser: (state, action: PayloadAction<{ username: string; role: string; access_token: string, name: string }>) => {
+      const { username, role, name, access_token } = action.payload;
       state.username = username;
       state.role = role;
+      state.name = name
       state.access_token = access_token;
       state.loggedIn = true
     },

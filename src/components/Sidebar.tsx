@@ -35,8 +35,6 @@ const Sidebar: React.FC<SidebarProps> = ({sidebarID}) => {
                 return (
                   <li key={index}><SidebarLink key={index} link_to={item.link_to} link_name={item.link_name} icon={item.icon}></SidebarLink></li>
                 )
-              }else{
-                return (<></>)
               }
             })}
           </ul>

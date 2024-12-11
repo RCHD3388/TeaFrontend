@@ -8,7 +8,7 @@ export type LoginMutationVariables = Types.Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginResponse', username: string, role: string, access_token: string } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'LoginResponse', username: string, role: string, access_token: string, name: string } };
 
 export type CreateUserMutationVariables = Types.Exact<{
   createUserInput: Types.CreateUserInput;
@@ -51,6 +51,7 @@ export const LoginDocument = gql`
     username
     role
     access_token
+    name
   }
 }
     `;
