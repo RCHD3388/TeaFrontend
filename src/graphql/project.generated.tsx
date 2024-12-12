@@ -35,7 +35,7 @@ export type GetAllProjectEmployeesQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetAllProjectEmployeesQuery = { __typename?: 'Query', getAllProjectEmployees: { __typename?: 'GetAllProjectEmployeeDto', registered: Array<{ __typename?: 'Employee', _id: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string }>, role: { __typename?: 'EmployeeRole', _id: string, name: string } }>, unregistered?: Array<{ __typename?: 'Employee', _id: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string }> }> | null } };
+export type GetAllProjectEmployeesQuery = { __typename?: 'Query', getAllProjectEmployees: { __typename?: 'GetAllProjectEmployeeDto', registered: Array<{ __typename?: 'Employee', _id: string, status: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string }>, role: { __typename?: 'EmployeeRole', _id: string, name: string } }>, unregistered?: Array<{ __typename?: 'Employee', _id: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string }> }> | null } };
 
 export type AddNewProjectEmployeeMutationVariables = Types.Exact<{
   id: Types.Scalars['String']['input'];
@@ -285,6 +285,7 @@ export const GetAllProjectEmployeesDocument = gql`
         _id
         name
       }
+      status
     }
     unregistered {
       _id

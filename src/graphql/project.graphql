@@ -107,6 +107,7 @@ query GetAllProjectEmployees ($id: String!){
                 _id
                 name
             }
+            status
         }
         unregistered {
             _id

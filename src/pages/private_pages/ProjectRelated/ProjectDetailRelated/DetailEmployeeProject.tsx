@@ -17,6 +17,7 @@ interface RowData {
     address: string,
     phone_number: string
   },
+  status: string,
   role: { _id: string, name: string },
   skill: [{ _id: string, name: string }]
 }
@@ -44,7 +45,6 @@ const DetailEmployeeProject: React.FC<DetailEmployeeProjectProps> = ({ dataProje
 
   const columns: StickyHeadTableColumn<RowData>[] = [
     { id: 'name', label: "Nama", align: "center", renderComponent: (row) => { return (<>{row.person.name}</>) } },
-    { id: 'email', label: "Email", align: "center", renderComponent: (row) => { return (<>{row.person.email}</>) } },
     { id: 'address', label: "Alamat", align: "center", renderComponent: (row) => { return (<>{row.person.address}</>) } },
     { id: 'phone_number', label: "Nomer Telepon", align: "center", renderComponent: (row) => { return (<>{row.person.phone_number}</>) } },
     {
@@ -60,6 +60,16 @@ const DetailEmployeeProject: React.FC<DetailEmployeeProjectProps> = ({ dataProje
           </Box>
         </div>)
       },
+    },
+    {
+      id: 'status', label: 'Status', minWidth: 50, align: "center",
+      renderComponent: (row) => {
+        return (<>
+          {row.status == "Active" ?
+            <div className="badge badge-success p-3 text-white gap-2">Active</div> :
+            <div className="badge badge-warning p-3 gap-2">Inactive</div>}
+        </>)
+      }
     },
     {
       id: 'detail_employee', label: 'Detail', actionLabel: 'Detail', align: "center",
@@ -92,7 +102,7 @@ const DetailEmployeeProject: React.FC<DetailEmployeeProjectProps> = ({ dataProje
           <div className="text-2xl font-bold mb-2">Detail Pegawai</div>
           {!empLoading && <div>
             {(user.role == "admin" || user.role == "owner") && <div className="flex justify-end">
-              <AddProjectEmployee dataEmployee={empData} loadingEmployee={empLoading} errorEmployee={empError} refetchEmployee={empRefetch}/>
+              <AddProjectEmployee dataEmployee={empData} loadingEmployee={empLoading} errorEmployee={empError} refetchEmployee={empRefetch} />
             </div>}
 
             <StickyHeadTable
