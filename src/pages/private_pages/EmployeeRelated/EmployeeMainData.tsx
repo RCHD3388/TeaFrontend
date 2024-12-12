@@ -1,14 +1,15 @@
-import { Box, Button } from "@mui/material";
-import React from "react";
+import { Autocomplete, Box, Button, TextField } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import AddEmployee from "../../../components/emlpoyee_related/AddEmployee";
 import StickyHeadTable, { StickyHeadTableColumn } from "../../../components/global_features/StickyHeadTable";
 import { useQuery } from "@apollo/client";
-import { GetAllEmployeesDocument } from "../../../graphql/person.generated";
+import { GetAllEmployeesDocument, GetAllSkillDocument } from "../../../graphql/person.generated";
 import { formatCurrency, formatDateToLong } from "../../../utils/service/FormatService";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import { selectUser } from "../../../app/reducers/userSlice";
 import { useNavigate } from "react-router-dom";
+import SearchIcon from '@mui/icons-material/Search';
 
 interface RowData {
   _id: string,
@@ -22,8 +23,14 @@ interface RowData {
 
 const EmployeeMainData: React.FC = () => {
   let { data, loading, refetch } = useQuery(GetAllEmployeesDocument, { variables: { requiresAuth: true } })
+  const { data: skillsData, loading: skillsLoading, refetch: refetchSkill } = useQuery(GetAllSkillDocument, { variables: { requiresAuth: true } })
   const user = useSelector((state: RootState) => selectUser(state))
   const navigate = useNavigate();
+
+  const [nameFilter, setNameFilter] = useState("")
+  const [roleFilter, setRoleFilter] = useState("")
+  const [skillFilter, setSkillFilter] = useState("")
+  const [statusFilter, setStatusFilter] = useState("")
 
   const columns: StickyHeadTableColumn<RowData>[] = [
     { id: 'person', label: "Nama", minWidth: 50, align: "center", format: (value) => String(value.name) },
@@ -57,7 +64,7 @@ const EmployeeMainData: React.FC = () => {
       id: 'action', label: 'Action', actionLabel: 'Detail', align: "center", buttonColor: (row) => 'secondary',
       buttonDisabled: (row) => {
         let rowRole = row.role.name
-        if(user.role == "admin" && (rowRole == "owner" || rowRole == "admin")) return true
+        if (user.role == "admin" && (rowRole == "owner" || rowRole == "admin")) return true
         return false
       }
     },
@@ -68,14 +75,64 @@ const EmployeeMainData: React.FC = () => {
     refetch()
   }
 
+  useEffect(() => {
+    if (skillsData) {
+      refetchSkill()
+    }
+  }, [skillsData, refetchSkill])
+
   return (
     <div className="flex flex-col">
       <div className="flex justify-end"><AddEmployee refetchEmployee={refetch} /></div>
 
+      <Box display={"flex"} flexWrap={"wrap"}>
+        <TextField
+          color="secondary" sx={{ mb: 1, mr: 1 }} label="Pencarian" size='small' variant="outlined"
+          onChange={(e) => { setNameFilter(e.target.value) }}
+          slotProps={{
+            input: {
+              startAdornment: <SearchIcon></SearchIcon>,
+            },
+          }}
+        />
+        <Autocomplete
+          disablePortal
+          options={["owner", "admin", "mandor", "staff_pembelian", "pegawai"]}
+          sx={{ width: 300, mb: 1, mr: 1 }}
+          onChange={(event: React.SyntheticEvent, newValue: string | null) => {
+            setRoleFilter(newValue || "")
+          }}
+          renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Role Pegawai" />}
+        />
+        <Autocomplete
+          disablePortal
+          options={skillsLoading ? [] : skillsData.getAllSkill.map((sk: any) => { return sk.name })}
+          sx={{ width: 300, mb: 1, mr: 1 }}
+          onChange={(event: React.SyntheticEvent, newValue: string | null) => {
+            setSkillFilter(newValue || "")
+          }}
+          renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Skill Pegawai" />}
+        />
+        <Autocomplete
+          disablePortal
+          options={["Active", "Inactive"]}
+          sx={{ width: 300 }}
+          onChange={(event: React.SyntheticEvent, newValue: string | null) => {
+            setStatusFilter(newValue || "")
+          }}
+          renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Status Pegawai" />}
+        />
+      </Box>
+
       {!loading && <div>
         <StickyHeadTable
           columns={columns}
-          rows={data?.getAllEmployees ?? []}
+          rows={data?.getAllEmployees.filter((emp: any) => {
+            let condition = emp.person.name.toLowerCase().includes(nameFilter.toLowerCase()) 
+                    && emp.role.name.includes(roleFilter) && emp.status.includes(statusFilter)
+                    && emp.skill.find((sk: any) => sk.name.includes(skillFilter))
+            return condition
+          }) ?? []}
           withIndex={true}
           onActionClick={handleActionTable}
         />

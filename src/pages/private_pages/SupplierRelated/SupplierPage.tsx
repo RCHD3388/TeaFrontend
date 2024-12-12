@@ -1,11 +1,12 @@
-import { Button } from "@mui/material";
+import { Autocomplete, Box, Button, TextField } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import AddSupplier from "../../../components/supplier_related/AddSupplier";
 import { GetAllSuppliersDocument } from "../../../graphql/supplier.generated";
 import { useQuery } from "@apollo/client";
 import StickyHeadTable, { StickyHeadTableColumn } from "../../../components/global_features/StickyHeadTable";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import SearchIcon from '@mui/icons-material/Search';
 
 interface RowData {
   _id: string,
@@ -48,6 +49,9 @@ export default function SupplierPage() {
   let { data, loading, refetch } = useQuery(GetAllSuppliersDocument, { variables: { requiresAuth: true } })
   const navigate = useNavigate()
 
+  const [nameFilter, setNameFilter] = useState("")
+  const [statusFilter, setStatusFilter] = useState("")
+
   const handleActionTable = (row: RowData, column: StickyHeadTableColumn<RowData>) => {
     navigate(`/appuser/supplier/${row._id}`)
     refetch()
@@ -60,10 +64,34 @@ export default function SupplierPage() {
         <div className="text-4xl font-bold mb-2">Supplier Perusahaan</div>
         <div className="flex justify-end"> <AddSupplier refetchSupplier={refetch} /> </div>
 
+        <Box display={"flex"} flexWrap={"wrap"}>
+          <TextField
+            color="secondary" sx={{ mb: 1, mr: 1 }} label="Pencarian" size='small' variant="outlined"
+            onChange={(e) => { setNameFilter(e.target.value) }}
+            slotProps={{
+              input: {
+                startAdornment: <SearchIcon></SearchIcon>,
+              },
+            }}
+          />
+          <Autocomplete
+            disablePortal
+            options={["Active", "Inactive"]}
+            sx={{ width: 300 }}
+            onChange={(event: React.SyntheticEvent, newValue: string | null) => {
+              setStatusFilter(newValue || "")
+            }}
+            renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Status Pegawai"/>}
+          />
+        </Box>
+
         {!loading && <div>
           <StickyHeadTable
             columns={columns}
-            rows={data?.getAllSuppliers ?? []}
+            rows={data?.getAllSuppliers.filter((sup: any) => {
+              console.log(sup.name)
+              return sup.name.toLowerCase().includes(nameFilter.toLowerCase()) && sup.status.includes(statusFilter)
+            }) ?? []}
             withIndex={true}
             onActionClick={handleActionTable}
           />

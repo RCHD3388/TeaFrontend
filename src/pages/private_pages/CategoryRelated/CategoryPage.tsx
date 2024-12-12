@@ -1,5 +1,5 @@
 import StickyHeadTable, { StickyHeadTableColumn } from '../../../components/global_features/StickyHeadTable';
-import { Alert, AlertColor, Box, Button, CircularProgress, MenuItem, Modal, Snackbar, Stack, TextField, Typography } from '@mui/material';
+import { Alert, AlertColor, Autocomplete, Box, Button, CircularProgress, MenuItem, Modal, Snackbar, Stack, TextField, Typography } from '@mui/material';
 import { useMutation, useQuery } from '@apollo/client';
 import { CreateCategoryDocument, DeleteCategoryDocument, GetCategoriesDocument, UpdateCategoryDocument } from '../../../graphql/category.generated';
 import React, { useEffect, useRef, useState } from 'react';
@@ -8,6 +8,7 @@ import { modalStyle } from '../../../theme';
 import { useDispatch } from 'react-redux';
 import { openSnackbar } from '../../../app/reducers/snackbarSlice';
 import AddIcon from '@mui/icons-material/Add';
+import SearchIcon from '@mui/icons-material/Search';
 
 interface CreateCategoryValues {
   name: string
@@ -25,7 +26,8 @@ interface RowData {
 const columns: StickyHeadTableColumn<RowData>[] = [
   { id: 'name', label: 'Nama', minWidth: 50, align: "center" },
   { id: 'description', label: 'Deskripsi', minWidth: 200, align: "center" },
-  { id: 'type', label: 'Type', minWidth: 50, align: "center", 
+  {
+    id: 'type', label: 'Type', minWidth: 50, align: "center",
     renderComponent: (row: any) => {
       return (<div className="badge badge-neutral p-3 gap-2">{row.type}</div>)
     }
@@ -39,7 +41,7 @@ const columns: StickyHeadTableColumn<RowData>[] = [
   },
 ];
 
-const typeDropdownValues: string[] = ["project_cost", "priority", "completion_status", "item", "attendance_status", "person_status"]
+const typeDropdownValues: string[] = ["project_cost", "priority", "completion_status", "item", "request_status"]
 
 export default function CategoryPage() {
   let { data, loading, refetch } = useQuery(GetCategoriesDocument, { variables: { requiresAuth: true } });
@@ -60,6 +62,9 @@ export default function CategoryPage() {
   const [descriptionErr, setDescriptionErr] = useState("")
   const [deleteErr, setDeleteErr] = useState("")
   const dispatch = useDispatch();
+
+  const [nameFilter, setNameFilter] = useState("")
+  const [typeFilter, setTypeFilter] = useState("")
 
   const { handleSubmit, control, formState: { errors }, reset } = useForm<CreateCategoryValues>({
     defaultValues: {
@@ -139,13 +144,37 @@ export default function CategoryPage() {
         <div className='flex justify-end'>
           <Button
             variant="contained" color='secondary' style={{ marginBottom: "1rem" }}
-            endIcon={<AddIcon/>}
+            endIcon={<AddIcon />}
             onClick={() => { handleOpenAddModal() }}
           >Tambah Kategori</Button>
         </div>
+        {/* search bar */}
+        <Box display={"flex"}>
+          <TextField
+            color="secondary" sx={{ mb: 1, mr: 1 }} label="Pencarian" size='small' variant="outlined"
+            onChange={(e) => { setNameFilter(e.target.value) }}
+            slotProps={{
+              input: {
+                startAdornment: <SearchIcon></SearchIcon>,
+              },
+            }}
+          />
+          <Autocomplete
+            disablePortal
+            options={["priority", "project_cost", "completion_status", "item", "request_status",]}
+            sx={{ width: 300 }}
+            onChange={(event: React.SyntheticEvent, newValue: string | null) => {
+              setTypeFilter(newValue || "")
+            }}
+            renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Tipe kategori"/>}
+          />
+        </Box>
         {!loading && <StickyHeadTable
           columns={columns}
-          rows={data?.getCategories ?? []}
+          rows={data?.getCategories.filter((cat: any) => {
+            let condition = cat.name.toLowerCase().includes(nameFilter.toLowerCase()) && cat.type.includes(typeFilter)
+            return condition
+          }) ?? []}
           withIndex={true}
           onActionClick={handleTableAction}
         />}

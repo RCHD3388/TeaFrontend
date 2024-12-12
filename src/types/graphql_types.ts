@@ -85,6 +85,14 @@ export type CreateUserInput = {
   username: Scalars['String']['input'];
 };
 
+export type CreateWarehouseInput = {
+  address: Scalars['String']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  project?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type Employee = {
   __typename?: 'Employee';
   _id: Scalars['String']['output'];
@@ -143,6 +151,11 @@ export type LoginResponse = {
   username: Scalars['String']['output'];
 };
 
+export type MaterialTransaction = {
+  __typename?: 'MaterialTransaction';
+  name: Scalars['String']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   addNewProjectEmployee: Array<Employee>;
@@ -152,6 +165,7 @@ export type Mutation = {
   createProject: Project;
   createSupplier: Supplier;
   createUser: User;
+  createWarehouse: Warehouse;
   deleteCategory: CategoryData;
   deleteEmployeeSkill: EmployeeSkill;
   deleteUserPassword: User;
@@ -164,6 +178,7 @@ export type Mutation = {
   updateSupplier: Supplier;
   updateUser: User;
   updateUserPassword: User;
+  updateWarehouse: Warehouse;
 };
 
 
@@ -200,6 +215,11 @@ export type MutationCreateSupplierArgs = {
 
 export type MutationCreateUserArgs = {
   createUserInput: CreateUserInput;
+};
+
+
+export type MutationCreateWarehouseArgs = {
+  createWarehouseInput: CreateWarehouseInput;
 };
 
 
@@ -271,6 +291,12 @@ export type MutationUpdateUserPasswordArgs = {
   password: Scalars['String']['input'];
 };
 
+
+export type MutationUpdateWarehouseArgs = {
+  id: Scalars['String']['input'];
+  updateWarehouseInput: UpdateWarehouseInput;
+};
+
 export type Person = {
   __typename?: 'Person';
   address: Scalars['String']['output'];
@@ -321,11 +347,13 @@ export type Query = {
   getAllSkill: Array<EmployeeSkill>;
   getAllSuppliers: Array<Supplier>;
   getAllUsers: Array<User>;
+  getAllWarehouses: Array<Warehouse>;
   getCategories: Array<CategoryData>;
   getEmployeeById: Employee;
   getHello: Scalars['String']['output'];
   getSupplierById: Supplier;
   getUserById: User;
+  getWarehouseById: Warehouse;
 };
 
 
@@ -363,12 +391,22 @@ export type QueryGetUserByIdArgs = {
   id: Scalars['String']['input'];
 };
 
+
+export type QueryGetWarehouseByIdArgs = {
+  id: Scalars['String']['input'];
+};
+
 export type Supplier = {
   __typename?: 'Supplier';
   _id: Scalars['String']['output'];
   name: Scalars['String']['output'];
   person: Person;
   status: Scalars['String']['output'];
+};
+
+export type ToolTransaction = {
+  __typename?: 'ToolTransaction';
+  name: Scalars['String']['output'];
 };
 
 export type UpdateCategoryInput = {
@@ -412,10 +450,30 @@ export type UpdateUserInput = {
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UpdateWarehouseInput = {
+  address?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type User = {
   __typename?: 'User';
   _id: Scalars['String']['output'];
   employee: Employee;
   status: Scalars['String']['output'];
   username: Scalars['String']['output'];
+};
+
+export type Warehouse = {
+  __typename?: 'Warehouse';
+  _id: Scalars['String']['output'];
+  address: Scalars['String']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  material_transaction: Array<MaterialTransaction>;
+  name: Scalars['String']['output'];
+  project?: Maybe<Project>;
+  status: Scalars['String']['output'];
+  tool_transaction: Array<ToolTransaction>;
+  type: Scalars['String']['output'];
 };

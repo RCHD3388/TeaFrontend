@@ -8,9 +8,10 @@ import { FindProjectByIdDocument } from "../../../graphql/project.generated";
 import ReplyAllIcon from '@mui/icons-material/ReplyAll';
 import { theme } from "../../../theme";
 import { a11yProps, CustomTabPanel } from "../../../components/CustomTabPanel";
-import React from "react";
+import React, { useEffect } from "react";
 import MainDetailProject from "./ProjectDetailRelated/MainDetailProject";
 import DetailEmployeeProject from "./ProjectDetailRelated/DetailEmployeeProject";
+import { CustomGraphQLError } from "../../../types/apollo_client.types";
 
 
 export default function DetailProject() {
@@ -24,6 +25,15 @@ export default function DetailProject() {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
+  useEffect(() => {
+    if (error) {
+      let graphqlErrorFetch = error?.graphQLErrors[0] as CustomGraphQLError || null;
+      if (graphqlErrorFetch?.original?.statusCode == "404") {
+        navigate("/appuser/notfound")
+      }
+    }
+  }, [error])
 
   return (
     <div className="p-5" style={{ height: "100%" }}>

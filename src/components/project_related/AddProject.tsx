@@ -99,7 +99,7 @@ const AddProject: React.FC<AddProjectProps> = ({ refetchProject }) => {
   }
 
   useEffect(() => { if (empData) empRefetch() }, [empData, empRefetch]); 
-  useEffect(() => { if (catData) catRefetch() }, [catData, catRefetch]); 
+  // useEffect(() => { if (catData) catRefetch() }, [catData, catRefetch]); 
 
   return (<>
     <Button variant="contained" color='secondary' style={{ marginBottom: "1rem" }}
@@ -195,8 +195,8 @@ const AddProject: React.FC<AddProjectProps> = ({ refetchProject }) => {
               <TextField
                 {...field} color="secondary"
                 select sx={{ width: "100%", ml: 0.5 }} label="Prioritas" size="small" variant="outlined"
-                error={!!errors.status}
-                helperText={errors.status ? errors.status.message : ''}
+                error={!!errors.priority}
+                helperText={errors.priority ? errors.priority.message : ''}
               >
                 {!catLoading && !catError && catData.getCategories.map((data: any, index: number) => {
                   if (data.type == "priority") return (

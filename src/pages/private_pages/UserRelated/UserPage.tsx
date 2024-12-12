@@ -7,11 +7,12 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import { selectUser } from "../../../app/reducers/userSlice";
-import { Box, Button, CircularProgress, MenuItem, Modal, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, CircularProgress, MenuItem, Modal, TextField, Typography } from "@mui/material";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { modalStyle } from "../../../theme";
 import { GetAllEmployeesDocument } from "../../../graphql/person.generated";
 import { openSnackbar } from "../../../app/reducers/snackbarSlice";
+import SearchIcon from '@mui/icons-material/Search';
 
 interface UpdateUserValues {
   username: string
@@ -46,6 +47,10 @@ export default function UserPage() {
   const [selectedRow, setSelectedRow] = useState<RowData>();
   const navigate = useNavigate()
   const dispatch = useDispatch()
+
+  const [nameFilter, setNameFilter] = useState("")
+  const [roleFilter, setRoleFilter] = useState("")
+  const [statusFilter, setStatusFilter] = useState("")
 
   useEffect(() => {if(data) refetch()}, [data, refetch])
 
@@ -135,10 +140,45 @@ export default function UserPage() {
         <div className="text-4xl font-bold mb-2">User Pegawai Perusahaan</div>
         <div className="flex justify-end"> <AddUser refetchUser={refetch} /> </div>
 
+        <Box display={"flex"} flexWrap={"wrap"}>
+          <TextField
+            color="secondary" sx={{ mb: 1, mr: 1 }} label="Pencarian" size='small' variant="outlined"
+            onChange={(e) => { setNameFilter(e.target.value) }}
+            slotProps={{
+              input: {
+                startAdornment: <SearchIcon></SearchIcon>,
+              },
+            }}
+          />
+          <Autocomplete
+            disablePortal
+            options={["owner", "admin", "mandor", "staff_pembelian"]}
+            sx={{ width: 300, mb: 1, mr: 1 }}
+            onChange={(event: React.SyntheticEvent, newValue: string | null) => {
+              setRoleFilter(newValue || "")
+            }}
+            renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Role Pegawai"/>}
+          />
+          <Autocomplete
+            disablePortal
+            options={["Active", "Inactive"]}
+            sx={{ width: 300, mb: 1, mr: 1 }}
+            onChange={(event: React.SyntheticEvent, newValue: string | null) => {
+              setStatusFilter(newValue || "")
+            }}
+            renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Status Pegawai"/>}
+          />
+        </Box>
+
         {!loading && <div>
           <StickyHeadTable
             columns={columns}
-            rows={data?.getAllUsers ?? []}
+            rows={data?.getAllUsers.filter((usr: any) => {
+              let condition = usr.username.toLowerCase().includes(nameFilter.toLowerCase()) 
+                && usr.employee.role.name.includes(roleFilter)
+                && usr.status.includes(statusFilter) 
+              return condition
+            }) ?? []}
             withIndex={true}
             onActionClick={handleActionTable}
           />

@@ -57,7 +57,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
   });
 
   useEffect(() => { if (rolesData) rolesRefetch }, [rolesData, rolesRefetch])
-  useEffect(() => { if (skillsData) refetch }, [skillsData, refetch])
+  // useEffect(() => { if (skillsData) refetch }, [skillsData, refetch])
 
   const handleAddEmployee: SubmitHandler<CreateEmployeeValues> = async (data) => {
     setIsSubmitting(true)

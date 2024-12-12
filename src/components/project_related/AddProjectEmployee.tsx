@@ -91,10 +91,9 @@ const AddProjectEmployee: React.FC<AddProjectEmployeeProps> = ({ projectId, data
     }
 
     setListTargetEmployee(tempTargetEmployeeId)
-    console.log(tempTargetEmployeeId)
   }
 
-  const handleAddProject = async () => {
+  const handleAddProjectEmployee = async () => {
     setIsDataEmpty(false)
     if (!isConfirmation) {
       if (listTargetEmployee.length == 0) {
@@ -104,7 +103,6 @@ const AddProjectEmployee: React.FC<AddProjectEmployeeProps> = ({ projectId, data
       }
     } else {
       // add to proyek
-      console.log(projectId)
       setIsSubmitting(true)
       try {
         await addNewEmployeeProject({
@@ -115,6 +113,7 @@ const AddProjectEmployee: React.FC<AddProjectEmployeeProps> = ({ projectId, data
           }
         })
         dispatch(openSnackbar({ severity: "success", message: "Berhasil tambah pegawai pada proyek " }))
+        setIsConfirmation(false)
         setListTargetEmployee([])
         refetchEmployee()
         handleCloseModal()
@@ -165,6 +164,10 @@ const AddProjectEmployee: React.FC<AddProjectEmployeeProps> = ({ projectId, data
           {isConfirmation ? <b>KONFIRMASI PENAMBAHAN PEGAWAI BARU</b> : <b>TAMBAH PEGAWAI BARU</b>}
         </Typography>
         <div>
+          {!isConfirmation && (<TextField
+            color="secondary" sx={{ width: "100%", mb: 1 }} label="Pencarian" size='small' variant="outlined"
+            onChange={(e) => {setNameFilter(e.target.value)}}
+          />)}
           {isDataEmpty && <p className="text-error font-bold">Pilih data pegawai terlebih dahulu untuk ditambahkan pada proyek</p>}
           {isConfirmation && <p>Lakukan konfirmasi, pasikan data pegawai yang ingin anda tambahkan pada proyek tersebut telah sesuai dengan keinginan anda</p>}
           <StickyHeadTable
@@ -189,7 +192,7 @@ const AddProjectEmployee: React.FC<AddProjectEmployeeProps> = ({ projectId, data
             {isConfirmation ? "Kembali" : "Batalkan"}
           </Button>
           <Button
-            onClick={() => { handleAddProject() }}
+            onClick={() => { handleAddProjectEmployee() }}
             variant="contained"
             color="primary"
             disabled={isSubmitting}

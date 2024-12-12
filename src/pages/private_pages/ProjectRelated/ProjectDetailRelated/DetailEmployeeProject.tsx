@@ -1,7 +1,7 @@
 import { ApolloError, ApolloQueryResult, useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useRef, useState } from "react";
 import { FindAllProjectsQuery, FindProjectByIdQueryVariables, GetAllProjectEmployeesDocument, RemoveProjectEmployeeDocument, UpdateProjectDocument } from "../../../../graphql/project.generated";
-import { Box, Button, CircularProgress, Container, Modal, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, CircularProgress, Container, Modal, TextField, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../app/store";
 import { selectUser } from "../../../../app/reducers/userSlice";
@@ -11,6 +11,7 @@ import AddProjectEmployee from "../../../../components/project_related/AddProjec
 import { modalStyle } from "../../../../theme";
 import { Controller } from "react-hook-form";
 import { openSnackbar } from "../../../../app/reducers/snackbarSlice";
+import SearchIcon from '@mui/icons-material/Search';
 
 interface RowData {
   _id: string,
@@ -53,6 +54,10 @@ const DetailEmployeeProject: React.FC<DetailEmployeeProjectProps> = ({ dataProje
       }
     }
   )
+
+  const [nameFilter, setNameFilter] = useState("")
+  const [skillFilter, setSkillFilter] = useState("")
+  const [statusFilter, setStatusFilter] = useState("")
 
   const columns: StickyHeadTableColumn<RowData>[] = [
     { id: 'name', label: "Nama", align: "center", renderComponent: (row) => { return (<>{row.person.name}</>) } },
@@ -113,7 +118,7 @@ const DetailEmployeeProject: React.FC<DetailEmployeeProjectProps> = ({ dataProje
     // check if selected row exist and project exist
     if (selectedRow && dataProject?.findProjectById._id) {
       // check description empty
-      if(description.trim() == ""){
+      if (description.trim() == "") {
         setDescErr("Desskripsi pengeluaran pegawai harus diisi")
         return;
       }
@@ -129,7 +134,7 @@ const DetailEmployeeProject: React.FC<DetailEmployeeProjectProps> = ({ dataProje
           }
         })
         dispatch(openSnackbar({ severity: "success", message: "Berhasil hapus pegawai pada proyek " }))
-        if(descriptionRef.current) descriptionRef.current.value = ""
+        if (descriptionRef.current) descriptionRef.current.value = ""
         setSelectedRow(null);
         empRefetch()
         setOpenDeleteModal(false)
@@ -160,9 +165,44 @@ const DetailEmployeeProject: React.FC<DetailEmployeeProjectProps> = ({ dataProje
               <AddProjectEmployee projectId={dataProject.findProjectById._id} dataEmployee={empData} loadingEmployee={empLoading} errorEmployee={empError} refetchEmployee={empRefetch} />
             </div>}
 
+            <Box display={"flex"} flexWrap={"wrap"}>
+              <TextField
+                color="secondary" sx={{ mb: 1, mr: 1 }} label="Pencarian Nama" size='small' variant="outlined"
+                onChange={(e) => { setNameFilter(e.target.value) }}
+                slotProps={{
+                  input: {
+                    startAdornment: <SearchIcon></SearchIcon>,
+                  },
+                }}
+              />
+              <TextField
+                color="secondary" sx={{ mb: 1, mr: 1 }} label="Pencarian Skill" size='small' variant="outlined"
+                onChange={(e) => { setSkillFilter(e.target.value) }}
+                slotProps={{
+                  input: {
+                    startAdornment: <SearchIcon></SearchIcon>,
+                  },
+                }}
+              />
+              <Autocomplete
+                disablePortal
+                options={["Active", "Inactive"]}
+                sx={{ width: 300 }}
+                onChange={(event: React.SyntheticEvent, newValue: string | null) => {
+                  setStatusFilter(newValue || "")
+                }}
+                renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Status Pegawai" />}
+              />
+            </Box>
+
             <StickyHeadTable
               columns={columns}
-              rows={empData?.getAllProjectEmployees.registered ?? []}
+              rows={empData?.getAllProjectEmployees.registered.filter((emp: any) => {
+                let condition = emp.person.name.toLowerCase().includes(nameFilter.toLowerCase()) 
+                    && emp.skill.find((sk: any) => sk.name.includes(skillFilter))
+                    && emp.status.includes(statusFilter)
+                return condition
+              }) ?? []}
               withIndex={true}
               onActionClick={handleActionTable}
             />
@@ -178,10 +218,10 @@ const DetailEmployeeProject: React.FC<DetailEmployeeProjectProps> = ({ dataProje
           <Box sx={modalStyle}>
             <Typography id="modal-modal-title" variant="h6" component="h2" mb={3}><b>Hapus pegawai</b></Typography>
             <Box padding={2}>
-            <p className="font-bold">Pegawai yang ingin dihapus</p>
-            <p><span className="font-bold">Nama :</span> {selectedRow?.person.name || ""}</p>
-            <p><span className="font-bold">Email :</span> {selectedRow?.person.email || ""}</p>
-            <p><span className="font-bold">Nomer Telepon :</span> {selectedRow?.person.phone_number || ""}</p>
+              <p className="font-bold">Pegawai yang ingin dihapus</p>
+              <p><span className="font-bold">Nama :</span> {selectedRow?.person.name || ""}</p>
+              <p><span className="font-bold">Email :</span> {selectedRow?.person.email || ""}</p>
+              <p><span className="font-bold">Nomer Telepon :</span> {selectedRow?.person.phone_number || ""}</p>
             </Box>
             {/* FIELD START */}
             <TextField
@@ -204,7 +244,7 @@ const DetailEmployeeProject: React.FC<DetailEmployeeProjectProps> = ({ dataProje
                 Kembali
               </Button>
               <Button
-                onClick={() => {handleDeleteEmployee()}}
+                onClick={() => { handleDeleteEmployee() }}
                 variant="contained"
                 color="primary"
                 disabled={isSubmitting}

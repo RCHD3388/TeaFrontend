@@ -1,0 +1,44 @@
+query GetAllWarehouses {
+    getAllWarehouses {
+        _id
+        name
+        description
+        type
+        address
+        status
+    }
+}
+
+query GetWarehouseById ($id: String!) {
+    getWarehouseById(id: $id) {
+        _id
+        name
+        description
+        type
+        address
+        status
+    }
+}
+
+mutation CreateWarehouse ($createWarehouseInput: CreateWarehouseInput!) {
+    createWarehouse(createWarehouseInput: $createWarehouseInput) {
+        _id
+        name
+        description
+        type
+        address
+        status
+    }
+}
+
+mutation UpdateWarehouse($id: String!, $updateWarehouseInput: UpdateWarehouseInput!) {
+    updateWarehouse(id: $id, updateWarehouseInput: $updateWarehouseInput) {
+        _id
+        name
+        description
+        type
+        address
+        status
+    }
+}
+
