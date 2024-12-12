@@ -7,9 +7,10 @@ import { Box, Button, CircularProgress, MenuItem, Modal, TextField, Typography }
 import AddIcon from '@mui/icons-material/Add';
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { GetAllProjectEmployeesQuery, GetAllProjectEmployeesQueryVariables } from "../../graphql/project.generated";
+import { AddNewProjectEmployeeDocument, GetAllProjectEmployeesQuery, GetAllProjectEmployeesQueryVariables } from "../../graphql/project.generated";
 import { modalStyle } from "../../theme";
 import StickyHeadTable, { StickyHeadTableColumn } from "../global_features/StickyHeadTable";
+import { openSnackbar } from "../../app/reducers/snackbarSlice";
 
 interface RowData {
   _id: string,
@@ -24,6 +25,7 @@ interface RowData {
 }
 
 interface AddProjectEmployeeProps {
+  projectId: string,
   dataEmployee: any,
   loadingEmployee: boolean,
   errorEmployee: ApolloError | undefined,
@@ -32,8 +34,8 @@ interface AddProjectEmployeeProps {
 
 
 
-const AddProjectEmployee: React.FC<AddProjectEmployeeProps> = ({ dataEmployee, loadingEmployee, errorEmployee, refetchEmployee }) => {
-
+const AddProjectEmployee: React.FC<AddProjectEmployeeProps> = ({ projectId, dataEmployee, loadingEmployee, errorEmployee, refetchEmployee }) => {
+  const [addNewEmployeeProject] = useMutation(AddNewProjectEmployeeDocument);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => { setOpenModal(true) }
@@ -41,8 +43,10 @@ const AddProjectEmployee: React.FC<AddProjectEmployeeProps> = ({ dataEmployee, l
   const dispatch = useDispatch();
 
   const [nameFilter, setNameFilter] = useState("")
-
+  const [isConfirmation, setIsConfirmation] = useState(false);
+  const [isDataEmpty, setIsDataEmpty] = useState(false)
   const [listTargetEmployee, setListTargetEmployee] = useState<string[]>([]);
+
 
   const columns: StickyHeadTableColumn<RowData>[] = [
     { id: 'person', label: "Pegawai", minWidth: 50, align: "center", format: (value) => String(value.name) },
@@ -62,12 +66,12 @@ const AddProjectEmployee: React.FC<AddProjectEmployeeProps> = ({ dataEmployee, l
     },
     {
       id: 'action', label: 'Action', actionLabel: 'Detail', align: "center",
-      buttonColor: (row) => { 
+      buttonColor: (row) => {
         if (listTargetEmployee.includes(row._id)) return "error"
         return "success"
       },
-      buttonLabel: (row) => { 
-        if (listTargetEmployee.includes(row._id)) return "Hapus"
+      buttonLabel: (row) => {
+        if (listTargetEmployee.includes(row._id)) return "Batal"
         return "Tambah"
       }
     },
@@ -75,17 +79,69 @@ const AddProjectEmployee: React.FC<AddProjectEmployeeProps> = ({ dataEmployee, l
 
   const handleActionTable = (row: RowData, column: StickyHeadTableColumn<RowData>) => {
     let tempTargetEmployeeId = listTargetEmployee;
-    if(listTargetEmployee.includes(row._id)){
-      tempTargetEmployeeId = tempTargetEmployeeId.filter((id) => {return id != row._id})
-    }else{
+    if (listTargetEmployee.includes(row._id)) {
+      // delete employee from list
+      tempTargetEmployeeId = tempTargetEmployeeId.filter((id) => { return id != row._id })
+      if (isConfirmation && tempTargetEmployeeId.length == 0) {
+        setIsConfirmation(false)
+      }
+    } else {
+      // add employee to list
       tempTargetEmployeeId = [...tempTargetEmployeeId, row._id]
     }
-    
+
     setListTargetEmployee(tempTargetEmployeeId)
     console.log(tempTargetEmployeeId)
   }
 
-  useEffect(() => {setListTargetEmployee([])}, [])
+  const handleAddProject = async () => {
+    setIsDataEmpty(false)
+    if (!isConfirmation) {
+      if (listTargetEmployee.length == 0) {
+        setIsDataEmpty(true)
+      } else {
+        setIsConfirmation(true)
+      }
+    } else {
+      // add to proyek
+      console.log(projectId)
+      setIsSubmitting(true)
+      try {
+        await addNewEmployeeProject({
+          variables: {
+            id: projectId,
+            employees: listTargetEmployee,
+            requiresAuth: true
+          }
+        })
+        dispatch(openSnackbar({ severity: "success", message: "Berhasil tambah pegawai pada proyek " }))
+        setListTargetEmployee([])
+        refetchEmployee()
+        handleCloseModal()
+      } catch (err: any) {
+        let error = err.graphQLErrors[0];
+        if (error.code == "BAD_REQUEST") {
+          let curError = error.original?.message || error.message;
+          let msg = ""
+          if (typeof curError == "string") msg = curError;
+          if (typeof curError == "object") msg = curError[0];
+          dispatch(openSnackbar({ severity: "error", message: msg }))
+        } else {
+          dispatch(openSnackbar({ severity: "error", message: "Gagal tambah pegawai proyek, silakan coba lagi nanti" }))
+        }
+      } finally {
+        setIsSubmitting(false)
+      }
+    }
+  }
+
+  const handleCancelProject = () => {
+    if (isConfirmation) {
+      setIsConfirmation(false)
+    } else {
+      handleCloseModal()
+    }
+  }
 
   return (<>
     <Button variant="contained" color='secondary' style={{ marginBottom: "1rem" }}
@@ -105,15 +161,42 @@ const AddProjectEmployee: React.FC<AddProjectEmployeeProps> = ({ dataEmployee, l
         modalStyle.width = 700;
         return modalStyle
       }}>
-        <Typography id="modal-modal-title" variant="h6" component="h2"><b>TAMBAH PEGAWAI BARU</b></Typography>
+        <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ mb: 3 }}>
+          {isConfirmation ? <b>KONFIRMASI PENAMBAHAN PEGAWAI BARU</b> : <b>TAMBAH PEGAWAI BARU</b>}
+        </Typography>
         <div>
+          {isDataEmpty && <p className="text-error font-bold">Pilih data pegawai terlebih dahulu untuk ditambahkan pada proyek</p>}
+          {isConfirmation && <p>Lakukan konfirmasi, pasikan data pegawai yang ingin anda tambahkan pada proyek tersebut telah sesuai dengan keinginan anda</p>}
           <StickyHeadTable
+            tableSx={{ maxHeight: 300 }}
             columns={columns}
-            rows={dataEmployee?.getAllProjectEmployees.unregistered.filter((emp: any) => emp.person.name.includes(nameFilter)) ?? []}
+            rows={dataEmployee?.getAllProjectEmployees.unregistered.filter((emp: any) => {
+              let customChecked = true;
+              if (isConfirmation) customChecked = listTargetEmployee.includes(emp._id)
+              return emp.person.name.includes(nameFilter) && customChecked
+            }) ?? []}
             withIndex={true}
             onActionClick={handleActionTable}
           />
         </div>
+        <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ mt: 2 }}>
+          <Button
+            onClick={handleCancelProject}
+            variant="contained"
+            color="error"
+            disabled={isSubmitting}
+          >
+            {isConfirmation ? "Kembali" : "Batalkan"}
+          </Button>
+          <Button
+            onClick={() => { handleAddProject() }}
+            variant="contained"
+            color="primary"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : isConfirmation ? "Tambahkan" : "Konfirmasi"}
+          </Button>
+        </Box>
       </Box>
     </Modal>
   </>)

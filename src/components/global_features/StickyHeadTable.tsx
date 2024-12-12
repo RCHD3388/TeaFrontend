@@ -28,6 +28,7 @@ interface TableProps<T> {
   columns: StickyHeadTableColumn<T>[];
   rows: T[];
   withIndex?: boolean;
+  tableSx?: object;
   onActionClick?: (row: T, column: StickyHeadTableColumn<T>) => void; // Handler untuk action
 }
 
@@ -35,6 +36,7 @@ export default function StickyHeadTable<T extends object>({
   columns,
   rows,
   withIndex = false,
+  tableSx = { maxHeight: 500 },
   onActionClick,
 }: TableProps<T>) {
   const [page, setPage] = React.useState(0);
@@ -52,7 +54,7 @@ export default function StickyHeadTable<T extends object>({
   return (
     <div>
       <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-        <TableContainer sx={{ maxHeight: 550 }}>
+        <TableContainer sx={tableSx}>
           <Table stickyHeader aria-label="flexible table">
             <TableHead>
               <TableRow>
