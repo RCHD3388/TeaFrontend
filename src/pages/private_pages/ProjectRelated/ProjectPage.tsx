@@ -14,6 +14,8 @@ import { RootState } from "../../../app/store";
 import { selectUser } from "../../../app/reducers/userSlice";
 import SearchIcon from '@mui/icons-material/Search';
 import { GetCategoriesDocument } from "../../../graphql/category.generated";
+import { Category } from "@mui/icons-material";
+import { CategoryType, EmployeeRoleType } from "../../../types/staticData.types";
 
 interface RowData {
   _id: string,
@@ -64,7 +66,7 @@ export default function ProjectPage() {
   const navigate = useNavigate()
   const { data: catData, loading: catLoading, error: catError, refetch: catRefetch } = useQuery(GetCategoriesDocument, {
     variables: {
-      categoryFilter: { filter: ["priority", "completion_status"] },
+      categoryFilter: { filter: [CategoryType.PRIORITY, CategoryType.COMPLETION_STATUS] },
       requiresAuth: true
     }
   })
@@ -91,7 +93,7 @@ export default function ProjectPage() {
       <div className="flex flex-col" style={{ maxHeight: "100%" }}>
         {/* page header title */}
         <div className="text-4xl font-bold mb-2">Proyek Anda</div>
-        {user && (user.role == "admin" || user.role == "owner") && <div className="flex justify-end"> <AddProject refetchProject={refetch} /> </div>}
+        {user && (user.role == EmployeeRoleType.ADMIN || user.role == EmployeeRoleType.OWNER) && <div className="flex justify-end"> <AddProject refetchProject={refetch} /> </div>}
 
         <Box display={"flex"} flexWrap={"wrap"}>
           <TextField
@@ -105,7 +107,7 @@ export default function ProjectPage() {
           />
           <Autocomplete
             disablePortal
-            options={catLoading ? [] : getFilterDataCustom("priority")}
+            options={catLoading ? [] : getFilterDataCustom(CategoryType.PRIORITY)}
             sx={{ width: 300, mb: 1, mr: 1 }}
             onChange={(event: React.SyntheticEvent, newValue: string | null) => {
               setPriorityFilter(newValue || "")
@@ -114,7 +116,7 @@ export default function ProjectPage() {
           />
           <Autocomplete
             disablePortal
-            options={catLoading ? [] : getFilterDataCustom("completion_status")}
+            options={catLoading ? [] : getFilterDataCustom(CategoryType.COMPLETION_STATUS)}
             sx={{ width: 300, mb: 1, mr: 1 }}
             onChange={(event: React.SyntheticEvent, newValue: string | null) => {
               setStatusFilter(newValue || "")

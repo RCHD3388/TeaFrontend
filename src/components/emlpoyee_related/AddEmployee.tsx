@@ -13,6 +13,7 @@ import { openSnackbar } from "../../app/reducers/snackbarSlice";
 import AddIcon from '@mui/icons-material/Add';
 import { RootState } from "../../app/store";
 import { selectUser } from "../../app/reducers/userSlice";
+import { EmployeeRoleType } from "../../types/staticData.types";
 
 interface CreateEmployeeValues {
   name: string
@@ -83,9 +84,17 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
       reset()
       refetchEmployee()
       handleCloseModal()
-    } catch (error: any) {
-      console.log(error.graphQLErrors[0]);
-      dispatch(openSnackbar({ severity: "error", message: "Gagal Tambah Pegawai, pastikan data telah valid" }))
+    } catch (err: any) {
+      let error = err.graphQLErrors[0];
+      if (error.code == "BAD_REQUEST") {
+        let curError = error.original?.message || error.message;
+        let msg = ""
+        if (typeof curError == "string") msg = curError;
+        if (typeof curError == "object") msg = curError[0];
+        dispatch(openSnackbar({ severity: "error", message: msg }))
+      } else {
+        dispatch(openSnackbar({ severity: "error", message: "Gagal Tambah Pegawai, silakan coba lagi" }))
+      }
     } finally {
       setIsSubmitting(false)
     }
@@ -112,7 +121,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
           <Typography id="modal-modal-title" variant="h6" component="h2"><b>TAMBAH PEGAWAI BARU</b></Typography>
           {/* FIELD START */}
           <Controller
-            name="name" control={control} rules={{ required: 'Name is required' }}
+            name="name" control={control} rules={{ required: 'Name tidak boleh kosong' }}
             render={({ field }) => (<TextField
               {...field} color="secondary"
               sx={{ width: "100%", mb: 1 }} label="Name" size='small' variant="outlined"
@@ -120,7 +129,13 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
             />)}
           />
           <Controller
-            name="email" control={control} rules={{ required: 'Email is required' }}
+            name="email" control={control} rules={{
+              required: 'Email tidak boleh kosong',
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: 'Email tidak valid'
+              }
+            }}
             render={({ field }) => (<TextField
               {...field} color="secondary"
               sx={{ width: "100%", mb: 1 }} label="Email" size='small' variant="outlined"
@@ -129,9 +144,9 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
           />
           <Controller
             name="phone_number" control={control} rules={{
-              required: 'Phone is required',
+              required: 'Nomer telepon tidak boleh kosong',
               validate: (value) =>
-                /^(\+62|62|0)[2-9]{1}[0-9]{7,12}$/.test(value) || 'Invalid phone number format',
+                /^(\+62|62|0)[2-9]{1}[0-9]{7,12}$/.test(value) || 'format nomer telepon salah',
             }}
             render={({ field }) => (<TextField
               {...field} color="secondary"
@@ -140,7 +155,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
             />)}
           />
           <Controller
-            name="address" control={control} rules={{ required: 'Address is required' }}
+            name="address" control={control} rules={{ required: 'Alamat tidak boleh kosong' }}
             render={({ field }) => (<TextField
               {...field} color="secondary"
               sx={{ width: "100%", mb: 1 }} label="Address" size='small' variant="outlined"
@@ -152,9 +167,9 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
               <Controller
                 name="hire_date" control={control}
                 rules={{
-                  required: 'Hire date is required',
+                  required: 'tanggal tidak boleh kosong',
                   validate: (value) => {
-                    if (value && dayjs(value).isAfter(dayjs())) { return 'Hire date cannot be in the future'; }
+                    if (value && dayjs(value).isAfter(dayjs())) { return 'tanggal tidak boleh di masa depan'; }
                     return true;
                   },
                 }}
@@ -180,7 +195,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
             </LocalizationProvider>
             <Controller
               name="salary" control={control} rules={{
-                required: 'Valid Gaji value is required',
+                required: 'Gaji tidak boleh kosong',
                 validate: (value) => value >= 50000 || 'Gaji harus minimal Rp. 50,000'
               }}
               render={({ field }) => (<TextField
@@ -194,7 +209,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
           </div>
           <div className="flex">
             <Controller
-              name="role_id" control={control} rules={{ required: 'Role is required' }}
+              name="role_id" control={control} rules={{ required: 'Role tidak boleh kosong' }}
               render={({ field }) => (
                 <TextField
                   {...field} color="secondary"
@@ -203,7 +218,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
                   helperText={errors.role_id ? errors.role_id.message : ''}
                 >
                   {!rolesLoading && rolesData.getAllRole.map((value: any, index: number) => {
-                    if (user.role == "admin" && (value.name == "admin" || value.name == "owner")) return <></>
+                    if (user.role == EmployeeRoleType.ADMIN && (value.name == EmployeeRoleType.ADMIN || value.name == EmployeeRoleType.OWNER)) return <></>
                     return <MenuItem key={index} value={value._id}>
                       <div className="badge badge-neutral p-3 gap-2">{value.name}</div>
                     </MenuItem>
@@ -212,7 +227,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
               )}
             />
             <Controller
-              name="skill_id" control={control} rules={{ required: 'Skill is required' }}
+              name="skill_id" control={control} rules={{ required: 'Skill tidak boleh kosong' }}
               render={({ field }) => (
                 <TextField
                   {...field} color="secondary"
@@ -230,7 +245,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
             />
           </div>
           <Controller
-            name="status" control={control} rules={{ required: 'Status is required' }}
+            name="status" control={control} rules={{ required: 'Status tidak boleh kosong' }}
             render={({ field }) => (
               <TextField
                 {...field} color="secondary"

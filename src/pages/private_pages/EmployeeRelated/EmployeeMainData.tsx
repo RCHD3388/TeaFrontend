@@ -10,6 +10,7 @@ import { RootState } from "../../../app/store";
 import { selectUser } from "../../../app/reducers/userSlice";
 import { useNavigate } from "react-router-dom";
 import SearchIcon from '@mui/icons-material/Search';
+import { EmployeeRoleType, EmployeeRoleTypeValues } from "../../../types/staticData.types";
 
 interface RowData {
   _id: string,
@@ -64,7 +65,7 @@ const EmployeeMainData: React.FC = () => {
       id: 'action', label: 'Action', actionLabel: 'Detail', align: "center", buttonColor: (row) => 'secondary',
       buttonDisabled: (row) => {
         let rowRole = row.role.name
-        if (user.role == "admin" && (rowRole == "owner" || rowRole == "admin")) return true
+        if (user.role == EmployeeRoleType.ADMIN && (rowRole == EmployeeRoleType.OWNER || rowRole == EmployeeRoleType.ADMIN)) return true
         return false
       }
     },
@@ -97,7 +98,7 @@ const EmployeeMainData: React.FC = () => {
         />
         <Autocomplete
           disablePortal
-          options={["owner", "admin", "mandor", "staff_pembelian", "pegawai"]}
+          options={EmployeeRoleTypeValues}
           sx={{ width: 300, mb: 1, mr: 1 }}
           onChange={(event: React.SyntheticEvent, newValue: string | null) => {
             setRoleFilter(newValue || "")

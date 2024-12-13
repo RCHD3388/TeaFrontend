@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { openSnackbar } from '../../../app/reducers/snackbarSlice';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
+import { CategoryTypeValues } from '../../../types/staticData.types';
 
 interface CreateCategoryValues {
   name: string
@@ -41,7 +42,7 @@ const columns: StickyHeadTableColumn<RowData>[] = [
   },
 ];
 
-const typeDropdownValues: string[] = ["project_cost", "priority", "completion_status", "item", "request_status"]
+const typeDropdownValues: string[] = CategoryTypeValues
 
 export default function CategoryPage() {
   let { data, loading, refetch } = useQuery(GetCategoriesDocument, { variables: { requiresAuth: true } });
@@ -161,7 +162,7 @@ export default function CategoryPage() {
           />
           <Autocomplete
             disablePortal
-            options={["priority", "project_cost", "completion_status", "item", "request_status",]}
+            options={CategoryTypeValues}
             sx={{ width: 300 }}
             onChange={(event: React.SyntheticEvent, newValue: string | null) => {
               setTypeFilter(newValue || "")
@@ -192,7 +193,7 @@ export default function CategoryPage() {
           </Typography>
           {/* FIELD START */}
           <Controller
-            name="name" control={control} rules={{ required: 'Name is required' }}
+            name="name" control={control} rules={{ required: 'Nama harus diisi' }}
             render={({ field }) => (
               <TextField
                 {...field} color="secondary"
@@ -203,7 +204,7 @@ export default function CategoryPage() {
             )}
           />
           <Controller
-            name="description" control={control} rules={{ required: 'Description is required' }}
+            name="description" control={control} rules={{ required: 'Deskripsi harus diisi' }}
             render={({ field }) => (
               <TextField
                 {...field} color="secondary"
@@ -214,7 +215,7 @@ export default function CategoryPage() {
             )}
           />
           <Controller
-            name="type" control={control} rules={{ required: 'Type is required' }}
+            name="type" control={control} rules={{ required: 'Tipe kategori harus diisi' }}
             render={({ field }) => (
               <TextField
                 {...field} color="secondary"

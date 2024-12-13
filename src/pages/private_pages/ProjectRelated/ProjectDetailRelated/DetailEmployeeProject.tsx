@@ -12,6 +12,7 @@ import { modalStyle } from "../../../../theme";
 import { Controller } from "react-hook-form";
 import { openSnackbar } from "../../../../app/reducers/snackbarSlice";
 import SearchIcon from '@mui/icons-material/Search';
+import { EmployeeRoleType } from "../../../../types/staticData.types";
 
 interface RowData {
   _id: string,
@@ -94,7 +95,7 @@ const DetailEmployeeProject: React.FC<DetailEmployeeProjectProps> = ({ dataProje
           <Button
             variant="contained" color={"secondary"}
             onClick={() => { navigate(`/appuser/employee/${row._id}`) }}
-            disabled={user.role === "mandor"}
+            disabled={user.role === EmployeeRoleType.MANDOR}
           >
             Detail
           </Button>
@@ -103,7 +104,7 @@ const DetailEmployeeProject: React.FC<DetailEmployeeProjectProps> = ({ dataProje
     },
     {
       id: 'action', label: 'Hapus', actionLabel: 'Hapus', align: "center", buttonColor: (row) => 'error',
-      buttonDisabled: (row) => user.role === "mandor"
+      buttonDisabled: (row) => user.role === EmployeeRoleType.MANDOR
     },
   ]
 
@@ -161,7 +162,7 @@ const DetailEmployeeProject: React.FC<DetailEmployeeProjectProps> = ({ dataProje
         <Container sx={{ paddingTop: 4 }}>
           <div className="text-2xl font-bold mb-2">Detail Pegawai</div>
           {!empLoading && !empError && <div>
-            {(user.role == "admin" || user.role == "owner") && <div className="flex justify-end">
+            {(user.role == EmployeeRoleType.ADMIN || user.role == EmployeeRoleType.OWNER) && <div className="flex justify-end">
               <AddProjectEmployee projectId={dataProject.findProjectById._id} dataEmployee={empData} loadingEmployee={empLoading} errorEmployee={empError} refetchEmployee={empRefetch} />
             </div>}
 

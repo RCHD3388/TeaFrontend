@@ -24,7 +24,7 @@ export default {
           "secondary": "#223634",
           "secondary-content": "#eaf0e4",
           // light yellow
-          "accent": "#e8d990",
+          "accent": "#F0E4AF",
           "accent-content": "#1e211b",
           // light gray
           "neutral": "#3c3d37",

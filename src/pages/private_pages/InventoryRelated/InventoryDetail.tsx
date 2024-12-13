@@ -1,63 +1,62 @@
 import { useMutation, useQuery } from "@apollo/client";
-import React, { SetStateAction, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { GetWarehouseByIdDocument, UpdateWarehouseDocument } from "../../../graphql/inventory.generated";
 import { useNavigate, useParams } from "react-router-dom";
+import { Box, Button, CircularProgress, Container, IconButton, MenuItem, TextField } from "@mui/material";
 import ReplyAllIcon from '@mui/icons-material/ReplyAll';
 import { theme } from "../../../theme";
-import { Box, Button, CircularProgress, Container, IconButton, MenuItem, TextField } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
-import { GetSupplierByIdDocument, UpdateSupplierDocument } from "../../../graphql/supplier.generated";
 import { CustomGraphQLError } from "../../../types/apollo_client.types";
+import { WarehouseType } from "../../../types/staticData.types";
 import { useDispatch } from "react-redux";
 import { openSnackbar } from "../../../app/reducers/snackbarSlice";
 
 interface updateSupplierValues {
-  company_name: string
   name: string
-  email: string
-  phone_number: string
+  description: string
   address: string
   status: string
 }
 
-const SupplierDetail: React.FC = () => {
-  const { supplierId } = useParams()
-  const [updateSupplier] = useMutation(UpdateSupplierDocument)
-  const { data: supplierData, loading, refetch, error: supplierDataError } = useQuery(GetSupplierByIdDocument, { variables: { id: supplierId, requiresAuth: true } })
+export default function InventoryDetail() {
+  const { warehouseId } = useParams();
   const navigate = useNavigate()
-  const dispatch = useDispatch()
-
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const dispatch = useDispatch()
+  const [updateWarehouse] = useMutation(UpdateWarehouseDocument)
+  const { data: dataInventory, loading: loadingInventory, error: errorInventory, refetch: refetchInventory } = useQuery(GetWarehouseByIdDocument, {
+    variables: {
+      id: warehouseId,
+      requiresAuth: true
+    }
+  })
 
   const { handleSubmit, control, formState: { errors }, reset } = useForm<updateSupplierValues>({
     defaultValues: {
-      company_name: '',
-      name: '',
-      email: '',
-      phone_number: '',
-      address: '',
-      status: '',
+      name: "",
+      description: "",
+      address: "",
+      status: "",
     }
   });
 
-  const handleEditSupplier = (data: updateSupplierValues) => {
-    if (supplierData?.getSupplierById) {
+  const handleEditInventory = (data: updateSupplierValues) => {
+    if (dataInventory?.getWarehouseById) {
       setIsSubmitting(true)
-      updateSupplier({
+      updateWarehouse({
         variables: {
-          id: supplierData.getSupplierById._id,
-          updateSupplierInput: {
-            company_name: data.company_name,
+          id: dataInventory.getWarehouseById._id,
+          updateWarehouseInput: {
             name: data.name,
-            email: data.email,
-            phone_number: data.phone_number,
+            description: data.description,
             address: data.address,
-            status: data.status,
+            status: data.status
           },
           requiresAuth: true
         }
       }).then((response) => {
-        dispatch(openSnackbar({ severity: "success", message: "Berhasil perbarui data supplier" }))
-        refetch()
+        dispatch(openSnackbar({ severity: "success", message: "Berhasil perbarui data warehouse" }))
+        refetchInventory()
         setIsSubmitting(false)
       }).catch((err) => {
         let error = err.graphQLErrors[0];
@@ -68,7 +67,7 @@ const SupplierDetail: React.FC = () => {
           if (typeof curError == "object") msg = curError[0];
           dispatch(openSnackbar({ severity: "error", message: msg }))
         } else {
-          dispatch(openSnackbar({ severity: "error", message: "Gagal perbarui data supplier, Silakan coba lagi nanti" }))
+          dispatch(openSnackbar({ severity: "error", message: "Gagal perbarui data warehouse, Silakan coba lagi nanti" }))
         }
         setIsSubmitting(false)
       })
@@ -76,28 +75,27 @@ const SupplierDetail: React.FC = () => {
   }
 
   useEffect(() => {
-    if (supplierDataError) {
-      let graphqlErrorFetch = supplierDataError?.graphQLErrors[0] as CustomGraphQLError || null;
+    if (errorInventory) {
+      let graphqlErrorFetch = errorInventory?.graphQLErrors[0] as CustomGraphQLError || null;
       if (graphqlErrorFetch?.original?.statusCode == "404") {
         navigate("/appuser/notfound")
       }
     } else {
-      if (!loading && supplierData) {
+      if (!loadingInventory && dataInventory) {
         reset({
-          company_name: supplierData.getSupplierById.name,
-          name: supplierData.getSupplierById.person.name,
-          email: supplierData.getSupplierById.person.email,
-          phone_number: supplierData.getSupplierById.person.phone_number,
-          address: supplierData.getSupplierById.person.address,
-          status: supplierData.getSupplierById.status,
+          name: dataInventory.getWarehouseById.name,
+          description: dataInventory.getWarehouseById.description,
+          address: dataInventory.getWarehouseById.address,
+          status: dataInventory.getWarehouseById.status,
         });
       }
     }
-  }, [loading, supplierData, supplierDataError])
+  }, [loadingInventory, dataInventory, errorInventory])
 
   return (
     <div className="p-5" style={{ height: "100%" }}>
       <div className="flex flex-col" style={{ maxHeight: "100%" }}>
+        {/* page header title */}
         <Box display={"flex"}>
           <IconButton
             style={{ backgroundColor: theme.palette.secondary.main, height: 40, width: 40, borderRadius: 8, color: 'white' }}
@@ -106,59 +104,38 @@ const SupplierDetail: React.FC = () => {
           >
             <ReplyAllIcon fontSize="medium"></ReplyAllIcon>
           </IconButton>
-          <div className="text-4xl font-bold mb-2">Detail Supplier</div>
+          <div className="mb-2 flex items-center">
+            <span className="text-4xl font-bold mr-2">Detail Warehouse</span>
+            {!loadingInventory && !errorInventory && <span className={`badge badge-lg ${dataInventory.getWarehouseById.type == WarehouseType.INVENTORY ? "badge-warning" : "badge-info text-white"}`}>
+              {dataInventory.getWarehouseById.type == WarehouseType.INVENTORY ? "Inventory Perusahaan" : "Inventory Proyek"}
+            </span>}
+          </div>
         </Box>
 
         <Container sx={{ paddingTop: 4 }}>
-          {!loading && <div>
+          {!loadingInventory && !errorInventory && <div>
             {/* FIELD START */}
             <Controller
-              name="company_name" control={control} rules={{ required: 'Nama perusahaan tidak boleh kosong' }}
+              name="name" control={control} rules={{ required: 'Nama tidak boleh kosong' }}
               render={({ field }) => (<TextField
                 {...field} color="secondary"
-                sx={{ width: "100%", mb: 3 }} label="Company Name" size='small' variant="outlined"
-                error={!!errors.company_name} helperText={errors.company_name ? errors.company_name.message : ''}
-              />)}
-            />
-            <Controller
-              name="name" control={control} rules={{ required: 'Name tidak boleh kosong' }}
-              render={({ field }) => (<TextField
-                {...field} color="secondary"
-                sx={{ width: "100%", mb: 3 }} label="Name" size='small' variant="outlined"
+                sx={{ width: "100%", mb: 1 }} label="Nama" size='small' variant="outlined"
                 error={!!errors.name} helperText={errors.name ? errors.name.message : ''}
               />)}
             />
             <Controller
-              name="email" control={control} rules={{
-                required: 'Email tidak boleh kosong',
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: 'Email tidak valid'
-                }
-              }}
+              name="description" control={control}
               render={({ field }) => (<TextField
                 {...field} color="secondary"
-                sx={{ width: "100%", mb: 3 }} label="Email" size='small' variant="outlined"
-                error={!!errors.email} helperText={errors.email ? errors.email.message : ''}
-              />)}
-            />
-            <Controller
-              name="phone_number" control={control} rules={{
-                required: 'Nomer telepon tidak boleh kosong',
-                validate: (value) =>
-                  /^(\+62|62|0)[2-9]{1}[0-9]{7,12}$/.test(value) || 'Format nomer telepon salah',
-              }}
-              render={({ field }) => (<TextField
-                {...field} color="secondary"
-                sx={{ width: "100%", mb: 3 }} label="Phone" size='small' variant="outlined"
-                error={!!errors.phone_number} helperText={errors.phone_number ? errors.phone_number.message : ''}
+                sx={{ width: "100%", mb: 1 }} label="Deskripsi" size='small' variant="outlined"
+                error={!!errors.description} helperText={errors.description ? errors.description.message : ''}
               />)}
             />
             <Controller
               name="address" control={control} rules={{ required: 'Alamat tidak boleh kosong' }}
               render={({ field }) => (<TextField
                 {...field} color="secondary"
-                sx={{ width: "100%", mb: 3 }} label="Address" size='small' variant="outlined"
+                sx={{ width: "100%", mb: 1 }} label="Alamat" size='small' variant="outlined"
                 error={!!errors.address} helperText={errors.address ? errors.address.message : ''}
               />)}
             />
@@ -166,8 +143,9 @@ const SupplierDetail: React.FC = () => {
               name="status" control={control} rules={{ required: 'Status tidak boleh kosong' }}
               render={({ field }) => (
                 <TextField
+                  disabled = {dataInventory.getWarehouseById.type == WarehouseType.PROJECT}
                   {...field} color="secondary"
-                  select sx={{ width: "100%", mb: 3 }} label="Status" size="small" variant="outlined"
+                  select sx={{ width: "100%", mb: 1 }} label="Status" size="small" variant="outlined"
                   error={!!errors.status}
                   helperText={errors.status ? errors.status.message : ''}
                 >
@@ -181,7 +159,7 @@ const SupplierDetail: React.FC = () => {
             {/* BUTTON SUBMIT */}
             <div className="flex justify-end">
               <Button
-                onClick={handleSubmit(handleEditSupplier)}
+                onClick={handleSubmit(handleEditInventory)}
                 variant="contained"
                 color="secondary"
                 disabled={isSubmitting}
@@ -192,8 +170,9 @@ const SupplierDetail: React.FC = () => {
             {/* BUTTON SUBMIT END */}
           </div>}
         </Container>
+        {warehouseId}
+
       </div>
     </div>
-  )
+  );
 }
-export default SupplierDetail;

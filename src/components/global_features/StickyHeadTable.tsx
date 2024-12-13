@@ -41,6 +41,7 @@ export default function StickyHeadTable<T extends object>({
 }: TableProps<T>) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const fontSize = 14;
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -82,7 +83,7 @@ export default function StickyHeadTable<T extends object>({
                 .map((row, rowIndex) => (
                   <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
                     {withIndex && (
-                      <TableCell key="no" align="left">
+                      <TableCell key="no" align="left" sx={{fontSize}}>
                         {(page * rowsPerPage) + rowIndex + 1}
                       </TableCell>
                     )}
@@ -98,8 +99,9 @@ export default function StickyHeadTable<T extends object>({
                           const buttonDisabled = column.buttonDisabled ? column.buttonDisabled(row) : false;
 
                           return (
-                            <TableCell key={column.id} align={column.align}>
+                            <TableCell key={column.id} align={column.align} sx={{fontSize}}>
                               <Button
+                                sx={{fontSize}}
                                 variant="contained"
                                 color={buttonColor}
                                 style={buttonStyle}
@@ -115,7 +117,7 @@ export default function StickyHeadTable<T extends object>({
                         // Cek jika kolom memiliki renderComponent
                         if (column.renderComponent) {
                           return (
-                            <TableCell key={String(column.id)} align={column.align}>
+                            <TableCell key={String(column.id)} align={column.align} sx={{fontSize}}>
                               {column.renderComponent(row)} {/* Render komponen kustom */}
                             </TableCell>
                           );
@@ -123,7 +125,7 @@ export default function StickyHeadTable<T extends object>({
 
                         const value = row[column.id as keyof T];
                         return (
-                          <TableCell key={String(column.id)} align={column.align}>
+                          <TableCell key={String(column.id)} align={column.align} sx={{fontSize}}>
                             {column.format && value !== undefined
                               ? column.format(value)
                               : value !== undefined

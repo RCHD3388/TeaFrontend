@@ -16,6 +16,7 @@ import StickyHeadTable, { StickyHeadTableColumn } from "../../../components/glob
 import { openSnackbar } from "../../../app/reducers/snackbarSlice";
 import { CustomGraphQLError } from "../../../types/apollo_client.types";
 import { a11yProps, CustomTabPanel } from "../../../components/CustomTabPanel";
+import { EmployeeRoleType } from "../../../types/staticData.types";
 
 interface RowData {
   _id: string,
@@ -218,7 +219,7 @@ const EmployeeDetail: React.FC = () => {
               {!loading && <div>
                 {/* FIELD START */}
                 <Controller
-                  name="name" control={control} rules={{ required: 'Name is required' }}
+                  name="name" control={control} rules={{ required: 'Name tidak boleh kosong' }}
                   render={({ field }) => (<TextField
                     {...field} color="secondary"
                     sx={{ width: "100%", mb: 2 }} label="Name" size='small' variant="outlined"
@@ -226,7 +227,13 @@ const EmployeeDetail: React.FC = () => {
                   />)}
                 />
                 <Controller
-                  name="email" control={control} rules={{ required: 'Email is required' }}
+                  name="email" control={control} rules={{
+                    required: 'Email tidak boleh kosong',
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: 'Email tidak valid'
+                    }
+                  }}
                   render={({ field }) => (<TextField
                     {...field} color="secondary"
                     sx={{ width: "100%", mb: 2 }} label="Email" size='small' variant="outlined"
@@ -235,9 +242,9 @@ const EmployeeDetail: React.FC = () => {
                 />
                 <Controller
                   name="phone_number" control={control} rules={{
-                    required: 'Phone is required',
+                    required: 'Nomer telepon tidak boleh kosong',
                     validate: (value) =>
-                      /^(\+62|62|0)[2-9]{1}[0-9]{7,12}$/.test(value) || 'Invalid phone number format',
+                      /^(\+62|62|0)[2-9]{1}[0-9]{7,12}$/.test(value) || 'Format nomor telepon tidak valid',
                   }}
                   render={({ field }) => (<TextField
                     {...field} color="secondary"
@@ -246,7 +253,7 @@ const EmployeeDetail: React.FC = () => {
                   />)}
                 />
                 <Controller
-                  name="address" control={control} rules={{ required: 'Address is required' }}
+                  name="address" control={control} rules={{ required: 'Alamat tidak boleh kosong' }}
                   render={({ field }) => (<TextField
                     {...field} color="secondary"
                     sx={{ width: "100%", mb: 2 }} label="Address" size='small' variant="outlined"
@@ -258,9 +265,9 @@ const EmployeeDetail: React.FC = () => {
                     <Controller
                       name="hire_date" control={control}
                       rules={{
-                        required: 'Hire date is required',
+                        required: 'Tanggal tidak boleh kosong',
                         validate: (value) => {
-                          if (value && dayjs(value).isAfter(dayjs())) { return 'Hire date cannot be in the future'; }
+                          if (value && dayjs(value).isAfter(dayjs())) { return 'Tanggal tidak boleh di masa depan'; }
                           return true;
                         },
                       }}
@@ -286,7 +293,7 @@ const EmployeeDetail: React.FC = () => {
                   </LocalizationProvider>
                   <Controller
                     name="salary" control={control} rules={{
-                      required: 'Valid Gaji value is required',
+                      required: 'Gaji tidak boleh kosong',
                       validate: (value) => value >= 50000 || 'Gaji harus minimal Rp. 50,000'
                     }}
                     render={({ field }) => (<TextField
@@ -300,10 +307,10 @@ const EmployeeDetail: React.FC = () => {
                 </div>
                 <div className="flex">
                   <Controller
-                    name="status" control={control} rules={{ required: 'Status is required' }}
+                    name="status" control={control} rules={{ required: 'Status tidak boleh kosong' }}
                     render={({ field }) => (
                       <TextField
-                        {...field}  color="secondary" 
+                        {...field} color="secondary"
                         select sx={{ width: "100%", mb: 2, mr: 1 }} label="Status" size="small" variant="outlined"
                         error={!!errors.status}
                         helperText={errors.status ? errors.status.message : ''}
@@ -314,16 +321,16 @@ const EmployeeDetail: React.FC = () => {
                     )}
                   />
                   <Controller
-                    name="role_id" control={control} rules={{ required: 'Role is required' }}
+                    name="role_id" control={control} rules={{ required: 'Role tidak boleh kosong' }}
                     render={({ field }) => (
                       <TextField
-                        {...field}  color="secondary" 
+                        {...field} color="secondary"
                         select sx={{ width: "100%", mb: 2, ml: 1 }} label="Role" size="small" variant="outlined"
                         error={!!errors.role_id}
                         helperText={errors.role_id ? errors.role_id.message : ''}
                       >
                         {!rolesLoading && rolesData.getAllRole.map((value: any, index: number) => {
-                          if (user.role == "admin" && (value.name == "admin" || value.name == "owner")) return <></>
+                          if (user.role == EmployeeRoleType.ADMIN && (value.name == EmployeeRoleType.ADMIN || value.name == EmployeeRoleType.OWNER)) return <></>
                           return <MenuItem key={index} value={value._id}><div className="badge badge-neutral p-3 gap-2">{value.name}</div></MenuItem>
                         })}
                       </TextField>

@@ -11,6 +11,7 @@ import { openSnackbar } from "../../app/reducers/snackbarSlice";
 import { generateRandomString } from "../../utils/service/GeneratorService";
 import { RootState } from "../../app/store";
 import { selectUser } from "../../app/reducers/userSlice";
+import { EmployeeRoleType } from "../../types/staticData.types";
 
 interface CreateUserValues {
   username: string
@@ -24,10 +25,19 @@ interface AddUserProps {
 
 const AddUser: React.FC<AddUserProps> = ({ refetchUser }) => {
   const user = useSelector((state: RootState) => selectUser(state))
-  let { data, error, loading, refetch } = useQuery(GetAllEmployeesDocument, { variables: { employeeFilter: {
-    filter: ["admin", "staff_pembelian", "mandor", "owner"],
-    status: true
-  }, requiresAuth: true } })
+  let { data, error, loading, refetch } = useQuery(GetAllEmployeesDocument, {
+    variables: {
+      employeeFilter: {
+        filter: [
+          EmployeeRoleType.ADMIN, 
+          EmployeeRoleType.STAFF_PEMBELIAN, 
+          EmployeeRoleType.MANDOR, 
+          EmployeeRoleType.OWNER
+        ],
+        status: true
+      }, requiresAuth: true
+    }
+  })
   const [createUser] = useMutation(CreateUserDocument);
   const [openModal, setOpenModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -74,9 +84,9 @@ const AddUser: React.FC<AddUserProps> = ({ refetchUser }) => {
 
   useEffect(() => {
     if (data) {
-      refetch();  
+      refetch();
     }
-  }, [data, refetch]); 
+  }, [data, refetch]);
 
   return (<>
     <Button variant="contained" color='secondary' style={{ marginBottom: "1rem" }}
@@ -96,7 +106,7 @@ const AddUser: React.FC<AddUserProps> = ({ refetchUser }) => {
         <Typography id="modal-modal-title" variant="h6" component="h2"><b>TAMBAH USER BARU</b></Typography>
         {/* FIELD START */}
         <Controller
-          name="username" control={control} rules={{ required: 'Username is required' }}
+          name="username" control={control} rules={{ required: 'Username tidak boleh kosong' }}
           render={({ field }) => (<TextField
             {...field} color="secondary"
             sx={{ width: "100%", mb: 1 }} label="Username" size='small' variant="outlined"
@@ -105,8 +115,8 @@ const AddUser: React.FC<AddUserProps> = ({ refetchUser }) => {
         />
         <Controller
           name="password" control={control} rules={{
-            required: 'Password is required',
-            minLength: { value: 8, message: 'Password must be at least 8 characters long' }
+            required: 'Password tidak boleh kosong',
+            minLength: { value: 8, message: 'Password harus minimal 8 karakter' }
           }}
           render={({ field }) => (<div className="flex">
             <TextField
@@ -125,7 +135,7 @@ const AddUser: React.FC<AddUserProps> = ({ refetchUser }) => {
         />
 
         <Controller
-          name="employee" control={control} rules={{ required: 'Pegawai is required' }}
+          name="employee" control={control} rules={{ required: 'Pegawai tidak boleh kosong' }}
           render={({ field }) => (
             <TextField
               {...field} color="secondary"
@@ -135,7 +145,8 @@ const AddUser: React.FC<AddUserProps> = ({ refetchUser }) => {
             >
               {!loading && !error && data?.getAllEmployees?.map((value: any, index: number) => {
                 // check kalau owner
-                if(!(user.role != "owner" && value.role.name == "owner") && !(user.role != "owner" && user.name == value.person.name)){
+                if (!(user.role != EmployeeRoleType.OWNER && value.role.name == EmployeeRoleType.OWNER)
+                  && !(user.role != EmployeeRoleType.OWNER && user.name == value.person.name)) {
                   return <MenuItem key={index} value={value._id}>{value.person.name} ({value.person.email})</MenuItem>
                 }
               })}

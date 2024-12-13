@@ -13,6 +13,7 @@ import { modalStyle } from "../../../theme";
 import { GetAllEmployeesDocument } from "../../../graphql/person.generated";
 import { openSnackbar } from "../../../app/reducers/snackbarSlice";
 import SearchIcon from '@mui/icons-material/Search';
+import { EmployeeRoleTypeValues } from "../../../types/staticData.types";
 
 interface UpdateUserValues {
   username: string
@@ -152,7 +153,7 @@ export default function UserPage() {
           />
           <Autocomplete
             disablePortal
-            options={["owner", "admin", "mandor", "staff_pembelian"]}
+            options={EmployeeRoleTypeValues}
             sx={{ width: 300, mb: 1, mr: 1 }}
             onChange={(event: React.SyntheticEvent, newValue: string | null) => {
               setRoleFilter(newValue || "")
@@ -194,7 +195,7 @@ export default function UserPage() {
             <Typography id="modal-modal-title" variant="h6" component="h2" sx={{mb: 2}}><b>DETAIL USER</b></Typography>
             {/* FIELD START */}
             <Controller
-              name="username" control={control} rules={{ required: 'Username is required' }}
+              name="username" control={control} rules={{ required: 'Username tidak boleh kosong' }}
               render={({ field }) => (<TextField
                 {...field} color="secondary"
                 sx={{ width: "100%", mb: 2 }} label="Username" size='small' variant="outlined"
@@ -202,7 +203,7 @@ export default function UserPage() {
               />)}
             />
             <Controller
-              name="status" control={control} rules={{ required: 'Status is required' }}
+              name="status" control={control} rules={{ required: 'Status tidak boleh kosong' }}
               render={({ field }) => (
                 <TextField
                   {...field} color="secondary"

@@ -16,6 +16,7 @@ import { GetCategoriesDocument } from "../../../../graphql/category.generated";
 import { formatDateToLong } from "../../../../utils/service/FormatService";
 import { RootState } from "../../../../app/store";
 import { selectUser } from "../../../../app/reducers/userSlice";
+import { CategoryType, EmployeeRoleType } from "../../../../types/staticData.types";
 
 interface updateProjectValues {
   name: string;
@@ -38,14 +39,14 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({ dataProject, load
   const user = useSelector((state: RootState) => selectUser(state))
   const { data: empData, loading: empLoading, error: empError, refetch: empRefetch } = useQuery(GetAllEmployeesDocument, {
     variables: {
-      employeeFilter: { filter: ["mandor"] },
+      employeeFilter: { filter: [EmployeeRoleType.MANDOR] },
       requiresAuth: true
     },
-    skip: user.role == "mandor"
+    skip: user.role == EmployeeRoleType.MANDOR
   })
   const { data: catData, loading: catLoading, error: catError, refetch: catRefetch } = useQuery(GetCategoriesDocument, {
     variables: {
-      categoryFilter: { filter: ["priority", "completion_status"] },
+      categoryFilter: { filter: [CategoryType.PRIORITY, CategoryType.COMPLETION_STATUS] },
       requiresAuth: true
     }
   })
@@ -141,7 +142,7 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({ dataProject, load
 
             {/* FIELD START */}
             <Controller
-              name="name" control={control} rules={{ required: 'Name is required' }}
+              name="name" control={control} rules={{ required: 'Name tidak boleh kosong' }}
               render={({ field }) => (<TextField
                 {...field} color="secondary"
                 sx={{ width: "100%", mb: 1 }} label="Name" size='small' variant="outlined"
@@ -149,7 +150,7 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({ dataProject, load
               />)}
             />
             <Controller
-              name="location" control={control} rules={{ required: 'Lokasi is required' }}
+              name="location" control={control} rules={{ required: 'Lokasi tidak boleh kosong' }}
               render={({ field }) => (<TextField
                 {...field} color="secondary"
                 sx={{ width: "100%", mb: 1 }} label="Lokasi" size='small' variant="outlined"
@@ -169,7 +170,7 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({ dataProject, load
                 name="target_date" control={control}
                 rules={{
                   validate: (value) => {
-                    if (value && dayjs(value).isBefore(dayjs())) { return 'Tanggal target must be in the future'; }
+                    if (value && dayjs(value).isBefore(dayjs())) { return 'Tanggal target harus di masa depan'; }
                     return true;
                   },
                 }}
@@ -195,7 +196,7 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({ dataProject, load
             </LocalizationProvider>
             <Box display={"flex"} mb={1} >
               <Controller
-                name="status" control={control} rules={{ required: 'Status is required' }}
+                name="status" control={control} rules={{ required: 'Status tidak boleh kosong' }}
                 render={({ field }) => (
                   <>
                     {!catLoading && !catError && (
@@ -206,7 +207,7 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({ dataProject, load
                         helperText={errors.status ? errors.status.message : ''}
                       >
                         {catData.getCategories.map((data: any, index: number) => {
-                          if (data.type == "completion_status") return (
+                          if (data.type == CategoryType.COMPLETION_STATUS) return (
                             <MenuItem key={index} value={data._id}><div className="badge p-3 gap-2">{data.name}</div></MenuItem>
                           )
                         })}
@@ -217,7 +218,7 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({ dataProject, load
                 )}
               />
               <Controller
-                name="priority" control={control} rules={{ required: 'Priority is required' }}
+                name="priority" control={control} rules={{ required: 'Prioritas tidak boleh kosong' }}
                 render={({ field }) => (
                   <>
                     {!catLoading && !catError && (
@@ -228,7 +229,7 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({ dataProject, load
                         helperText={errors.status ? errors.status.message : ''}
                       >
                         {catData.getCategories.map((data: any, index: number) => {
-                          if (data.type == "priority") return (
+                          if (data.type == CategoryType.PRIORITY) return (
                             <MenuItem key={index} value={data._id}><div className="badge p-3 gap-2">{data.name}</div></MenuItem>
                           )
                         })}
@@ -239,10 +240,10 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({ dataProject, load
               />
             </Box>
             <Controller
-              name="project_leader" control={control} rules={{ required: 'Mandor is required' }}
+              name="project_leader" control={control} rules={{ required: 'Mandor tidak boleh kosong' }}
               render={({ field }) => (
                 <>
-                  {user.role != "mandor" && !empLoading && !empError && (
+                  {user.role != EmployeeRoleType.MANDOR && !empLoading && !empError && (
                     <TextField
                       {...field} color="secondary"
                       select sx={{ width: "100%", mb: 4 }} label="Mandor" size="small" variant="outlined"

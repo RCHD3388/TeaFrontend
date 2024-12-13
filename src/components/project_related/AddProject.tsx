@@ -14,6 +14,7 @@ import { CreateProjectDocument, FindAllProjectsQuery, FindAllProjectsQueryVariab
 import { GetAllEmployeesDocument } from "../../graphql/person.generated";
 import { GetCategoriesDocument } from "../../graphql/category.generated";
 import { CreateProjectInput } from "../../types/graphql_types";
+import { CategoryType, EmployeeRoleType } from "../../types/staticData.types";
 
 interface CreateProjectValues {
   name: string;
@@ -32,13 +33,13 @@ interface AddProjectProps {
 const AddProject: React.FC<AddProjectProps> = ({ refetchProject }) => {
   const { data: empData, loading: empLoading, error: empError, refetch: empRefetch } = useQuery(GetAllEmployeesDocument, {
     variables: {
-      employeeFilter: { filter: ["mandor"], status: true },
+      employeeFilter: { filter: [EmployeeRoleType.MANDOR], status: true },
       requiresAuth: true
     }
   })
   const { data: catData, loading: catLoading, error: catError, refetch: catRefetch } = useQuery(GetCategoriesDocument, {
     variables: {
-      categoryFilter: { filter: ["priority", "completion_status"] },
+      categoryFilter: { filter: [CategoryType.PRIORITY, CategoryType.COMPLETION_STATUS] },
       requiresAuth: true
     }
   })
@@ -119,7 +120,7 @@ const AddProject: React.FC<AddProjectProps> = ({ refetchProject }) => {
         <Typography id="modal-modal-title" variant="h6" component="h2"><b>INISIALISASI PROJECT BARU</b></Typography>
         {/* FIELD START */}
         <Controller
-          name="name" control={control} rules={{ required: 'Name is required' }}
+          name="name" control={control} rules={{ required: 'Name tidak boleh kosong' }}
           render={({ field }) => (<TextField
             {...field} color="secondary"
             sx={{ width: "100%", mb: 1 }} label="Name" size='small' variant="outlined"
@@ -127,7 +128,7 @@ const AddProject: React.FC<AddProjectProps> = ({ refetchProject }) => {
           />)}
         />
         <Controller
-          name="location" control={control} rules={{ required: 'Lokasi is required' }}
+          name="location" control={control} rules={{ required: 'Lokasi tidak boleh kosong' }}
           render={({ field }) => (<TextField
             {...field} color="secondary"
             sx={{ width: "100%", mb: 1 }} label="Lokasi" size='small' variant="outlined"
@@ -147,7 +148,7 @@ const AddProject: React.FC<AddProjectProps> = ({ refetchProject }) => {
             name="target_date" control={control}
             rules={{
               validate: (value) => {
-                if (value && dayjs(value).isBefore(dayjs())) { return 'Tanggal target must be in the future'; }
+                if (value && dayjs(value).isBefore(dayjs())) { return 'Tanggal target harus di masa depan'; }
                 return true;
               },
             }}
@@ -173,7 +174,7 @@ const AddProject: React.FC<AddProjectProps> = ({ refetchProject }) => {
         </LocalizationProvider>
         <Box display={"flex"} mb={1} >
           <Controller
-            name="status" control={control} rules={{ required: 'Status is required' }}
+            name="status" control={control} rules={{ required: 'Status tidak boleh kosong' }}
             render={({ field }) => (
               <TextField
                 {...field} color="secondary"
@@ -182,7 +183,7 @@ const AddProject: React.FC<AddProjectProps> = ({ refetchProject }) => {
                 helperText={errors.status ? errors.status.message : ''}
               >
                 {!catLoading && !catError && catData.getCategories.map((data: any, index: number) => {
-                  if (data.type == "completion_status") return (
+                  if (data.type == CategoryType.COMPLETION_STATUS) return (
                     <MenuItem key={index} value={data._id}><div className="badge p-3 gap-2">{data.name}</div></MenuItem>
                   )
                 })}
@@ -190,7 +191,7 @@ const AddProject: React.FC<AddProjectProps> = ({ refetchProject }) => {
             )}
           />
           <Controller
-            name="priority" control={control} rules={{ required: 'Priority is required' }}
+            name="priority" control={control} rules={{ required: 'Prioritas tidak boleh kosong' }}
             render={({ field }) => (
               <TextField
                 {...field} color="secondary"
@@ -199,7 +200,7 @@ const AddProject: React.FC<AddProjectProps> = ({ refetchProject }) => {
                 helperText={errors.priority ? errors.priority.message : ''}
               >
                 {!catLoading && !catError && catData.getCategories.map((data: any, index: number) => {
-                  if (data.type == "priority") return (
+                  if (data.type == CategoryType.PRIORITY) return (
                     <MenuItem key={index} value={data._id}><div className="badge p-3 gap-2">{data.name}</div></MenuItem>
                   )
                 })}
@@ -208,7 +209,7 @@ const AddProject: React.FC<AddProjectProps> = ({ refetchProject }) => {
           />
         </Box>
         <Controller
-          name="project_leader" control={control} rules={{ required: 'Mandor is required' }}
+          name="project_leader" control={control} rules={{ required: 'Mandor tidak boleh kosong' }}
           render={({ field }) => (
             <TextField
               {...field} color="secondary"
