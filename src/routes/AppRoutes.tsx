@@ -16,6 +16,7 @@ import ProjectPage from "../pages/private_pages/ProjectRelated/ProjectPage";
 import DetailProject from "../pages/private_pages/ProjectRelated/DetailProject";
 import InventoryPage from "../pages/private_pages/InventoryRelated/InventoryPage";
 import InventoryDetail from "../pages/private_pages/InventoryRelated/InventoryDetail";
+import DetailSku from "../pages/private_pages/InventoryRelated/ToolRelated/DetailSku";
 
 const AppRoutes: React.FC = () => {
   const router = createBrowserRouter([
@@ -41,7 +42,8 @@ const AppRoutes: React.FC = () => {
         ] },
         { path: "inventory", children: [
           { index: true, element: <InventoryPage />},
-          { path: ":warehouseId", element: <InventoryDetail />}
+          { path: ":warehouseId", element: <InventoryDetail />},
+          { path: "sku/:skuId", element: <DetailSku />}
         ] },
         { path: "purchasing", element: <DashboardPage /> },
         { path: "supplier", children: [

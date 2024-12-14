@@ -2,8 +2,9 @@ export enum CategoryType {
   PROJECT_COST = "pengeluaran_proyek",
   PRIORITY = "prioritas",
   COMPLETION_STATUS = "status_penyelesaian",
-  ITEM = "item",
+  ITEM = "kategori_item",
   REQUEST_STATUS = "status_permintaan",
+  TOOL_STATUS = "status_alat",
 }
 
 export const CategoryTypeValues = Object.values(CategoryType)
@@ -14,6 +15,7 @@ export enum CategoryTypeColor {
   COMPLETION_STATUS = "green",
   ITEM = "blue",
   REQUEST_STATUS = "blue",
+  TOOL_STATUS = "blue",
 }
 
 export enum EmployeeRoleType {

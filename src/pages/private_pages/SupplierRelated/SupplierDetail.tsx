@@ -10,7 +10,7 @@ import { CustomGraphQLError } from "../../../types/apollo_client.types";
 import { useDispatch } from "react-redux";
 import { openSnackbar } from "../../../app/reducers/snackbarSlice";
 
-interface updateSupplierValues {
+interface UpdateSupplierValues {
   company_name: string
   name: string
   email: string
@@ -28,7 +28,7 @@ const SupplierDetail: React.FC = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const { handleSubmit, control, formState: { errors }, reset } = useForm<updateSupplierValues>({
+  const { handleSubmit, control, formState: { errors }, reset } = useForm<UpdateSupplierValues>({
     defaultValues: {
       company_name: '',
       name: '',
@@ -39,7 +39,7 @@ const SupplierDetail: React.FC = () => {
     }
   });
 
-  const handleEditSupplier = (data: updateSupplierValues) => {
+  const handleEditSupplier = (data: UpdateSupplierValues) => {
     if (supplierData?.getSupplierById) {
       setIsSubmitting(true)
       updateSupplier({
@@ -171,8 +171,8 @@ const SupplierDetail: React.FC = () => {
                   error={!!errors.status}
                   helperText={errors.status ? errors.status.message : ''}
                 >
-                  <MenuItem value={"Active"}><div className="badge badge-success p-3 text-white gap-2">Active</div></MenuItem>
-                  <MenuItem value={"Inactive"}><div className="badge badge-warning p-3 gap-2">Inactive</div></MenuItem>
+                  <MenuItem value={"Active"}><div className="badge whitespace-nowrap badge-success p-3 text-white gap-2">Active</div></MenuItem>
+                  <MenuItem value={"Inactive"}><div className="badge whitespace-nowrap badge-warning p-3 gap-2">Inactive</div></MenuItem>
                 </TextField>
               )}
             />

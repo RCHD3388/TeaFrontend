@@ -11,7 +11,7 @@ import { WarehouseType } from "../../../types/staticData.types";
 import { useDispatch } from "react-redux";
 import { openSnackbar } from "../../../app/reducers/snackbarSlice";
 
-interface updateSupplierValues {
+interface UpdateWarehouseValues {
   name: string
   description: string
   address: string
@@ -31,7 +31,7 @@ export default function InventoryDetail() {
     }
   })
 
-  const { handleSubmit, control, formState: { errors }, reset } = useForm<updateSupplierValues>({
+  const { handleSubmit, control, formState: { errors }, reset } = useForm<UpdateWarehouseValues>({
     defaultValues: {
       name: "",
       description: "",
@@ -40,7 +40,7 @@ export default function InventoryDetail() {
     }
   });
 
-  const handleEditInventory = (data: updateSupplierValues) => {
+  const handleEditInventory = (data: UpdateWarehouseValues) => {
     if (dataInventory?.getWarehouseById) {
       setIsSubmitting(true)
       updateWarehouse({
@@ -106,7 +106,7 @@ export default function InventoryDetail() {
           </IconButton>
           <div className="mb-2 flex items-center">
             <span className="text-4xl font-bold mr-2">Detail Warehouse</span>
-            {!loadingInventory && !errorInventory && <span className={`badge badge-lg ${dataInventory.getWarehouseById.type == WarehouseType.INVENTORY ? "badge-warning" : "badge-info text-white"}`}>
+            {!loadingInventory && !errorInventory && <span className={`badge whitespace-nowrap badge-lg ${dataInventory.getWarehouseById.type == WarehouseType.INVENTORY ? "badge-warning" : "badge-info text-white"}`}>
               {dataInventory.getWarehouseById.type == WarehouseType.INVENTORY ? "Inventory Perusahaan" : "Inventory Proyek"}
             </span>}
           </div>
@@ -149,8 +149,8 @@ export default function InventoryDetail() {
                   error={!!errors.status}
                   helperText={errors.status ? errors.status.message : ''}
                 >
-                  <MenuItem value={"Active"}><div className="badge badge-success p-3 text-white gap-2">Active</div></MenuItem>
-                  <MenuItem value={"Inactive"}><div className="badge badge-warning p-3 gap-2">Inactive</div></MenuItem>
+                  <MenuItem value={"Active"}><div className="badge whitespace-nowrap badge-success p-3 text-white gap-2">Active</div></MenuItem>
+                  <MenuItem value={"Inactive"}><div className="badge whitespace-nowrap badge-warning p-3 gap-2">Inactive</div></MenuItem>
                 </TextField>
               )}
             />

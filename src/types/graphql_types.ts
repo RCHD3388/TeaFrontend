@@ -34,7 +34,7 @@ export type AttendanceDetail = {
 export type CategoryData = {
   __typename?: 'CategoryData';
   _id: Scalars['ID']['output'];
-  description: Scalars['String']['output'];
+  description?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
   type: Scalars['String']['output'];
 };
@@ -44,7 +44,7 @@ export type CategoryFilter = {
 };
 
 export type CreateCategoryInput = {
-  description: Scalars['String']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   type: Scalars['String']['input'];
 };
@@ -63,6 +63,22 @@ export type CreateEmployeeSkillInput = {
   name: Scalars['String']['input'];
 };
 
+export type CreateInventoryCategoryInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+};
+
+export type CreateMaterialInput = {
+  conversion: Scalars['Float']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  item_category: Scalars['String']['input'];
+  merk: Scalars['String']['input'];
+  minimum_unit_measure: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  status: Scalars['String']['input'];
+  unit_measure: Scalars['String']['input'];
+};
+
 export type CreateProjectInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   location: Scalars['String']['input'];
@@ -71,6 +87,13 @@ export type CreateProjectInput = {
   project_leader: Scalars['String']['input'];
   status: Scalars['String']['input'];
   target_date?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type CreateSkuInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  item_category: Scalars['String']['input'];
+  merk: Scalars['String']['input'];
+  name: Scalars['String']['input'];
 };
 
 export type CreateSupplierInput = {
@@ -151,8 +174,29 @@ export type LoginResponse = {
   username: Scalars['String']['output'];
 };
 
+export type Material = {
+  __typename?: 'Material';
+  _id: Scalars['ID']['output'];
+  conversion: Scalars['Float']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['String']['output'];
+  item_category: CategoryData;
+  merk: Merk;
+  minimum_unit_measure: UnitMeasure;
+  name: Scalars['String']['output'];
+  status: Scalars['String']['output'];
+  unit_measure: UnitMeasure;
+};
+
 export type MaterialTransaction = {
   __typename?: 'MaterialTransaction';
+  name: Scalars['String']['output'];
+};
+
+export type Merk = {
+  __typename?: 'Merk';
+  _id: Scalars['ID']['output'];
+  description?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
 };
 
@@ -162,20 +206,30 @@ export type Mutation = {
   createCategory: CategoryData;
   createEmployee: Employee;
   createEmployeeSkill: EmployeeSkill;
+  createMaterial: Material;
+  createMerk: Merk;
   createProject: Project;
+  createSku: Sku;
   createSupplier: Supplier;
+  createUnitMeasure: UnitMeasure;
   createUser: User;
   createWarehouse: Warehouse;
   deleteCategory: CategoryData;
   deleteEmployeeSkill: EmployeeSkill;
+  deleteMerk: Merk;
+  deleteUnitMeasure: UnitMeasure;
   deleteUserPassword: User;
   login: LoginResponse;
   removeProjectEmployee: Employee;
   updateCategory: CategoryData;
   updateEmployee: Employee;
   updateEmployeeSkill: EmployeeSkill;
+  updateMaterial: Material;
+  updateMerk: Merk;
   updateProject: Project;
+  updateSku: Sku;
   updateSupplier: Supplier;
+  updateUnitMeasure: UnitMeasure;
   updateUser: User;
   updateUserPassword: User;
   updateWarehouse: Warehouse;
@@ -203,13 +257,33 @@ export type MutationCreateEmployeeSkillArgs = {
 };
 
 
+export type MutationCreateMaterialArgs = {
+  createMaterialInput: CreateMaterialInput;
+};
+
+
+export type MutationCreateMerkArgs = {
+  createInventoryCategoryInput: CreateInventoryCategoryInput;
+};
+
+
 export type MutationCreateProjectArgs = {
   createProjectInput: CreateProjectInput;
 };
 
 
+export type MutationCreateSkuArgs = {
+  createSkuInput: CreateSkuInput;
+};
+
+
 export type MutationCreateSupplierArgs = {
   createSupplierInput: CreateSupplierInput;
+};
+
+
+export type MutationCreateUnitMeasureArgs = {
+  createInventoryCategoryInput: CreateInventoryCategoryInput;
 };
 
 
@@ -229,6 +303,16 @@ export type MutationDeleteCategoryArgs = {
 
 
 export type MutationDeleteEmployeeSkillArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteMerkArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteUnitMeasureArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -268,15 +352,39 @@ export type MutationUpdateEmployeeSkillArgs = {
 };
 
 
+export type MutationUpdateMaterialArgs = {
+  id: Scalars['String']['input'];
+  updateMaterialInput: UpdateMaterialInput;
+};
+
+
+export type MutationUpdateMerkArgs = {
+  id: Scalars['String']['input'];
+  updateInventoryCategoryInput: UpdateInventoryCategoryInput;
+};
+
+
 export type MutationUpdateProjectArgs = {
   id: Scalars['String']['input'];
   updateProjectInput: UpdateProjectInput;
 };
 
 
+export type MutationUpdateSkuArgs = {
+  id: Scalars['String']['input'];
+  updateSkuInput: UpdateSkuInput;
+};
+
+
 export type MutationUpdateSupplierArgs = {
   id: Scalars['String']['input'];
   updateSupplierInput: UpdateSupplierInput;
+};
+
+
+export type MutationUpdateUnitMeasureArgs = {
+  id: Scalars['String']['input'];
+  updateInventoryCategoryInput: UpdateInventoryCategoryInput;
 };
 
 
@@ -342,16 +450,24 @@ export type Query = {
   findAllProjects: Array<Project>;
   findProjectById: Project;
   getAllEmployees: Array<Employee>;
+  getAllMaterials: Array<Material>;
+  getAllMerks: Array<Merk>;
   getAllProjectEmployees: GetAllProjectEmployeeDto;
   getAllRole: Array<EmployeeRole>;
   getAllSkill: Array<EmployeeSkill>;
+  getAllSkus: Array<Sku>;
   getAllSuppliers: Array<Supplier>;
+  getAllUnitMeasures: Array<UnitMeasure>;
   getAllUsers: Array<User>;
   getAllWarehouses: Array<Warehouse>;
   getCategories: Array<CategoryData>;
   getEmployeeById: Employee;
   getHello: Scalars['String']['output'];
+  getMaterialById: Material;
+  getMerkById: Merk;
+  getSkuById: Sku;
   getSupplierById: Supplier;
+  getUnitMeasureById: UnitMeasure;
   getUserById: User;
   getWarehouseById: Warehouse;
 };
@@ -382,7 +498,27 @@ export type QueryGetEmployeeByIdArgs = {
 };
 
 
+export type QueryGetMaterialByIdArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGetMerkByIdArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGetSkuByIdArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type QueryGetSupplierByIdArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryGetUnitMeasureByIdArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -396,6 +532,15 @@ export type QueryGetWarehouseByIdArgs = {
   id: Scalars['String']['input'];
 };
 
+export type Sku = {
+  __typename?: 'Sku';
+  _id: Scalars['ID']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  item_category: CategoryData;
+  merk: Merk;
+  name: Scalars['String']['output'];
+};
+
 export type Supplier = {
   __typename?: 'Supplier';
   _id: Scalars['String']['output'];
@@ -406,6 +551,13 @@ export type Supplier = {
 
 export type ToolTransaction = {
   __typename?: 'ToolTransaction';
+  name: Scalars['String']['output'];
+};
+
+export type UnitMeasure = {
+  __typename?: 'UnitMeasure';
+  _id: Scalars['ID']['output'];
+  description?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
 };
 
@@ -426,6 +578,22 @@ export type UpdateEmployeeInput = {
   status?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UpdateInventoryCategoryInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateMaterialInput = {
+  conversion: Scalars['Float']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  item_category: Scalars['String']['input'];
+  merk: Scalars['String']['input'];
+  minimum_unit_measure: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  status: Scalars['String']['input'];
+  unit_measure: Scalars['String']['input'];
+};
+
 export type UpdateProjectInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   location?: InputMaybe<Scalars['String']['input']>;
@@ -434,6 +602,13 @@ export type UpdateProjectInput = {
   project_leader?: InputMaybe<Scalars['String']['input']>;
   status?: InputMaybe<Scalars['String']['input']>;
   target_date?: InputMaybe<Scalars['DateTime']['input']>;
+};
+
+export type UpdateSkuInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  item_category: Scalars['String']['input'];
+  merk?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateSupplierInput = {

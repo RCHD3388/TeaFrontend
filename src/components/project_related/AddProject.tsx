@@ -63,7 +63,6 @@ const AddProject: React.FC<AddProjectProps> = ({ refetchProject }) => {
 
   const handleAddProject: SubmitHandler<CreateProjectValues> = async (data) => {
     setIsSubmitting(true)
-    console.log(data.target_date)
     try {
       let createProjectInput: CreateProjectInput = {
         name: data.name,
@@ -184,7 +183,7 @@ const AddProject: React.FC<AddProjectProps> = ({ refetchProject }) => {
               >
                 {!catLoading && !catError && catData.getCategories.map((data: any, index: number) => {
                   if (data.type == CategoryType.COMPLETION_STATUS) return (
-                    <MenuItem key={index} value={data._id}><div className="badge p-3 gap-2">{data.name}</div></MenuItem>
+                    <MenuItem key={index} value={data._id}><div className="badge whitespace-nowrap p-3 gap-2">{data.name}</div></MenuItem>
                   )
                 })}
               </TextField>
@@ -201,7 +200,7 @@ const AddProject: React.FC<AddProjectProps> = ({ refetchProject }) => {
               >
                 {!catLoading && !catError && catData.getCategories.map((data: any, index: number) => {
                   if (data.type == CategoryType.PRIORITY) return (
-                    <MenuItem key={index} value={data._id}><div className="badge p-3 gap-2">{data.name}</div></MenuItem>
+                    <MenuItem key={index} value={data._id}><div className="badge whitespace-nowrap p-3 gap-2">{data.name}</div></MenuItem>
                   )
                 })}
               </TextField>

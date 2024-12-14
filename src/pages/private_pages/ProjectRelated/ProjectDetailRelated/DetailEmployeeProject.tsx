@@ -66,14 +66,14 @@ const DetailEmployeeProject: React.FC<DetailEmployeeProjectProps> = ({ dataProje
     { id: 'phone_number', label: "Nomer Telepon", align: "center", renderComponent: (row) => { return (<>{row.person.phone_number}</>) } },
     {
       id: 'role', label: 'Role', align: "center",
-      renderComponent: (row) => { return (<div className="badge badge-neutral p-3 gap-2">{row.role.name}</div>) }
+      renderComponent: (row) => { return (<div className="badge whitespace-nowrap badge-neutral p-3 gap-2">{row.role.name}</div>) }
     },
     {
       id: 'skill', label: 'Skill', align: "center",
       renderComponent: (row) => {
         return (<div className="flex justify-center items-center">
           <Box sx={{ maxWidth: 200, overflowX: 'auto', display: 'flex', gap: 1 }}>
-            {row.skill.map((skillname, index) => <div key={index} className="badge badge-neutral p-3 whitespace-nowrap gap-2">{skillname.name}</div>)}
+            {row.skill.map((skillname, index) => <div key={index} className="badge whitespace-nowrap badge-neutral p-3 whitespace-nowrap gap-2">{skillname.name}</div>)}
           </Box>
         </div>)
       },
@@ -83,8 +83,8 @@ const DetailEmployeeProject: React.FC<DetailEmployeeProjectProps> = ({ dataProje
       renderComponent: (row) => {
         return (<>
           {row.status == "Active" ?
-            <div className="badge badge-success p-3 text-white gap-2">Active</div> :
-            <div className="badge badge-warning p-3 gap-2">Inactive</div>}
+            <div className="badge whitespace-nowrap badge-success p-3 text-white gap-2">Active</div> :
+            <div className="badge whitespace-nowrap badge-warning p-3 gap-2">Inactive</div>}
         </>)
       }
     },

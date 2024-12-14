@@ -8,14 +8,14 @@ export type GetCategoriesQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetCategoriesQuery = { __typename?: 'Query', getCategories: Array<{ __typename?: 'CategoryData', _id: string, name: string, description: string, type: string }> };
+export type GetCategoriesQuery = { __typename?: 'Query', getCategories: Array<{ __typename?: 'CategoryData', _id: string, name: string, description?: string | null, type: string }> };
 
 export type CreateCategoryMutationVariables = Types.Exact<{
   input: Types.CreateCategoryInput;
 }>;
 
 
-export type CreateCategoryMutation = { __typename?: 'Mutation', createCategory: { __typename?: 'CategoryData', name: string, description: string, type: string } };
+export type CreateCategoryMutation = { __typename?: 'Mutation', createCategory: { __typename?: 'CategoryData', name: string, description?: string | null, type: string } };
 
 export type UpdateCategoryMutationVariables = Types.Exact<{
   id: Types.Scalars['String']['input'];
@@ -23,14 +23,14 @@ export type UpdateCategoryMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateCategoryMutation = { __typename?: 'Mutation', updateCategory: { __typename?: 'CategoryData', _id: string, name: string, description: string, type: string } };
+export type UpdateCategoryMutation = { __typename?: 'Mutation', updateCategory: { __typename?: 'CategoryData', _id: string, name: string, description?: string | null, type: string } };
 
 export type DeleteCategoryMutationVariables = Types.Exact<{
   id: Types.Scalars['String']['input'];
 }>;
 
 
-export type DeleteCategoryMutation = { __typename?: 'Mutation', deleteCategory: { __typename?: 'CategoryData', _id: string, name: string, description: string, type: string } };
+export type DeleteCategoryMutation = { __typename?: 'Mutation', deleteCategory: { __typename?: 'CategoryData', _id: string, name: string, description?: string | null, type: string } };
 
 
 export const GetCategoriesDocument = gql`

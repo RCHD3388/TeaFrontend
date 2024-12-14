@@ -45,14 +45,14 @@ const columns: StickyHeadTableColumn<RowData>[] = [
     id: 'priority', label: 'Prioritas', minWidth: 100, align: "center",
     renderComponent: (row) => {
       return (
-        <div className="badge badge-neutral p-3 gap-2">{row.priority.name}</div>)
+        <div className="badge whitespace-nowrap badge-neutral p-3 gap-2">{row.priority.name}</div>)
     }
   },
   {
     id: 'status', label: 'Status', minWidth: 50, align: "center",
     renderComponent: (row) => {
       return (
-        <div className="badge badge-neutral p-3 gap-2">{row.status.name}</div>)
+        <div className="badge whitespace-nowrap badge-neutral p-3 gap-2">{row.status.name}</div>)
     }
   },
   {

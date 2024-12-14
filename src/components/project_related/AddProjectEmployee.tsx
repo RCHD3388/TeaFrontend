@@ -52,14 +52,14 @@ const AddProjectEmployee: React.FC<AddProjectEmployeeProps> = ({ projectId, data
     { id: 'person', label: "Pegawai", minWidth: 50, align: "center", format: (value) => String(value.name) },
     {
       id: 'role', label: 'Role', minWidth: 50, align: "center",
-      renderComponent: (row) => { return (<div className="badge badge-neutral p-3 gap-2">{row.role.name}</div>) }
+      renderComponent: (row) => { return (<div className="badge whitespace-nowrap badge-neutral p-3 gap-2">{row.role.name}</div>) }
     },
     {
       id: 'skill', label: 'Skill', minWidth: 50, align: "center",
       renderComponent: (row) => {
         return (<div className="flex justify-center items-center">
           <Box sx={{ maxWidth: 200, overflowX: 'auto', display: 'flex', gap: 1 }}>
-            {row.skill.map((skillname, index) => <div key={index} className="badge badge-neutral p-3 whitespace-nowrap gap-2">{skillname.name}</div>)}
+            {row.skill.map((skillname, index) => <div key={index} className="badge whitespace-nowrap badge-neutral p-3 whitespace-nowrap gap-2">{skillname.name}</div>)}
           </Box>
         </div>)
       },

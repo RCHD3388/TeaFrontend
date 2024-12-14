@@ -35,8 +35,8 @@ const columns: StickyHeadTableColumn<RowData>[] = [
     renderComponent: (row) => {
       return (<>
         {row.status == "Active" ?
-          <div className="badge badge-success p-3 text-white gap-2">Active</div> :
-          <div className="badge badge-warning p-3 gap-2">Inactive</div>}
+          <div className="badge whitespace-nowrap badge-success p-3 text-white gap-2">Active</div> :
+          <div className="badge whitespace-nowrap badge-warning p-3 gap-2">Inactive</div>}
       </>)
     }
   },
@@ -54,7 +54,7 @@ export default function SupplierPage() {
 
   const handleActionTable = (row: RowData, column: StickyHeadTableColumn<RowData>) => {
     navigate(`/appuser/supplier/${row._id}`)
-    refetch()
+    // refetch()
   }
 
   return (
@@ -89,7 +89,6 @@ export default function SupplierPage() {
           <StickyHeadTable
             columns={columns}
             rows={data?.getAllSuppliers.filter((sup: any) => {
-              console.log(sup.name)
               return sup.name.toLowerCase().includes(nameFilter.toLowerCase()) && sup.status.includes(statusFilter)
             }) ?? []}
             withIndex={true}

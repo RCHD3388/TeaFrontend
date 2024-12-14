@@ -208,7 +208,7 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({ dataProject, load
                       >
                         {catData.getCategories.map((data: any, index: number) => {
                           if (data.type == CategoryType.COMPLETION_STATUS) return (
-                            <MenuItem key={index} value={data._id}><div className="badge p-3 gap-2">{data.name}</div></MenuItem>
+                            <MenuItem key={index} value={data._id}><div className="badge whitespace-nowrap p-3 gap-2">{data.name}</div></MenuItem>
                           )
                         })}
 
@@ -230,7 +230,7 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({ dataProject, load
                       >
                         {catData.getCategories.map((data: any, index: number) => {
                           if (data.type == CategoryType.PRIORITY) return (
-                            <MenuItem key={index} value={data._id}><div className="badge p-3 gap-2">{data.name}</div></MenuItem>
+                            <MenuItem key={index} value={data._id}><div className="badge whitespace-nowrap p-3 gap-2">{data.name}</div></MenuItem>
                           )
                         })}
                       </TextField>
@@ -251,7 +251,7 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({ dataProject, load
                       helperText={errors.status ? errors.status.message : ''}
                     >
                       {empData?.getAllEmployees.map((data: any, index: number) => {
-                        return <MenuItem key={index} value={data._id}><div className="badge p-3 gap-2">{data.person.name} ({data.person.email})</div></MenuItem>
+                        return <MenuItem key={index} value={data._id}><div className="badge whitespace-nowrap p-3 gap-2">{data.person.name} ({data.person.email})</div></MenuItem>
                       })}
                     </TextField>
                   )}

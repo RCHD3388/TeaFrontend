@@ -42,3 +42,206 @@ mutation UpdateWarehouse($id: String!, $updateWarehouseInput: UpdateWarehouseInp
     }
 }
 
+# UNIT MEASURE GRAPHQL
+query GetAllUnitMeasures {
+    getAllUnitMeasures {
+        _id
+        name
+        description
+    }
+}
+
+query GetUnitMeasureById ($id: String!){
+    getUnitMeasureById(id: $id) {
+        _id
+        name
+        description
+    }
+}
+
+mutation CreateUnitMeasure ($createInventoryCategoryInput: CreateInventoryCategoryInput!){
+    createUnitMeasure(createInventoryCategoryInput: $createInventoryCategoryInput) {
+        _id
+        name
+        description
+    }
+}
+
+mutation UpdateUnitMeasure ($id: String!, $updateInventoryCategoryInput: UpdateInventoryCategoryInput!) {
+    updateUnitMeasure(id: $id, updateInventoryCategoryInput: $updateInventoryCategoryInput) {
+        _id
+        name
+        description
+    }
+}
+
+mutation DeleteUnitMeasure ($id: String!) {
+    deleteUnitMeasure(id: $id) {
+        _id
+        name
+        description
+    }
+}
+
+# MERK GRAPHQL
+query GetAllMerks {
+    getAllMerks {
+        _id
+        name
+        description
+    }
+}
+
+query GetMerkById ($id: String!){
+    getMerkById(id: $id) {
+        _id
+        name
+        description
+    }
+}
+
+mutation CreateMerk ($createInventoryCategoryInput: CreateInventoryCategoryInput!){
+    createMerk(createInventoryCategoryInput: $createInventoryCategoryInput) {
+        _id
+        name
+        description
+    }
+}
+
+mutation UpdateMerk ($id: String!, $updateInventoryCategoryInput: UpdateInventoryCategoryInput!) {
+    updateMerk(id: $id, updateInventoryCategoryInput: $updateInventoryCategoryInput) {
+        _id
+        name
+        description
+    }
+}
+
+mutation DeleteMerk ($id: String!) {
+    deleteMerk(id: $id) {
+        _id
+        name
+        description
+    }
+}
+
+# MATERIAL GRAPHQL
+query GetAllMaterials {
+    getAllMaterials {
+        _id
+        id
+        name
+        description
+        status
+        conversion
+        merk {
+            name
+        }
+        unit_measure {
+            name
+        }
+        minimum_unit_measure {
+            name
+        }
+        item_category {
+            name
+        }
+    }
+}
+
+query GetMaterialById ($id: String!){
+    getMaterialById(id: $id) {
+        _id
+        id
+        name
+        description
+        status
+        conversion
+        merk {
+            _id
+            name
+        }
+        unit_measure {
+            _id
+            name
+        }
+        minimum_unit_measure {
+            _id
+            name
+        }
+        item_category {
+            _id
+            name
+        }
+    }
+}
+
+mutation CreateMaterial ($createMaterialInput: CreateMaterialInput!) {
+    createMaterial(createMaterialInput: $createMaterialInput) {
+        _id
+        id
+        name
+        description
+        status
+        conversion
+    }
+}
+
+mutation UpdateMaterial ($id: String!, $updateMaterialInput: UpdateMaterialInput!) {
+    updateMaterial(id: $id, updateMaterialInput: $updateMaterialInput) {
+        _id
+        id
+        name
+        description
+        status
+        conversion
+    }
+}
+
+# TOOL SKU GRAPHQL
+query GetAllSkus {
+    getAllSkus {
+        _id
+        name
+        description
+        merk {
+            _id
+            name
+        }
+        item_category {
+            _id
+            name
+        }
+    }
+}
+
+query GetSkuById ($id: String!) {
+    getSkuById(id: $id) {
+        _id
+        name
+        description
+        merk {
+            _id
+            name
+        }
+        item_category {
+            _id
+            name
+        }
+    }
+}
+
+mutation CreateSku ($createSkuInput: CreateSkuInput!) {
+    createSku(createSkuInput: $createSkuInput) {
+        _id
+        name
+        description
+    }
+}
+
+mutation UpdateSku ($id: String!, $updateSkuInput: UpdateSkuInput!) {
+    updateSku(id: $id, updateSkuInput: $updateSkuInput) {
+        _id
+        name
+        description
+    }
+}

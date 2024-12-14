@@ -26,11 +26,14 @@ interface RowData {
 
 const columns: StickyHeadTableColumn<RowData>[] = [
   { id: 'name', label: 'Nama', minWidth: 50, align: "center" },
-  { id: 'description', label: 'Deskripsi', minWidth: 200, align: "center" },
+  {
+    id: 'description', label: 'Deskripsi', minWidth: 200, align: "center",
+    format: (value) => value.length == 0 ? <div className="text-error">Belum ada deskripsi</div> : value
+  },
   {
     id: 'type', label: 'Type', minWidth: 50, align: "center",
     renderComponent: (row: any) => {
-      return (<div className="badge badge-neutral p-3 gap-2">{row.type}</div>)
+      return (<div className="badge whitespace-nowrap badge-neutral p-3 gap-2">{row.type}</div>)
     }
   },
   {
@@ -101,9 +104,8 @@ export default function CategoryPage() {
     let description = descriptionRef.current?.value.trim() || "";
     setNameErr(""); setDescriptionErr("");
     if (!name) setNameErr("Nama tidak boleh kosong")
-    if (!description) setDescriptionErr("description tidak boleh kosong")
 
-    if (name != "" && description != "") {
+    if (name != "") {
       updateCategory({
         variables: {
           id: selectedRow?._id || "",
@@ -167,7 +169,7 @@ export default function CategoryPage() {
             onChange={(event: React.SyntheticEvent, newValue: string | null) => {
               setTypeFilter(newValue || "")
             }}
-            renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Tipe kategori"/>}
+            renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Tipe kategori" />}
           />
         </Box>
         {!loading && <StickyHeadTable
@@ -204,7 +206,7 @@ export default function CategoryPage() {
             )}
           />
           <Controller
-            name="description" control={control} rules={{ required: 'Deskripsi harus diisi' }}
+            name="description" control={control}
             render={({ field }) => (
               <TextField
                 {...field} color="secondary"
@@ -264,7 +266,7 @@ export default function CategoryPage() {
           </Typography>
           <Typography id="modal-modal-description" variant="h6" component="h2">
             <div className='flex judtify-center items-center mb-3'>
-              {selectedRow?.name ?? ""} <div className=' ml-2 badge badge-neutral p-3'>{selectedRow?.type}</div>
+              {selectedRow?.name ?? ""} <div className=' ml-2 badge whitespace-nowrap badge-neutral p-3'>{selectedRow?.type}</div>
             </div>
           </Typography>
 

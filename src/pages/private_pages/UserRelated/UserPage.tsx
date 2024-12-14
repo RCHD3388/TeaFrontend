@@ -67,15 +67,15 @@ export default function UserPage() {
     },
     {
       id: 'role', label: 'Role', minWidth: 100, align: "center",
-      renderComponent: (row) => { return (<div className="badge badge-neutral p-3 gap-2">{row.employee.role.name}</div>) }
+      renderComponent: (row) => { return (<div className="badge whitespace-nowrap badge-neutral p-3 gap-2">{row.employee.role.name}</div>) }
     },
     {
       id: 'status', label: 'Status', minWidth: 50, align: "center",
       renderComponent: (row) => {
         return (<>
           {row.status == "Active" ?
-            <div className="badge badge-success p-3 text-white gap-2">Active</div> :
-            <div className="badge badge-warning p-3 gap-2">Inactive</div>}
+            <div className="badge whitespace-nowrap badge-success p-3 text-white gap-2">Active</div> :
+            <div className="badge whitespace-nowrap badge-warning p-3 gap-2">Inactive</div>}
         </>)
       },
     },
@@ -211,8 +211,8 @@ export default function UserPage() {
                   error={!!errors.status}
                   helperText={errors.status ? errors.status.message : ''}
                 >
-                  <MenuItem value={"Active"}><div className="badge badge-success p-3 text-white gap-2">Active</div></MenuItem>
-                  <MenuItem value={"Inactive"}><div className="badge badge-warning p-3 gap-2">Inactive</div></MenuItem>
+                  <MenuItem value={"Active"}><div className="badge whitespace-nowrap badge-success p-3 text-white gap-2">Active</div></MenuItem>
+                  <MenuItem value={"Inactive"}><div className="badge whitespace-nowrap badge-warning p-3 gap-2">Inactive</div></MenuItem>
                 </TextField>
               )}
             />

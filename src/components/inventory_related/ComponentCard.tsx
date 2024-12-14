@@ -23,17 +23,17 @@ const ComponentCard: React.FC<CustomListComponentProps> = ({
 
   const getWarehouseTypeBadge = (type: string) => {
     if(type === WarehouseType.INVENTORY) {
-      return <div className="badge badge-warning text-white">{type}</div>
+      return <div className="badge whitespace-nowrap badge-warning">{type}</div>
     }else{
-      return <div className="badge badge-info text-white">{type}</div>
+      return <div className="badge whitespace-nowrap badge-info text-white">{type}</div>
     }
   }
 
   const getWarehouseStatusBadge = (status: string) => {
     if(status === "Active") {
-      return <div className="badge badge-success text-white">{status}</div>
+      return <div className="badge whitespace-nowrap badge-success text-white">{status}</div>
     }else{
-      return <div className="badge badge-warning">{status}</div>
+      return <div className="badge whitespace-nowrap badge-warning">{status}</div>
     }
   }
 

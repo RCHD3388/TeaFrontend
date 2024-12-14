@@ -56,7 +56,7 @@ export default function StickyHeadTable<T extends object>({
     <div>
       <Paper sx={{ width: '100%', overflow: 'hidden' }}>
         <TableContainer sx={tableSx}>
-          <Table stickyHeader aria-label="flexible table">
+          <Table stickyHeader size='small' aria-label="flexible table">
             <TableHead>
               <TableRow>
                 {withIndex && (
@@ -83,7 +83,7 @@ export default function StickyHeadTable<T extends object>({
                 .map((row, rowIndex) => (
                   <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
                     {withIndex && (
-                      <TableCell key="no" align="left" sx={{fontSize}}>
+                      <TableCell key="no" align="left" sx={{ fontSize }}>
                         {(page * rowsPerPage) + rowIndex + 1}
                       </TableCell>
                     )}
@@ -99,9 +99,9 @@ export default function StickyHeadTable<T extends object>({
                           const buttonDisabled = column.buttonDisabled ? column.buttonDisabled(row) : false;
 
                           return (
-                            <TableCell key={column.id} align={column.align} sx={{fontSize}}>
+                            <TableCell key={column.id} align={column.align} sx={{ fontSize }}>
                               <Button
-                                sx={{fontSize}}
+                                sx={{ fontSize }}
                                 variant="contained"
                                 color={buttonColor}
                                 style={buttonStyle}
@@ -117,7 +117,7 @@ export default function StickyHeadTable<T extends object>({
                         // Cek jika kolom memiliki renderComponent
                         if (column.renderComponent) {
                           return (
-                            <TableCell key={String(column.id)} align={column.align} sx={{fontSize}}>
+                            <TableCell key={String(column.id)} align={column.align} sx={{ fontSize }}>
                               {column.renderComponent(row)} {/* Render komponen kustom */}
                             </TableCell>
                           );
@@ -125,7 +125,7 @@ export default function StickyHeadTable<T extends object>({
 
                         const value = row[column.id as keyof T];
                         return (
-                          <TableCell key={String(column.id)} align={column.align} sx={{fontSize}}>
+                          <TableCell key={String(column.id)} align={column.align} sx={{ fontSize }}>
                             {column.format && value !== undefined
                               ? column.format(value)
                               : value !== undefined

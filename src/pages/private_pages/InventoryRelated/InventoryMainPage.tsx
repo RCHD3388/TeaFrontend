@@ -10,6 +10,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { GetAllWarehousesDocument } from "../../../graphql/inventory.generated";
 import CustomListComponent from "../../../components/inventory_related/ComponentCard";
 import { WarehouseTypeValues } from "../../../types/staticData.types";
+import AddWarehouse from "../../../components/inventory_related/AddWarehouse";
 
 export default function InventoryMainPage() {
   let { data, loading, error, refetch } = useQuery(GetAllWarehousesDocument, { variables: { requiresAuth: true } })
@@ -23,6 +24,8 @@ export default function InventoryMainPage() {
 
   return (
     <div className="flex flex-col" style={{ maxHeight: "100%" }}>
+
+      <div className="flex justify-end"><AddWarehouse refetchWarehouse={refetch} /></div>
 
       <Box display={"flex"} flexWrap={"wrap"}>
         <TextField
@@ -61,7 +64,6 @@ export default function InventoryMainPage() {
           </div>
 
           : data.getAllWarehouses.map((item: any, index: number) => {
-            console.log(item)
             if (nameFilter != "" && !item.name.toLowerCase().includes(nameFilter.toLowerCase())) return null
             if (statusFilter != "" && item.status != statusFilter) return null
             if (warehouseFilter != "" && item.type != warehouseFilter) return null
