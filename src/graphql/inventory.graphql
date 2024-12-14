@@ -134,15 +134,19 @@ query GetAllMaterials {
         status
         conversion
         merk {
+            _id
             name
         }
         unit_measure {
+            _id
             name
         }
         minimum_unit_measure {
+            _id
             name
         }
         item_category {
+            _id
             name
         }
     }

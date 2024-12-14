@@ -101,7 +101,7 @@ export type DeleteMerkMutation = { __typename?: 'Mutation', deleteMerk: { __type
 export type GetAllMaterialsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetAllMaterialsQuery = { __typename?: 'Query', getAllMaterials: Array<{ __typename?: 'Material', _id: string, id: string, name: string, description?: string | null, status: string, conversion: number, merk: { __typename?: 'Merk', name: string }, unit_measure: { __typename?: 'UnitMeasure', name: string }, minimum_unit_measure: { __typename?: 'UnitMeasure', name: string }, item_category: { __typename?: 'CategoryData', name: string } }> };
+export type GetAllMaterialsQuery = { __typename?: 'Query', getAllMaterials: Array<{ __typename?: 'Material', _id: string, id: string, name: string, description?: string | null, status: string, conversion: number, merk: { __typename?: 'Merk', _id: string, name: string }, unit_measure: { __typename?: 'UnitMeasure', _id: string, name: string }, minimum_unit_measure: { __typename?: 'UnitMeasure', _id: string, name: string }, item_category: { __typename?: 'CategoryData', _id: string, name: string } }> };
 
 export type GetMaterialByIdQueryVariables = Types.Exact<{
   id: Types.Scalars['String']['input'];
@@ -710,15 +710,19 @@ export const GetAllMaterialsDocument = gql`
     status
     conversion
     merk {
+      _id
       name
     }
     unit_measure {
+      _id
       name
     }
     minimum_unit_measure {
+      _id
       name
     }
     item_category {
+      _id
       name
     }
   }

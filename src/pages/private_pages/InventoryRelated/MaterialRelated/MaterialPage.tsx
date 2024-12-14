@@ -8,6 +8,8 @@ import { GetCategoriesDocument } from "../../../../graphql/category.generated";
 import { CategoryType } from "../../../../types/staticData.types";
 import StickyHeadTable, { StickyHeadTableColumn } from "../../../../components/global_features/StickyHeadTable";
 import AddSku from "../../../../components/inventory_related/AddSku";
+import AddMaterial from "../../../../components/inventory_related/AddMaterial";
+import EditMaterialModal from "../../../../components/inventory_related/EditMaterialModal";
 
 
 interface RowData {
@@ -18,15 +20,19 @@ interface RowData {
   status: string
   conversion: number
   merk: {
+    _id: string
     name: string
   }
   unit_measure: {
+    _id: string
     name: string
   }
   minimum_unit_measure: {
+    _id: string
     name: string
   }
   item_category: {
+    _id: string
     name: string
   }
 }
@@ -46,6 +52,11 @@ const MaterialPage: React.FC = () => {
   const [merkFilter, setMerkFilter] = useState("")
   const [categoryFilter, setCategoryFilter] = useState("")
 
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const handleOpenEditModal = () => { setOpenEditModal(true) }
+  const handleCloseEditModal = () => { setOpenEditModal(false) }
+  const [selectedRow, setSelectedRow] = useState<RowData | null>(null);
+
   const columns: StickyHeadTableColumn<RowData>[] = [
     { id: 'id', label: "ID", minWidth: 50, align: "center", format: (value) => String(value) },
     { id: 'name', label: "Nama", minWidth: 50, align: "center", format: (value) => String(value) },
@@ -56,24 +67,25 @@ const MaterialPage: React.FC = () => {
         if (row.status === "Inactive") return (<div className="badge badge-warning whitespace-nowrap p-3 gap-2">{row.status}</div>)
       },
     },
-    { id: 'conversion', label: "Konversi", minWidth: 50, align: "center"},
+    { id: 'conversion', label: "Konversi", minWidth: 50, align: "center" },
+    { id: 'unit_measure', label: "Satuan", minWidth: 50, align: "center", format: (value) => value.name },
+    { id: 'minimum_unit_measure', label: "Satuan Minimum", minWidth: 50, align: "center", format: (value) => value.name },
     {
       id: 'merk', label: "Merk", minWidth: 50, align: "center",
       renderComponent: (row) => { return (<div className="badge whitespace-nowrap p-3 gap-2">{row.merk.name}</div>) },
     },
-    { id: 'unit_measure', label: "Satuan", minWidth: 50, align: "center", format: (value) => value.name },
-    { id: 'minimum_unit_measure', label: "Satuan Minimum", minWidth: 50, align: "center", format: (value) => value.name },
     {
       id: 'item_category', label: "Kategori", minWidth: 50, align: "center",
       renderComponent: (row) => { return (<div className="badge whitespace-nowrap p-3 gap-2">{row.item_category.name}</div>) },
     },
     {
-      id: 'action', label: 'Action', actionLabel: 'Detail', align: "center", buttonColor: (row) => 'secondary',
+      id: 'action', label: 'Action', actionLabel: 'Detail/Edit', align: "center", buttonColor: (row) => 'secondary',
     },
   ]
 
   const handleActionTable = (row: RowData, column: StickyHeadTableColumn<RowData>) => {
-    
+    setSelectedRow(row)
+    handleOpenEditModal()
   }
 
   useEffect(() => {
@@ -92,7 +104,7 @@ const MaterialPage: React.FC = () => {
     <div className="flex flex-col">
       <div className="text-2xl font-bold mb-1">Daftar Material</div>
       <div className="flex justify-end">
-        <AddSku refetchSkus={refetch} />
+        <AddMaterial refetchMaterials={refetch} />
       </div>
 
       <Box display={"flex"} flexWrap={"wrap"}>
@@ -137,6 +149,13 @@ const MaterialPage: React.FC = () => {
           onActionClick={handleActionTable}
         />
       </div>}
+      <EditMaterialModal
+        row={selectedRow}
+        refetchMaterials={refetch}
+        openModal={openEditModal}
+        handleOpenModal={handleOpenEditModal}
+        handleCloseModal={handleCloseEditModal}
+      />
     </div>
   )
 }
