@@ -39,7 +39,7 @@ interface RowData {
 
 const MaterialPage: React.FC = () => {
 
-  let { data, loading, refetch } = useQuery(GetAllMaterialsDocument, { variables: { requiresAuth: true } })
+  let { data, loading, error, refetch } = useQuery(GetAllMaterialsDocument, { variables: { requiresAuth: true } })
   const { data: merkData, loading: merkLoading, error: merkError, refetch: refetchMerk } = useQuery(GetAllMerksDocument, { variables: { requiresAuth: true } })
   const { data: categoryData, loading: categoryLoading, error: categoryError, refetch: refetchCategory } = useQuery(GetCategoriesDocument, {
     variables: {
@@ -137,18 +137,24 @@ const MaterialPage: React.FC = () => {
         />
       </Box>
 
-      {!loading && <div>
-        <StickyHeadTable
-          columns={columns}
-          rows={data?.getAllMaterials.filter((matr: any) => {
-            let condition = matr.name.toLowerCase().includes(nameFilter.toLowerCase())
-              && matr.merk.name.includes(merkFilter) && matr.item_category.name.includes(categoryFilter)
-            return condition
-          }) ?? []}
-          withIndex={true}
-          onActionClick={handleActionTable}
-        />
-      </div>}
+      {!loading && !error &&
+        data?.getAllMaterials.length <= 0 ?
+        <div className="flex justify-center items-center p-5 bg-accent shadow-md">
+          PERUSAHAAN BELUM MEMILIKI DATA MATERIAL
+        </div>
+        :
+        <div>
+          <StickyHeadTable
+            columns={columns}
+            rows={data?.getAllMaterials.filter((matr: any) => {
+              let condition = matr.name.toLowerCase().includes(nameFilter.toLowerCase())
+                && matr.merk.name.includes(merkFilter) && matr.item_category.name.includes(categoryFilter)
+              return condition
+            }) ?? []}
+            withIndex={true}
+            onActionClick={handleActionTable}
+          />
+        </div>}
       <EditMaterialModal
         row={selectedRow}
         refetchMaterials={refetch}

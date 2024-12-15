@@ -138,7 +138,7 @@ const EditMaterialModal: React.FC<EditMaterialModalProps> = ({
 
         <Controller
           name="description" control={control}
-          render={({ field }) => (<TextField
+          render={({ field }) => (<TextField multiline rows={3}
             {...field} color="secondary"
             sx={{ width: "100%", mb: 1 }} label="Deskripsi" size='small' variant="outlined"
             error={!!errors.description} helperText={errors.description ? errors.description.message : ''}

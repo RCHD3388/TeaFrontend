@@ -21,14 +21,17 @@ interface RowData {
 
 const columns: StickyHeadTableColumn<RowData>[] = [
   { id: 'name', label: "Supplier", minWidth: 50, align: "center" },
-  { id: 'phone_number', label: 'Nomer Telepon', minWidth: 100, align: "center",
-    renderComponent: (row) => {return (<>{row.person.phone_number}</>)}
+  {
+    id: 'phone_number', label: 'Nomer Telepon', minWidth: 100, align: "center",
+    renderComponent: (row) => { return (<>{row.person.phone_number}</>) }
   },
-  { id: 'email', label: 'Email', minWidth: 50, align: "center",
-    renderComponent: (row) => {return (<>{row.person.email}</>)}
+  {
+    id: 'email', label: 'Email', minWidth: 50, align: "center",
+    renderComponent: (row) => { return (<>{row.person.email}</>) }
   },
-  { id: 'address', label: 'Alamat', minWidth: 100, align: "center",
-    renderComponent: (row) => {return (<>{row.person.address}</>)}
+  {
+    id: 'address', label: 'Alamat', minWidth: 100, align: "center",
+    renderComponent: (row) => { return (<>{row.person.address}</>) }
   },
   {
     id: 'status', label: 'Status', minWidth: 50, align: "center",
@@ -46,7 +49,7 @@ const columns: StickyHeadTableColumn<RowData>[] = [
 ]
 
 export default function SupplierPage() {
-  let { data, loading, refetch } = useQuery(GetAllSuppliersDocument, { variables: { requiresAuth: true } })
+  let { data, loading, error, refetch } = useQuery(GetAllSuppliersDocument, { variables: { requiresAuth: true } })
   const navigate = useNavigate()
 
   const [nameFilter, setNameFilter] = useState("")
@@ -81,20 +84,26 @@ export default function SupplierPage() {
             onChange={(event: React.SyntheticEvent, newValue: string | null) => {
               setStatusFilter(newValue || "")
             }}
-            renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Status Pegawai"/>}
+            renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Status Pegawai" />}
           />
         </Box>
 
-        {!loading && <div>
-          <StickyHeadTable
-            columns={columns}
-            rows={data?.getAllSuppliers.filter((sup: any) => {
-              return sup.name.toLowerCase().includes(nameFilter.toLowerCase()) && sup.status.includes(statusFilter)
-            }) ?? []}
-            withIndex={true}
-            onActionClick={handleActionTable}
-          />
-        </div>}
+        {!loading && !error &&
+          data?.getAllSuppliers.length <= 0 ?
+          <div className="flex justify-center items-center p-5 bg-accent shadow-md">
+            PERUSAHAAN BELUM MEMILIKI SUPPLIER
+          </div> 
+          :
+          <div>
+            <StickyHeadTable
+              columns={columns}
+              rows={data?.getAllSuppliers.filter((sup: any) => {
+                return sup.name.toLowerCase().includes(nameFilter.toLowerCase()) && sup.status.includes(statusFilter)
+              }) ?? []}
+              withIndex={true}
+              onActionClick={handleActionTable}
+            />
+          </div>}
       </div>
     </div>
   );

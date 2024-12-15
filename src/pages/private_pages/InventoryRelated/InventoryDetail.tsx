@@ -10,6 +10,7 @@ import { CustomGraphQLError } from "../../../types/apollo_client.types";
 import { WarehouseType } from "../../../types/staticData.types";
 import { useDispatch } from "react-redux";
 import { openSnackbar } from "../../../app/reducers/snackbarSlice";
+import DetailInventoryItem from "../../../components/inventory_related/DetailInventoryItem";
 
 interface UpdateWarehouseValues {
   name: string
@@ -104,7 +105,7 @@ export default function InventoryDetail() {
           >
             <ReplyAllIcon fontSize="medium"></ReplyAllIcon>
           </IconButton>
-          <div className="mb-2 flex items-center">
+          <div className="mb-2 flex items-center flex-wrap">
             <span className="text-4xl font-bold mr-2">Detail Warehouse</span>
             {!loadingInventory && !errorInventory && <span className={`badge whitespace-nowrap badge-lg ${dataInventory.getWarehouseById.type == WarehouseType.INVENTORY ? "badge-warning" : "badge-info text-white"}`}>
               {dataInventory.getWarehouseById.type == WarehouseType.INVENTORY ? "Inventory Perusahaan" : "Inventory Proyek"}
@@ -112,7 +113,7 @@ export default function InventoryDetail() {
           </div>
         </Box>
 
-        <Container sx={{ paddingTop: 4 }}>
+        <Container sx={{ paddingY: 3 }}>
           {!loadingInventory && !errorInventory && <div>
             {/* FIELD START */}
             <Controller
@@ -143,7 +144,7 @@ export default function InventoryDetail() {
               name="status" control={control} rules={{ required: 'Status tidak boleh kosong' }}
               render={({ field }) => (
                 <TextField
-                  disabled = {dataInventory.getWarehouseById.type == WarehouseType.PROJECT}
+                  disabled={dataInventory.getWarehouseById.type == WarehouseType.PROJECT}
                   {...field} color="secondary"
                   select sx={{ width: "100%", mb: 1 }} label="Status" size="small" variant="outlined"
                   error={!!errors.status}
@@ -169,9 +170,17 @@ export default function InventoryDetail() {
             </div>
             {/* BUTTON SUBMIT END */}
           </div>}
-        </Container>
-        {warehouseId}
 
+          {/* HORIZONTAL LINE */}
+          <hr className="bg-gray-400" style={{ padding: 1, marginTop: 20, marginBottom: 20 }} />
+
+          {/* DETAIL INVENTORY */}
+          {warehouseId ? <DetailInventoryItem warehouseId={warehouseId} /> :
+            <div className="bg-error text-white p-5 flex justify-center items-center rounded-lg">
+              Tidak dapat mendapatkan data item pada warehouse
+            </div>
+          }
+        </Container>
       </div>
     </div>
   );

@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { logoutUser, selectUser } from "../app/reducers/userSlice";
 import { RootState } from "../app/store";
 
-interface NavbarProps{
+interface NavbarProps {
   sidebarID: string
 }
 
-const Navbar: React.FC<NavbarProps> = ({sidebarID}) => {
+const Navbar: React.FC<NavbarProps> = ({ sidebarID }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => selectUser(state))
@@ -26,7 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({sidebarID}) => {
 
   return (
     <>
-      <div className="navbar bg-light shadow-lg h-16" style={{zIndex: 3}}>
+      <div className="navbar bg-light  shadow-lg h-16" style={{ zIndex: 3 }}>
         <div className="flex-1">
           <label htmlFor={sidebarID} className="btn btn-primary drawer-button lg:hidden">
             <svg
@@ -47,7 +47,7 @@ const Navbar: React.FC<NavbarProps> = ({sidebarID}) => {
             <p className="leading-none">Home</p>
           </div>
         </div>
-        <div className="flex gap-2" style={{zIndex: 3}}>
+        <div className="flex gap-2" style={{ zIndex: 3 }}>
           <div className="dropdown dropdown-end">
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar placeholder">
               <div className="bg-secondary text-secondary-content w-12 rounded-full">
@@ -57,9 +57,12 @@ const Navbar: React.FC<NavbarProps> = ({sidebarID}) => {
             <ul
               tabIndex={0}
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-              <p className="font text-base">{user.username}</p>
-              <p className="font-bold text-sm">{user.role}</p>
-              <hr className="my-2 border-t-2 border-gray-300" />
+              <div className="flex gap-2">
+                <span className="font-bold text-base" style={{ textTransform: "capitalize" }}>{user.username} </span>
+                <span className="badge badge-warning">{user.role}</span>
+              </div>  
+              <li className="btn my-2 bg-success text-white btn-sm" onClick={() => { logoutHandling() }}>Profile</li>
+              <hr className="mb-2 border-t-2 border-gray-300" />
               <li className="btn bg-important btn-sm" onClick={() => { logoutHandling() }}>Logout</li>
             </ul>
           </div>

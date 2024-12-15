@@ -1,6 +1,6 @@
 import { Autocomplete, Box, Button, CircularProgress, MenuItem, Modal, TextField, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import {useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import SearchIcon from '@mui/icons-material/Search';
 import { GetAllMerksDocument, GetAllSkusDocument } from "../../../../graphql/inventory.generated";
@@ -25,8 +25,8 @@ interface RowData {
 }
 
 const ToolSkuPage: React.FC = () => {
-  
-  let { data, loading, refetch } = useQuery(GetAllSkusDocument, { variables: { requiresAuth: true } })
+
+  let { data, loading, error, refetch } = useQuery(GetAllSkusDocument, { variables: { requiresAuth: true } })
   const { data: merkData, loading: merkLoading, error: merkError, refetch: refetchMerk } = useQuery(GetAllMerksDocument, { variables: { requiresAuth: true } })
   const { data: categoryData, loading: categoryLoading, error: categoryError, refetch: refetchCategory } = useQuery(GetCategoriesDocument, {
     variables: {
@@ -108,18 +108,24 @@ const ToolSkuPage: React.FC = () => {
         />
       </Box>
 
-      {!loading && <div>
-        <StickyHeadTable
-          columns={columns}
-          rows={data?.getAllSkus.filter((sku: any) => {
-            let condition = sku.name.toLowerCase().includes(nameFilter.toLowerCase())
-              && sku.merk.name.includes(merkFilter) && sku.item_category.name.includes(categoryFilter)
-            return condition
-          }) ?? []}
-          withIndex={true}
-          onActionClick={handleActionTable}
-        />
-      </div>}
+      {!loading && !error &&
+        data?.getAllSkus.length <= 0 ?
+        <div className="flex justify-center items-center p-5 bg-accent shadow-md">
+          PERUSAHAAN BELUM MEMILIKI DATA PERALATAN
+        </div> 
+        :
+        <div>
+          <StickyHeadTable
+            columns={columns}
+            rows={data?.getAllSkus.filter((sku: any) => {
+              let condition = sku.name.toLowerCase().includes(nameFilter.toLowerCase())
+                && sku.merk.name.includes(merkFilter) && sku.item_category.name.includes(categoryFilter)
+              return condition
+            }) ?? []}
+            withIndex={true}
+            onActionClick={handleActionTable}
+          />
+        </div>}
     </div>
   )
 }

@@ -38,7 +38,7 @@ const ComponentCard: React.FC<CustomListComponentProps> = ({
   }
 
   return (
-    <div className="p-3 mb-3 bg-accent flex justify-between rounded shadow-md">
+    <div className="p-3 mb-3 bg-accent flex justify-between rounded-lg shadow-md">
       <div className="">
         <div className="mb-2">
           <div className="font-bold text-2xl">{title}</div>

@@ -164,16 +164,22 @@ export default function InventoryCategoryPage() {
             />
           </Box>
 
-          {!loadingUMeasure && <div>
-            <StickyHeadTable
-              tableSx={{ height: 150 }}
-              columns={unitMeasureColumns}
-              rows={dataUMeasure?.getAllUnitMeasures.filter((item: any) => {
-                return item.name.toLowerCase().includes(nameUnitFilter.toLowerCase())
-              }) ?? []}
-              withIndex={true}
-            />
-          </div>}
+          {!loadingUMeasure && !errorUMeasure &&
+            dataUMeasure?.getAllUnitMeasures.length <= 0 ?
+            <div className="flex justify-center items-center p-5 bg-accent shadow-md">
+              PERUSAHAAN BELUM MEMILIKI DATA SATUAN UNIT
+            </div>
+            :
+            <div>
+              <StickyHeadTable
+                tableSx={{ height: 150 }}
+                columns={unitMeasureColumns}
+                rows={dataUMeasure?.getAllUnitMeasures.filter((item: any) => {
+                  return item.name.toLowerCase().includes(nameUnitFilter.toLowerCase())
+                }) ?? []}
+                withIndex={true}
+              />
+            </div>}
         </Box>
 
         {/* page merk list */}
@@ -194,16 +200,22 @@ export default function InventoryCategoryPage() {
             />
           </Box>
 
-          {!loadingMerk && <div>
-            <StickyHeadTable
-              tableSx={{ height: 150 }}
-              columns={merkColumns}
-              rows={dataMerk?.getAllMerks.filter((item: any) => {
-                return item.name.toLowerCase().includes(nameMerkFilter.toLowerCase())
-              }) ?? []}
-              withIndex={true}
-            />
-          </div>}
+          {!loadingMerk && !errorMerk &&
+            dataMerk?.getAllMerks.length <= 0 ?
+            <div className="flex justify-center items-center p-5 bg-accent shadow-md">
+              PERUSAHAAN BELUM MEMILIKI DATA MERK
+            </div>
+            :
+            <div>
+              <StickyHeadTable
+                tableSx={{ height: 150 }}
+                columns={merkColumns}
+                rows={dataMerk?.getAllMerks.filter((item: any) => {
+                  return item.name.toLowerCase().includes(nameMerkFilter.toLowerCase())
+                }) ?? []}
+                withIndex={true}
+              />
+            </div>}
         </Box>
 
         {/* EDIT MODAL INVENTORY CATEGORY */}

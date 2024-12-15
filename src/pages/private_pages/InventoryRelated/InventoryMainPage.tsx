@@ -59,7 +59,7 @@ export default function InventoryMainPage() {
 
       {!loading && !error && <>
         {data.getAllWarehouses.length == 0 ?
-          <div className="flex justify-center items-center p-5 bg-primary shadow-md">
+          <div className="flex justify-center items-center p-5 bg-accent shadow-md">
             PERUSAHAAN BELUM MEMILIKI WAREHOUSE
           </div>
 

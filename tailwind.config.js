@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        light: "#edf7ee",
+        light: "#F2FFF4",
         important: "#cd5555"
       }
     },
@@ -24,7 +24,7 @@ export default {
           "secondary": "#223634",
           "secondary-content": "#eaf0e4",
           // light yellow
-          "accent": "#F0E4AF",
+          "accent": "#FAE99C",
           "accent-content": "#1e211b",
           // light gray
           "neutral": "#3c3d37",

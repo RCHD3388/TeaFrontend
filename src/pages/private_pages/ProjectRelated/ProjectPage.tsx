@@ -61,7 +61,7 @@ const columns: StickyHeadTableColumn<RowData>[] = [
 ]
 
 export default function ProjectPage() {
-  let { data, loading, refetch } = useQuery(FindAllProjectsDocument, { variables: { requiresAuth: true } })
+  let { data, loading, error, refetch } = useQuery(FindAllProjectsDocument, { variables: { requiresAuth: true } })
   const user = useSelector((state: RootState) => selectUser(state))
   const navigate = useNavigate()
   const { data: catData, loading: catLoading, error: catError, refetch: catRefetch } = useQuery(GetCategoriesDocument, {
@@ -81,9 +81,9 @@ export default function ProjectPage() {
   }
 
   const getFilterDataCustom = (target: string) => {
-    let data = catData.getCategories.filter((cat:any) => cat.type == target)
+    let data = catData.getCategories.filter((cat: any) => cat.type == target)
     data = data.map((d: any) => d.name)
-    return data    
+    return data
   }
 
   useEffect(() => { if (catData) catRefetch() }, [catData, catRefetch]);
@@ -125,19 +125,25 @@ export default function ProjectPage() {
           />
         </Box>
 
-        {!loading && <div>
-          <StickyHeadTable
-            columns={columns}
-            rows={data?.findAllProjects.filter((proj: any) => {
-              let condition = proj.name.toLowerCase().includes(nameFilter.toLowerCase())
-                && proj.priority.name.includes(priorityFilter) 
-                && proj.status.name.includes(statusFilter) 
-              return condition
-            }) ?? []}
-            withIndex={true}
-            onActionClick={handleActionTable}
-          />
-        </div>}
+        {!loading && !error &&
+          data?.findAllProjects.length <= 0 ?
+          <div className="flex justify-center items-center p-5 bg-accent shadow-md">
+            ANDA BELUM MEMILIKI PROYEK
+          </div>
+          :
+          <div>
+            <StickyHeadTable
+              columns={columns}
+              rows={data?.findAllProjects.filter((proj: any) => {
+                let condition = proj.name.toLowerCase().includes(nameFilter.toLowerCase())
+                  && proj.priority.name.includes(priorityFilter)
+                  && proj.status.name.includes(statusFilter)
+                return condition
+              }) ?? []}
+              withIndex={true}
+              onActionClick={handleActionTable}
+            />
+          </div>}
       </div>
     </div>
   );
