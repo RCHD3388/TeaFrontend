@@ -3,7 +3,6 @@ export enum CategoryType {
   PRIORITY = "prioritas",
   COMPLETION_STATUS = "status_penyelesaian",
   ITEM = "kategori_item",
-  REQUEST_STATUS = "status_permintaan",
   TOOL_STATUS = "status_alat",
 }
 
@@ -14,7 +13,6 @@ export enum CategoryTypeColor {
   PRIORITY = "yellow",
   COMPLETION_STATUS = "green",
   ITEM = "blue",
-  REQUEST_STATUS = "blue",
   TOOL_STATUS = "blue",
 }
 
@@ -34,3 +32,26 @@ export enum WarehouseType {
 }
 
 export const WarehouseTypeValues = Object.values(WarehouseType)
+
+
+export enum RequestItemType {
+  PEMINJAMAN = 'Peminjaman',
+  PENGEMBALIAN = 'Pengembalian',
+}
+export const RequestItemTypeValues = Object.values(RequestItemType)
+
+export enum RequestItem_ItemType {
+  MATERIAL = 'Material',
+  TOOL = 'Tool',
+}
+export const RequestItem_ItemTypeValues = Object.values(RequestItem_ItemType)
+
+export enum RequestStatusType {
+  MENUNGGU = 'menunggu persetujuan',
+  DISETUJUI = 'disetujui',
+  DITOLAK = 'ditolak',
+  PROSES = 'proses',
+  DIBATALKAN = 'dibatalkan',
+  SELESAI = 'selesai',
+}
+export const RequestStatusTypeValues = Object.values(RequestStatusType)
