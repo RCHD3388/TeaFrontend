@@ -3,7 +3,7 @@ import AddIcon from '@mui/icons-material/Add';
 import AddSupplier from "../../../components/supplier_related/AddSupplier";
 import { GetAllSuppliersDocument } from "../../../graphql/supplier.generated";
 import { useMutation, useQuery } from "@apollo/client";
-import StickyHeadTable, { StickyHeadTableColumn } from "../../../components/global_features/StickyHeadTable";
+import StickyHeadTable from "../../../components/global_features/StickyHeadTable";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import SearchIcon from '@mui/icons-material/Search';
@@ -13,6 +13,7 @@ import AddMerk from "../../../components/inventory_related/AddMerk";
 import { modalStyle } from "../../../theme";
 import { openSnackbar } from "../../../app/reducers/snackbarSlice";
 import { useDispatch } from "react-redux";
+import { GridColDef } from "@mui/x-data-grid";
 
 enum UnitEditType {
   UNIT_MEASURE = "SATUAN UNIT",
@@ -24,13 +25,15 @@ interface RowData {
   name: string,
   description: string
 }
-const mainColumns: StickyHeadTableColumn<RowData>[] = [
-  { id: 'name', label: "Nama", minWidth: 50, align: "center" },
+const mainColumns: GridColDef<RowData>[] = [
+  { field: "index", headerName: "No", type: "number", flex: 1 },
+  { field: "name", headerName: "Name", minWidth: 200, type: "string", flex: 2 },
   {
-    id: 'description', label: "Deskripsi", minWidth: 50, align: "center",
-    format(value) {
+    field: "description", headerName: "Description", minWidth: 200, type: "string", flex: 2,
+    renderCell: (params: any) => {
+      let value = params.row.description;
       return value.length == 0 ? <div className="text-error">Belum ada deskripsi</div> : value
-    },
+    }
   },
 ]
 
@@ -41,10 +44,6 @@ export default function InventoryCategoryPage() {
   const [updateMerk] = useMutation(UpdateMerkDocument)
   const [deleteUnitMeasure] = useMutation(DeleteUnitMeasureDocument)
   const [deleteMerk] = useMutation(DeleteMerkDocument)
-  const navigate = useNavigate()
-
-  const [nameUnitFilter, setNameUnitFilter] = useState("")
-  const [nameMerkFilter, setNameMerkFilter] = useState("")
 
   const [editType, setEditType] = useState("");
   const [selectedRow, setSelectedRow] = useState<RowData | null>(null);
@@ -116,29 +115,23 @@ export default function InventoryCategoryPage() {
   }
 
   // COLUMN DETAIL
-  const unitMeasureColumns: StickyHeadTableColumn<RowData>[] = [
+  const unitMeasureColumns: GridColDef<RowData>[] = [
     ...mainColumns,
     {
-      id: 'custom_action', label: 'Action', actionLabel: 'Detail', align: "center",
-      renderComponent: (row) => {
-        return (
-          <Button variant="contained" color="secondary" onClick={() => { handleUnitMeasureEdit(row) }}
-            size="small" sx={{ textTransform: "none" }}> Detail / Edit </Button>
-        )
-      }
+      field: 'action_custom', headerName: 'Action', minWidth: 150, flex: 1, sortable: false, filterable: false,
+      renderCell: (params) => (<Button variant='contained' color='secondary'
+        onClick={() => { handleUnitMeasureEdit(params.row) }}> Detail / Edit </Button>
+      ),
     },
   ]
 
-  const merkColumns: StickyHeadTableColumn<RowData>[] = [
+  const merkColumns: GridColDef<RowData>[] = [
     ...mainColumns,
     {
-      id: 'custom_action', label: 'Action', actionLabel: 'Detail', align: "center",
-      renderComponent: (row) => {
-        return (
-          <Button variant="contained" color="secondary" onClick={() => { handleMerkEdit(row) }}
-            size="small" sx={{ textTransform: "none" }}> Detail / Edit </Button>
-        )
-      }
+      field: 'action_custom', headerName: 'Action', minWidth: 150, flex: 1, sortable: false, filterable: false,
+      renderCell: (params) => (<Button variant='contained' color='secondary'
+        onClick={() => { handleMerkEdit(params.row) }}> Detail / Edit </Button>
+      ),
     },
   ]
   // COLUMN DETAIL END
@@ -153,15 +146,6 @@ export default function InventoryCategoryPage() {
 
           <Box display={"flex"} flexWrap={"wrap"} justifyContent={"space-between"}>
             <AddUnitMeasure refetchUnitMeasure={refetchUMeasure} />
-            <TextField
-              color="secondary" sx={{ mb: 1, mr: 1 }} label="Pencarian" size='small' variant="outlined"
-              onChange={(e) => { setNameUnitFilter(e.target.value) }}
-              slotProps={{
-                input: {
-                  startAdornment: <SearchIcon></SearchIcon>,
-                },
-              }}
-            />
           </Box>
 
           {!loadingUMeasure && !errorUMeasure &&
@@ -174,10 +158,8 @@ export default function InventoryCategoryPage() {
               <StickyHeadTable
                 tableSx={{ height: 150 }}
                 columns={unitMeasureColumns}
-                rows={dataUMeasure?.getAllUnitMeasures.filter((item: any) => {
-                  return item.name.toLowerCase().includes(nameUnitFilter.toLowerCase())
-                }) ?? []}
-                withIndex={true}
+                rows={dataUMeasure?.getAllUnitMeasures ?? []}
+                csvname="daftar_satuan_unit"
               />
             </div>}
         </Box>
@@ -189,15 +171,6 @@ export default function InventoryCategoryPage() {
 
           <Box display={"flex"} flexWrap={"wrap"} justifyContent={"space-between"}>
             <AddMerk refetchMerk={refetchMerk} />
-            <TextField
-              color="secondary" sx={{ mb: 1, mr: 1 }} label="Pencarian" size='small' variant="outlined"
-              onChange={(e) => { setNameMerkFilter(e.target.value) }}
-              slotProps={{
-                input: {
-                  startAdornment: <SearchIcon></SearchIcon>,
-                },
-              }}
-            />
           </Box>
 
           {!loadingMerk && !errorMerk &&
@@ -210,10 +183,8 @@ export default function InventoryCategoryPage() {
               <StickyHeadTable
                 tableSx={{ height: 150 }}
                 columns={merkColumns}
-                rows={dataMerk?.getAllMerks.filter((item: any) => {
-                  return item.name.toLowerCase().includes(nameMerkFilter.toLowerCase())
-                }) ?? []}
-                withIndex={true}
+                rows={dataMerk?.getAllMerks ?? []}
+                csvname="daftar_merk"
               />
             </div>}
         </Box>

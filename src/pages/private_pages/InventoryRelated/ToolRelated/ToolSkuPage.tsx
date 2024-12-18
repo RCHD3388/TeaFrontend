@@ -6,8 +6,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import { GetAllMerksDocument, GetAllSkusDocument } from "../../../../graphql/inventory.generated";
 import { GetCategoriesDocument } from "../../../../graphql/category.generated";
 import { CategoryType } from "../../../../types/staticData.types";
-import StickyHeadTable, { StickyHeadTableColumn } from "../../../../components/global_features/StickyHeadTable";
+import StickyHeadTable from "../../../../components/global_features/StickyHeadTable";
 import AddSku from "../../../../components/inventory_related/AddSku";
+import { GridColDef } from "@mui/x-data-grid";
 
 
 interface RowData {
@@ -35,27 +36,8 @@ const ToolSkuPage: React.FC = () => {
     }
   })
   const navigate = useNavigate();
-  const [nameFilter, setNameFilter] = useState("")
-  const [merkFilter, setMerkFilter] = useState("")
-  const [categoryFilter, setCategoryFilter] = useState("")
 
-  const columns: StickyHeadTableColumn<RowData>[] = [
-    { id: 'name', label: "Nama", minWidth: 50, align: "center", format: (value) => String(value) },
-    { id: 'description', label: "Deskripsi", minWidth: 50, align: "center", format: (value) => value.length == 0 ? <div className="text-error">Belum ada deskripsi</div> : value },
-    {
-      id: 'merk', label: "Merk", minWidth: 50, align: "center",
-      renderComponent: (row) => { return (<div className="badge whitespace-nowrap p-3 gap-2">{row.merk.name}</div>) },
-    },
-    {
-      id: 'item_category', label: "Kategori", minWidth: 50, align: "center",
-      renderComponent: (row) => { return (<div className="badge whitespace-nowrap p-3 gap-2">{row.item_category.name}</div>) },
-    },
-    {
-      id: 'action', label: 'Action', actionLabel: 'Detail', align: "center", buttonColor: (row) => 'secondary',
-    },
-  ]
-
-  const handleActionTable = (row: RowData, column: StickyHeadTableColumn<RowData>) => {
+  const handleActionTable = (row: RowData) => {
     navigate(`/appuser/inventory/sku/${row._id}`)
   }
 
@@ -71,6 +53,33 @@ const ToolSkuPage: React.FC = () => {
     }
   }, [categoryData, refetchCategory])
 
+  const columns: GridColDef<RowData>[] = [
+    { field: "index", headerName: "No", type: "number", flex: 1 },
+    { field: "name", headerName: "Name", minWidth: 150, type: "string", flex: 2 },
+    {
+      field: "description", headerName: "Description", minWidth: 200, type: "string", flex: 2,
+      renderCell: (params: any) => {
+        let value = params.row.description;
+        return value.length == 0 ? <div className="text-error">Belum ada deskripsi</div> : value
+      }
+    },
+    {
+      field: 'merk', headerName: "Merk", minWidth: 150, type: "singleSelect", flex: 1,
+      valueOptions: merkData?.getAllMerks.map((merk: any) => ({ label: merk.name, value: merk._id })) || [],
+      renderCell: (params) => { return (<div className="badge whitespace-nowrap p-3 gap-2">{params.row.merk.name}</div>) },
+    },
+    {
+      field: 'item_category', headerName: "Kategori", minWidth: 150, type: "singleSelect", flex: 1,
+      renderCell: (params) => { return (<div className="badge whitespace-nowrap p-3 gap-2">{params.row.item_category.name}</div>) },
+    },
+    {
+      field: 'action', headerName: 'Action', minWidth: 150, flex: 1, sortable: false, filterable: false,
+      renderCell: (params) => (<Button variant='contained' color='secondary' sx={{ textTransform: 'none' }}
+        onClick={() => { handleActionTable(params.row) }}> Detail / Edit </Button>
+      ),
+    }
+  ]
+
   return (
     <div className="flex flex-col">
       <div className="text-2xl font-bold mb-1">Daftar Satuan Unit</div>
@@ -78,52 +87,18 @@ const ToolSkuPage: React.FC = () => {
         <AddSku refetchSkus={refetch} />
       </div>
 
-      <Box display={"flex"} flexWrap={"wrap"}>
-        <TextField
-          color="secondary" sx={{ mb: 1, mr: 1 }} label="Pencarian" size='small' variant="outlined"
-          onChange={(e) => { setNameFilter(e.target.value) }}
-          slotProps={{
-            input: {
-              startAdornment: <SearchIcon></SearchIcon>,
-            },
-          }}
-        />
-        <Autocomplete
-          disablePortal
-          options={merkLoading ? [] : merkData.getAllMerks.map((mk: any) => { return mk.name })}
-          sx={{ width: 300, mb: 1, mr: 1 }}
-          onChange={(event: React.SyntheticEvent, newValue: string | null) => {
-            setMerkFilter(newValue || "")
-          }}
-          renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Merk Sku" />}
-        />
-        <Autocomplete
-          disablePortal
-          options={categoryLoading ? [] : categoryData.getCategories.map((ct: any) => { return ct.name })}
-          sx={{ width: 300, mb: 1, mr: 1 }}
-          onChange={(event: React.SyntheticEvent, newValue: string | null) => {
-            setCategoryFilter(newValue || "")
-          }}
-          renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Kategori Barang" />}
-        />
-      </Box>
-
       {!loading && !error &&
         data?.getAllSkus.length <= 0 ?
         <div className="flex justify-center items-center p-5 bg-accent shadow-md">
           PERUSAHAAN BELUM MEMILIKI DATA PERALATAN
-        </div> 
+        </div>
         :
         <div>
           <StickyHeadTable
             columns={columns}
-            rows={data?.getAllSkus.filter((sku: any) => {
-              let condition = sku.name.toLowerCase().includes(nameFilter.toLowerCase())
-                && sku.merk.name.includes(merkFilter) && sku.item_category.name.includes(categoryFilter)
-              return condition
-            }) ?? []}
+            rows={data?.getAllSkus ?? []}
             withIndex={true}
-            onActionClick={handleActionTable}
+            csvname={"sku_data"}
           />
         </div>}
     </div>

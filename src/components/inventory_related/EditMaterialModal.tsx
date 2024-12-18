@@ -126,6 +126,9 @@ const EditMaterialModal: React.FC<EditMaterialModalProps> = ({
     >
       <Box sx={modalStyle}>
         <Typography id="modal-modal-title" variant="h6" component="h2"><b>TAMBAH MATERIAL</b></Typography>
+        <Typography id="modal-modal-description" mb={2} sx={{ fontWeight: "bold" }}>
+          Material ID : {row.id}
+        </Typography>
         {/* FIELD START */}
         <Controller
           name="name" control={control} rules={{ required: 'Nama tidak boleh kosong' }}

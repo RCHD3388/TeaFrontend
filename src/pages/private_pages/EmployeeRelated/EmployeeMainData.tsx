@@ -1,7 +1,7 @@
 import { Autocomplete, Box, Button, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import AddEmployee from "../../../components/emlpoyee_related/AddEmployee";
-import StickyHeadTable, { StickyHeadTableColumn } from "../../../components/global_features/StickyHeadTable";
+import StickyHeadTable from "../../../components/global_features/StickyHeadTable";
 import { useQuery } from "@apollo/client";
 import { GetAllEmployeesDocument, GetAllSkillDocument } from "../../../graphql/person.generated";
 import { formatCurrency, formatDateToLong } from "../../../utils/service/FormatService";
@@ -9,8 +9,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import { selectUser } from "../../../app/reducers/userSlice";
 import { useNavigate } from "react-router-dom";
-import SearchIcon from '@mui/icons-material/Search';
 import { EmployeeRoleType, EmployeeRoleTypeValues } from "../../../types/staticData.types";
+import { GridColDef } from "@mui/x-data-grid";
 
 interface RowData {
   _id: string,
@@ -28,50 +28,7 @@ const EmployeeMainData: React.FC = () => {
   const user = useSelector((state: RootState) => selectUser(state))
   const navigate = useNavigate();
 
-  const [nameFilter, setNameFilter] = useState("")
-  const [roleFilter, setRoleFilter] = useState("")
-  const [skillFilter, setSkillFilter] = useState("")
-  const [statusFilter, setStatusFilter] = useState("")
-
-  const columns: StickyHeadTableColumn<RowData>[] = [
-    { id: 'person', label: "Nama", minWidth: 50, align: "center", format: (value) => String(value.name) },
-    { id: "hire_date", label: "Hire Date", minWidth: 50, align: "center", format: (value) => formatDateToLong(value) },
-    { id: 'salary', label: 'Salary', minWidth: 50, align: "center", format: (value) => formatCurrency(value) },
-    {
-      id: 'status', label: 'Status', minWidth: 50, align: "center",
-      renderComponent: (row) => {
-        return (<>
-          {row.status == "Active" ?
-            <div className="badge whitespace-nowrap badge-success p-3 text-white gap-2">Active</div> :
-            <div className="badge whitespace-nowrap badge-warning p-3 gap-2">Inactive</div>}
-        </>)
-      }
-    },
-    {
-      id: 'role', label: 'Role', minWidth: 50, align: "center",
-      renderComponent: (row) => { return (<div className="badge whitespace-nowrap badge-neutral p-3 gap-2">{row.role.name}</div>) }
-    },
-    {
-      id: 'skill', label: 'Skill', minWidth: 50, align: "center",
-      renderComponent: (row) => {
-        return (<div className="flex justify-center items-center">
-          <Box sx={{ maxWidth: 200, overflowX: 'auto', display: 'flex', gap: 1 }}>
-            {row.skill.map((skillname, index) => <div key={index} className="badge whitespace-nowrap badge-neutral p-3 whitespace-nowrap gap-2">{skillname.name}</div>)}
-          </Box>
-        </div>)
-      },
-    },
-    {
-      id: 'action', label: 'Action', actionLabel: 'Detail', align: "center", buttonColor: (row) => 'secondary',
-      buttonDisabled: (row) => {
-        let rowRole = row.role.name
-        if (user.role == EmployeeRoleType.ADMIN && (rowRole == EmployeeRoleType.OWNER || rowRole == EmployeeRoleType.ADMIN)) return true
-        return false
-      }
-    },
-  ]
-
-  const handleActionTable = (row: RowData, column: StickyHeadTableColumn<RowData>) => {
+  const handleActionTable = (row: RowData) => {
     navigate(`/appuser/employee/${row._id}`)
     refetch()
   }
@@ -82,60 +39,80 @@ const EmployeeMainData: React.FC = () => {
     }
   }, [skillsData, refetchSkill])
 
+  const columns: GridColDef[] = [
+    { field: 'index', type: 'number', headerName: "No", minWidth: 25 },
+    {
+      field: 'person', headerName: 'Nama', minWidth: 150, type: "string", flex: 1,
+      valueFormatter: (value, row) => row.person.name,
+      valueGetter: (value, row) => String(row.person.name),
+    },
+    {
+      field: 'hire_date', headerName: 'Hire Date', minWidth: 150, type: "date", flex: 1,
+      valueFormatter: (value, row) => formatDateToLong(row.hire_date),
+    },
+    {
+      field: 'salary', headerName: 'Salary', minWidth: 150, type: "string", flex: 1,
+      valueFormatter: (value, row) => formatCurrency(row.salary), // Format salary
+    },
+    {
+      field: 'status', headerName: 'Status', minWidth: 150, type: "singleSelect", flex: 1,
+      valueOptions: ['Active', 'Inactive'],
+      renderCell: (params) => (
+        params.row.status === 'Active' ?
+          <div className="badge whitespace-nowrap badge-success p-3 text-white gap-2">Active</div> :
+          <div className="badge whitespace-nowrap badge-warning p-3 gap-2">Inactive</div>
+      ),
+    },
+    {
+      field: 'role', headerName: 'Role', minWidth: 150, type: "singleSelect", flex: 1,
+      valueOptions: EmployeeRoleTypeValues,
+      renderCell: (params) => (<div className="badge whitespace-nowrap badge-neutral p-3 gap-2">{params.row.role.name}</div>),
+    },
+    {
+      field: 'skill', headerName: 'Skill', minWidth: 150, type: "singleSelect", flex: 1,
+      valueOptions: skillsLoading ? [] : skillsData?.getAllSkill.map((sk: any) => sk.name) || [],
+      renderCell: (params) => (
+        <div className="flex justify-center items-center" style={{ height: "100%" }}>
+          <Box sx={{ maxWidth: 200, overflowX: 'auto', display: 'flex', gap: 1 }} >
+            {params.row.skill.map((skill: any, index: number) => (
+              <div key={index} className="badge whitespace-nowrap badge-neutral p-3 gap-2" > {skill.name} </div>
+            ))}
+          </Box>
+        </div>
+      ),
+      valueGetter: (value, row) => row.skill.map((sk: any) => sk.name).join(", ")
+    },
+    {
+      field: 'action', headerName: 'Action', minWidth: 100, sortable: false,
+      renderCell: (params) => {
+        const rowRole = params.row.role.name;
+        const isDisabled =
+          user.role === EmployeeRoleType.ADMIN &&
+          (rowRole === EmployeeRoleType.OWNER || rowRole === EmployeeRoleType.ADMIN);
+
+        return (
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => { handleActionTable(params.row) }}
+            disabled={isDisabled}
+          >
+            Detail
+          </Button>
+        );
+      },
+    }
+  ]
+
   return (
     <div className="flex flex-col">
       <div className="flex justify-end"><AddEmployee refetchEmployee={refetch} /></div>
 
-      <Box display={"flex"} flexWrap={"wrap"}>
-        <TextField
-          color="secondary" sx={{ mb: 1, mr: 1 }} label="Pencarian" size='small' variant="outlined"
-          onChange={(e) => { setNameFilter(e.target.value) }}
-          slotProps={{
-            input: {
-              startAdornment: <SearchIcon></SearchIcon>,
-            },
-          }}
-        />
-        <Autocomplete
-          disablePortal
-          options={EmployeeRoleTypeValues}
-          sx={{ width: 300, mb: 1, mr: 1 }}
-          onChange={(event: React.SyntheticEvent, newValue: string | null) => {
-            setRoleFilter(newValue || "")
-          }}
-          renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Role Pegawai" />}
-        />
-        <Autocomplete
-          disablePortal
-          options={skillsLoading ? [] : skillsData.getAllSkill.map((sk: any) => { return sk.name })}
-          sx={{ width: 300, mb: 1, mr: 1 }}
-          onChange={(event: React.SyntheticEvent, newValue: string | null) => {
-            setSkillFilter(newValue || "")
-          }}
-          renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Skill Pegawai" />}
-        />
-        <Autocomplete
-          disablePortal
-          options={["Active", "Inactive"]}
-          sx={{ width: 300 }}
-          onChange={(event: React.SyntheticEvent, newValue: string | null) => {
-            setStatusFilter(newValue || "")
-          }}
-          renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Status Pegawai" />}
-        />
-      </Box>
-
       {!loading && <div>
         <StickyHeadTable
           columns={columns}
-          rows={data?.getAllEmployees.filter((emp: any) => {
-            let condition = emp.person.name.toLowerCase().includes(nameFilter.toLowerCase()) 
-                    && emp.role.name.includes(roleFilter) && emp.status.includes(statusFilter)
-                    && emp.skill.find((sk: any) => sk.name.includes(skillFilter))
-            return condition
-          }) ?? []}
-          withIndex={true}
-          onActionClick={handleActionTable}
+          rows={data?.getAllEmployees || []}
+          csvname="employee_data"
         />
       </div>}
     </div>

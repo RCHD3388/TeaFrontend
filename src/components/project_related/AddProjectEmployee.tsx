@@ -9,8 +9,9 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { AddNewProjectEmployeeDocument, GetAllProjectEmployeesQuery, GetAllProjectEmployeesQueryVariables } from "../../graphql/project.generated";
 import { modalStyle } from "../../theme";
-import StickyHeadTable, { StickyHeadTableColumn } from "../global_features/StickyHeadTable";
+import StickyHeadTable from "../global_features/StickyHeadTable";
 import { openSnackbar } from "../../app/reducers/snackbarSlice";
+import { GridColDef } from "@mui/x-data-grid";
 
 interface RowData {
   _id: string,
@@ -47,37 +48,7 @@ const AddProjectEmployee: React.FC<AddProjectEmployeeProps> = ({ projectId, data
   const [isDataEmpty, setIsDataEmpty] = useState(false)
   const [listTargetEmployee, setListTargetEmployee] = useState<string[]>([]);
 
-
-  const columns: StickyHeadTableColumn<RowData>[] = [
-    { id: 'person', label: "Pegawai", minWidth: 50, align: "center", format: (value) => String(value.name) },
-    {
-      id: 'role', label: 'Role', minWidth: 50, align: "center",
-      renderComponent: (row) => { return (<div className="badge whitespace-nowrap badge-neutral p-3 gap-2">{row.role.name}</div>) }
-    },
-    {
-      id: 'skill', label: 'Skill', minWidth: 50, align: "center",
-      renderComponent: (row) => {
-        return (<div className="flex justify-center items-center">
-          <Box sx={{ maxWidth: 200, overflowX: 'auto', display: 'flex', gap: 1 }}>
-            {row.skill.map((skillname, index) => <div key={index} className="badge whitespace-nowrap badge-neutral p-3 whitespace-nowrap gap-2">{skillname.name}</div>)}
-          </Box>
-        </div>)
-      },
-    },
-    {
-      id: 'action', label: 'Action', actionLabel: 'Detail', align: "center",
-      buttonColor: (row) => {
-        if (listTargetEmployee.includes(row._id)) return "error"
-        return "success"
-      },
-      buttonLabel: (row) => {
-        if (listTargetEmployee.includes(row._id)) return "Batal"
-        return "Tambah"
-      }
-    },
-  ]
-
-  const handleActionTable = (row: RowData, column: StickyHeadTableColumn<RowData>) => {
+  const handleActionTable = (row: RowData) => {
     let tempTargetEmployeeId = listTargetEmployee;
     if (listTargetEmployee.includes(row._id)) {
       // delete employee from list
@@ -142,6 +113,48 @@ const AddProjectEmployee: React.FC<AddProjectEmployeeProps> = ({ projectId, data
     }
   }
 
+  const columns: GridColDef<RowData>[] = [
+    {
+      field: 'person', headerName: "Pegawai", minWidth: 150, align: "center", flex: 1,
+      valueFormatter: (value, row) => String(row.person.name)
+    },
+    {
+      field: 'role', headerName: 'Role', minWidth: 150, align: "center", flex: 1,
+      renderCell: (params) => { return (<div className="badge whitespace-nowrap badge-neutral p-3 gap-2">{params.row.role.name}</div>) }
+    },
+    {
+      field: 'skill', headerName: 'Skill', minWidth: 150, type: "string", flex: 1,
+      renderCell: (params) => (
+        <div className="flex justify-center items-center" style={{ height: "100%" }}>
+          <Box sx={{ maxWidth: 200, overflowX: 'auto', display: 'flex', gap: 1 }} >
+            {params.row.skill.map((skill: any, index: number) => (
+              <div key={index} className="badge whitespace-nowrap badge-neutral p-3 gap-2" > {skill.name} </div>
+            ))}
+          </Box>
+        </div>
+      ),
+      valueGetter: (value, row) => row.skill.map((sk: any) => sk.name).join(", ")
+    },
+    {
+      field: 'action', headerName: 'Action', align: "center", flex: 1, minWidth: 150,
+      renderCell: (params) => {
+        return (
+          <Button
+            variant="contained"
+            color={listTargetEmployee.includes(params.row._id) ? "error" : "success"}
+            onClick={() => { handleActionTable(params.row) }}
+          >
+            {listTargetEmployee.includes(params.row._id) ? "Batal" : "Tambah"}
+          </Button>
+        )
+      }
+    },
+  ]
+
+  useEffect(() => {
+    console.log(dataEmployee)
+  }, [dataEmployee])
+
   return (<>
     <Button variant="contained" color='secondary' style={{ marginBottom: "1rem" }}
       onClick={async () => {
@@ -166,20 +179,16 @@ const AddProjectEmployee: React.FC<AddProjectEmployeeProps> = ({ projectId, data
         <div>
           {!isConfirmation && (<TextField
             color="secondary" sx={{ width: "100%", mb: 1 }} label="Pencarian" size='small' variant="outlined"
-            onChange={(e) => {setNameFilter(e.target.value)}}
+            onChange={(e) => { setNameFilter(e.target.value) }}
           />)}
           {isDataEmpty && <p className="text-error font-bold">Pilih data pegawai terlebih dahulu untuk ditambahkan pada proyek</p>}
           {isConfirmation && <p>Lakukan konfirmasi, pasikan data pegawai yang ingin anda tambahkan pada proyek tersebut telah sesuai dengan keinginan anda</p>}
           <StickyHeadTable
             tableSx={{ maxHeight: 300 }}
             columns={columns}
-            rows={dataEmployee?.getAllProjectEmployees.unregistered.filter((emp: any) => {
-              let customChecked = true;
-              if (isConfirmation) customChecked = listTargetEmployee.includes(emp._id)
-              return emp.person.name.includes(nameFilter) && customChecked
-            }) ?? []}
+            rows={dataEmployee?.getAllProjectEmployees.unregistered ?? []}
             withIndex={true}
-            onActionClick={handleActionTable}
+            csvname="pegawai_project"
           />
         </div>
         <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ mt: 2 }}>

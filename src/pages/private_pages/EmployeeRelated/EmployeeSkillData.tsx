@@ -1,30 +1,19 @@
 import React, { useState } from "react";
 import AddEmployeeSkill from "../../../components/emlpoyee_related/AddEmployeeSkill";
-import StickyHeadTable, { StickyHeadTableColumn } from "../../../components/global_features/StickyHeadTable";
+import StickyHeadTable from "../../../components/global_features/StickyHeadTable";
 import { useMutation, useQuery } from "@apollo/client";
 import { DeleteEmployeeSkillDocument, GetAllSkillDocument, UpdateEmployeeSkillDocument } from "../../../graphql/person.generated";
 import { AlertColor, Box, Button, CircularProgress, Modal, TextField, Typography } from "@mui/material";
 import { modalStyle } from "../../../theme";
 import { useDispatch } from "react-redux";
 import { openSnackbar } from "../../../app/reducers/snackbarSlice";
+import { GridColDef } from "@mui/x-data-grid";
 
 interface RowData {
   _id: string,
   name: string,
   description: string
 }
-
-const columns: StickyHeadTableColumn<RowData>[] = [
-  { id: "name", label: "Name", minWidth: 50, align: "center" },
-  { id: "description", label: "Description", align: "center" },
-  {
-    id: 'action',
-    label: 'Action',
-    actionLabel: 'Ubah',
-    align: "center",
-    buttonColor: (row) => 'secondary'
-  },
-]
 
 const EmployeeSkillData: React.FC = () => {
   let { data, loading, refetch } = useQuery(GetAllSkillDocument, { variables: { requiresAuth: true } })
@@ -42,7 +31,7 @@ const EmployeeSkillData: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const dispatch = useDispatch();
 
-  const handleActionTable = (row: RowData, column: StickyHeadTableColumn<RowData>) => {
+  const handleActionTable = (row: RowData) => {
     setSelectedRow(row);
     handleOpenEditModal();
   }
@@ -88,6 +77,26 @@ const EmployeeSkillData: React.FC = () => {
     }
   }
 
+  const columns: GridColDef<RowData>[] = [
+    { field: "index", headerName: "No", type: "number", flex: 1 },
+    { field: "name", headerName: "Name", minWidth: 200, type: "string", flex: 2 },
+    { field: "description", headerName: "Description", minWidth: 200, type: "string", flex: 2, 
+      renderCell: (params) => {
+        let value = params.row.description;
+        return value.length == 0 ? <div className="text-error">Belum ada deskripsi</div> : value
+      }
+    },
+    {
+      field: 'action', headerName: 'Ubah', minWidth: 100, flex: 1, sortable: false, filterable: false,
+      renderCell: (params) => (
+        <Button variant="contained" color="secondary"
+          onClick={() => { handleActionTable(params.row) }}>
+          Detail
+        </Button>
+      ),
+    },
+  ]
+
   return (
     <div className="flex flex-col">
       <div className="flex justify-end">
@@ -97,8 +106,7 @@ const EmployeeSkillData: React.FC = () => {
         <StickyHeadTable
           columns={columns}
           rows={data?.getAllSkill ?? []}
-          withIndex={true}
-          onActionClick={handleActionTable}
+          csvname="skill_pegawai"
         />
       </div>}
 

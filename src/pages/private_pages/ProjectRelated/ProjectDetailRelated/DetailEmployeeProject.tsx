@@ -5,14 +5,15 @@ import { Autocomplete, Box, Button, CircularProgress, Container, Modal, TextFiel
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../app/store";
 import { selectUser } from "../../../../app/reducers/userSlice";
-import StickyHeadTable, { StickyHeadTableColumn } from "../../../../components/global_features/StickyHeadTable";
+import StickyHeadTable from "../../../../components/global_features/StickyHeadTable";
 import { useNavigate } from "react-router-dom";
 import AddProjectEmployee from "../../../../components/project_related/AddProjectEmployee";
 import { modalStyle } from "../../../../theme";
 import { Controller } from "react-hook-form";
 import { openSnackbar } from "../../../../app/reducers/snackbarSlice";
 import SearchIcon from '@mui/icons-material/Search';
-import { EmployeeRoleType } from "../../../../types/staticData.types";
+import { EmployeeRoleType, EmployeeRoleTypeValues } from "../../../../types/staticData.types";
+import { GridColDef } from "@mui/x-data-grid";
 
 interface RowData {
   _id: string,
@@ -56,60 +57,8 @@ const DetailEmployeeProject: React.FC<DetailEmployeeProjectProps> = ({ dataProje
     }
   )
 
-  const [nameFilter, setNameFilter] = useState("")
-  const [skillFilter, setSkillFilter] = useState("")
-  const [statusFilter, setStatusFilter] = useState("")
-
-  const columns: StickyHeadTableColumn<RowData>[] = [
-    { id: 'name', label: "Nama", align: "center", renderComponent: (row) => { return (<>{row.person.name}</>) } },
-    { id: 'address', label: "Alamat", align: "center", renderComponent: (row) => { return (<>{row.person.address}</>) } },
-    { id: 'phone_number', label: "Nomer Telepon", align: "center", renderComponent: (row) => { return (<>{row.person.phone_number}</>) } },
-    {
-      id: 'role', label: 'Role', align: "center",
-      renderComponent: (row) => { return (<div className="badge whitespace-nowrap badge-neutral p-3 gap-2">{row.role.name}</div>) }
-    },
-    {
-      id: 'skill', label: 'Skill', align: "center",
-      renderComponent: (row) => {
-        return (<div className="flex justify-center items-center">
-          <Box sx={{ maxWidth: 200, overflowX: 'auto', display: 'flex', gap: 1 }}>
-            {row.skill.map((skillname, index) => <div key={index} className="badge whitespace-nowrap badge-neutral p-3 whitespace-nowrap gap-2">{skillname.name}</div>)}
-          </Box>
-        </div>)
-      },
-    },
-    {
-      id: 'status', label: 'Status', minWidth: 50, align: "center",
-      renderComponent: (row) => {
-        return (<>
-          {row.status == "Active" ?
-            <div className="badge whitespace-nowrap badge-success p-3 text-white gap-2">Active</div> :
-            <div className="badge whitespace-nowrap badge-warning p-3 gap-2">Inactive</div>}
-        </>)
-      }
-    },
-    {
-      id: 'detail_employee', label: 'Detail', actionLabel: 'Detail', align: "center",
-      renderComponent: (row) => {
-        return (<>
-          <Button
-            variant="contained" color={"secondary"}
-            onClick={() => { navigate(`/appuser/employee/${row._id}`) }}
-            disabled={user.role === EmployeeRoleType.MANDOR}
-          >
-            Detail
-          </Button>
-        </>)
-      },
-    },
-    {
-      id: 'action', label: 'Hapus', actionLabel: 'Hapus', align: "center", buttonColor: (row) => 'error',
-      buttonDisabled: (row) => user.role === EmployeeRoleType.MANDOR
-    },
-  ]
-
   // delete button
-  const handleActionTable = (row: RowData, column: StickyHeadTableColumn<RowData>) => {
+  const handleActionTable = (row: RowData) => {
     setSelectedRow(row);
     setOpenDeleteModal(true);
   }
@@ -156,59 +105,93 @@ const DetailEmployeeProject: React.FC<DetailEmployeeProjectProps> = ({ dataProje
     }
   }
 
+  const columns: GridColDef<RowData>[] = [
+    { field: 'index', headerName: "No", type: "number", minWidth: 50 },
+    {
+      field: 'name', headerName: 'Nama', minWidth: 150, type: "string", flex: 1,
+      renderCell: (params) => <>{params.row.person.name}</>,
+      valueGetter: (value, row) => row.person.name
+    },
+    {
+      field: 'address', headerName: 'Alamat', minWidth: 150, type: "string", flex: 1,
+      renderCell: (params) => <>{params.row.person.address}</>,
+      valueGetter: (value, row) => row.person.address
+    },
+    {
+      field: 'phone_number', headerName: 'Nomer Telepon', minWidth: 150, type: "string", flex: 1,
+      renderCell: (params) => <>{params.row.person.phone_number}</>,
+      valueGetter: (value, row) => row.person.phone_number
+    },
+    {
+      field: 'role', headerName: 'Role', minWidth: 150, type: "singleSelect", flex: 1,
+      valueOptions: EmployeeRoleTypeValues,
+      renderCell: (params) => (<div className="badge whitespace-nowrap badge-neutral p-3 gap-2"> {params.row.role.name} </div>),
+      valueGetter: (value, row) => row.role.name
+    },
+    {
+      field: 'skill', headerName: 'Skill', minWidth: 150, type: "string", flex: 1,
+      renderCell: (params) => (
+        <div className="flex justify-center items-center" style={{ height: "100%" }}>
+          <Box sx={{ maxWidth: 200, overflowX: 'auto', display: 'flex', gap: 1 }}>
+            {params.row.skill.map((skillname: any, index: number) => (
+              <div key={index} className="badge whitespace-nowrap badge-neutral p-3 whitespace-nowrap gap-2">
+                {skillname.name}
+              </div>
+            ))}
+          </Box>
+        </div>
+      ),
+      valueGetter: (value, row) => row.skill.map((sk: any) => sk.skillname).join(", ")
+    },
+    {
+      field: 'status', headerName: 'Status', minWidth: 100, type: "singleSelect",
+      valueOptions: ["Active", "Inactive"],
+      renderCell: (params) => (
+        <>
+          {params.row.status === 'Active' ? (
+            <div className="badge whitespace-nowrap badge-success p-3 text-white gap-2">Active</div>
+          ) : (
+            <div className="badge whitespace-nowrap badge-warning p-3 gap-2">Inactive</div>
+          )}
+        </>
+      ),
+      valueGetter: (value, row) => row.status
+    },
+    {
+      field: 'action_detail_employee', headerName: 'Detail', minWidth: 200, flex: 1, sortable: false,
+      renderCell: (params) => (
+        <>
+          <Button variant="contained" color="secondary" sx={{ mr: 1 }}
+            onClick={() => { navigate(`/appuser/employee/${params.row._id}`); }}
+            disabled={params.row.role.name === EmployeeRoleType.MANDOR}
+          >
+            Detail
+          </Button>
+          <Button variant="contained" color="error"
+            onClick={() => { handleActionTable(params.row) }}
+            disabled={params.row.role.name === EmployeeRoleType.MANDOR} >
+            Hapus
+          </Button>
+        </>
+      ),
+    }
+  ]
+
   return (
     <div style={{ height: "100%" }}>
       <div className="flex flex-col" style={{ maxHeight: "100%" }}>
-        <Container sx={{ paddingTop: 4 }}>
-          <div className="text-2xl font-bold mb-2">Detail Pegawai</div>
-          {!empLoading && !empError && <div>
-            {(user.role == EmployeeRoleType.ADMIN || user.role == EmployeeRoleType.OWNER) && <div className="flex justify-end">
-              <AddProjectEmployee projectId={dataProject.findProjectById._id} dataEmployee={empData} loadingEmployee={empLoading} errorEmployee={empError} refetchEmployee={empRefetch} />
-            </div>}
-
-            <Box display={"flex"} flexWrap={"wrap"}>
-              <TextField
-                color="secondary" sx={{ mb: 1, mr: 1 }} label="Pencarian Nama" size='small' variant="outlined"
-                onChange={(e) => { setNameFilter(e.target.value) }}
-                slotProps={{
-                  input: {
-                    startAdornment: <SearchIcon></SearchIcon>,
-                  },
-                }}
-              />
-              <TextField
-                color="secondary" sx={{ mb: 1, mr: 1 }} label="Pencarian Skill" size='small' variant="outlined"
-                onChange={(e) => { setSkillFilter(e.target.value) }}
-                slotProps={{
-                  input: {
-                    startAdornment: <SearchIcon></SearchIcon>,
-                  },
-                }}
-              />
-              <Autocomplete
-                disablePortal
-                options={["Active", "Inactive"]}
-                sx={{ width: 300 }}
-                onChange={(event: React.SyntheticEvent, newValue: string | null) => {
-                  setStatusFilter(newValue || "")
-                }}
-                renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Status Pegawai" />}
-              />
-            </Box>
-
-            <StickyHeadTable
-              columns={columns}
-              rows={empData?.getAllProjectEmployees.registered.filter((emp: any) => {
-                let condition = emp.person.name.toLowerCase().includes(nameFilter.toLowerCase()) 
-                    && emp.skill.find((sk: any) => sk.name.includes(skillFilter))
-                    && emp.status.includes(statusFilter)
-                return condition
-              }) ?? []}
-              withIndex={true}
-              onActionClick={handleActionTable}
-            />
+        <div className="text-2xl font-bold mb-2">Detail Pegawai</div>
+        {!empLoading && !empError && <div>
+          {(user.role == EmployeeRoleType.ADMIN || user.role == EmployeeRoleType.OWNER) && <div className="flex justify-end">
+            <AddProjectEmployee projectId={dataProject.findProjectById._id} dataEmployee={empData} loadingEmployee={empLoading} errorEmployee={empError} refetchEmployee={empRefetch} />
           </div>}
-        </Container>
+
+          <StickyHeadTable
+            columns={columns}
+            rows={empData?.getAllProjectEmployees.registered || []}
+            csvname="employee_data"
+          />
+        </div>}
 
         <Modal
           open={openDeleteModal}

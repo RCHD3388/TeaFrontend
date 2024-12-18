@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import StickyHeadTable, { StickyHeadTableColumn } from "../../../components/global_features/StickyHeadTable";
+import StickyHeadTable from "../../../components/global_features/StickyHeadTable";
 import { useNavigate } from "react-router-dom";
 import { GetAllUsersDocument, UpdateUserDocument } from "../../../graphql/user.generated";
 import AddUser from "../../../components/user_related/AddUser";
@@ -14,6 +14,7 @@ import { GetAllEmployeesDocument } from "../../../graphql/person.generated";
 import { openSnackbar } from "../../../app/reducers/snackbarSlice";
 import SearchIcon from '@mui/icons-material/Search';
 import { EmployeeRoleTypeValues } from "../../../types/staticData.types";
+import { GridColDef } from "@mui/x-data-grid";
 
 interface UpdateUserValues {
   username: string
@@ -49,40 +50,7 @@ export default function UserPage() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const [nameFilter, setNameFilter] = useState("")
-  const [roleFilter, setRoleFilter] = useState("")
-  const [statusFilter, setStatusFilter] = useState("")
-
-  useEffect(() => {if(data) refetch()}, [data, refetch])
-
-  const columns: StickyHeadTableColumn<RowData>[] = [
-    { id: 'username', label: "Username", minWidth: 50, align: "center" },
-    {
-      id: 'name', label: 'Name', minWidth: 50, align: "center",
-      renderComponent: (row) => { return (<>{row.employee.person.name}</>) }
-    },
-    {
-      id: 'email', label: 'Email', minWidth: 100, align: "center",
-      renderComponent: (row) => { return (<>{row.employee.person.email}</>) }
-    },
-    {
-      id: 'role', label: 'Role', minWidth: 100, align: "center",
-      renderComponent: (row) => { return (<div className="badge whitespace-nowrap badge-neutral p-3 gap-2">{row.employee.role.name}</div>) }
-    },
-    {
-      id: 'status', label: 'Status', minWidth: 50, align: "center",
-      renderComponent: (row) => {
-        return (<>
-          {row.status == "Active" ?
-            <div className="badge whitespace-nowrap badge-success p-3 text-white gap-2">Active</div> :
-            <div className="badge whitespace-nowrap badge-warning p-3 gap-2">Inactive</div>}
-        </>)
-      },
-    },
-    {
-      id: 'action', label: 'Action', actionLabel: 'Detail', align: "center", buttonColor: (row) => 'secondary',
-    },
-  ]
+  useEffect(() => { if (data) refetch() }, [data, refetch])
 
   const { handleSubmit, control, setValue, formState: { errors }, reset } = useForm<UpdateUserValues>({
     defaultValues: {
@@ -92,7 +60,7 @@ export default function UserPage() {
     },
   });
 
-  const handleActionTable = (row: RowData, column: StickyHeadTableColumn<RowData>) => {
+  const handleActionTable = (row: RowData) => {
     reset({
       username: row.username,
       status: row.status,
@@ -134,6 +102,48 @@ export default function UserPage() {
     }
   }
 
+  const columns: GridColDef<RowData>[] = [
+    { field: 'index', headerName: "No", type: "number", minWidth: 50 },
+    { field: 'username', headerName: "Username", type: "string", flex: 1, minWidth: 150 },
+    {
+      field: 'name', headerName: 'Name', minWidth: 150, flex: 1, type: "string",
+      renderCell: (params) => <>{params.row.employee.person.name}</>,
+      valueGetter: (value, row) => row.employee?.person?.name
+    },
+    {
+      field: 'email', headerName: 'Email', minWidth: 150, type: "string", flex: 1,
+      renderCell: (params) => <>{params.row.employee.person.email}</>,
+      valueGetter: (value, row) => row.employee?.person?.email
+    },
+    {
+      field: 'role', headerName: 'Role', minWidth: 150, type: "singleSelect", flex: 1,
+      valueOptions: EmployeeRoleTypeValues,
+      renderCell: (params) => (<div className="badge whitespace-nowrap badge-neutral p-3 gap-2"> {params.row.employee.role.name} </div>),
+      valueGetter: (value, row) => row.employee?.role?.name
+    },
+    {
+      field: 'status', headerName: 'Status', minWidth: 150, type: "singleSelect", flex: 1,
+      valueOptions: ["Active", "Inactive"],
+      renderCell: (params) => (
+        <>
+          {params.row.status === "Active" ? (
+            <div className="badge whitespace-nowrap badge-success p-3 text-white gap-2"> Active </div>
+          ) : (
+            <div className="badge whitespace-nowrap badge-warning p-3 gap-2"> Inactive </div>
+          )}
+        </>
+      ),
+    },
+    {
+      field: 'action', headerName: 'Action', align: "center", flex: 1, minWidth: 150, sortable: false,
+      renderCell: (params) => (
+        <Button variant="contained" color="secondary" onClick={() => { handleActionTable(params.row) }}>
+          Detail
+        </Button>
+      ),
+    }
+  ]
+
   return (
     <div className="p-5" style={{ height: "100%" }}>
       <div className="flex flex-col" style={{ maxHeight: "100%" }}>
@@ -141,47 +151,11 @@ export default function UserPage() {
         <div className="text-4xl font-bold mb-2">User Pegawai Perusahaan</div>
         <div className="flex justify-end"> <AddUser refetchUser={refetch} /> </div>
 
-        <Box display={"flex"} flexWrap={"wrap"}>
-          <TextField
-            color="secondary" sx={{ mb: 1, mr: 1 }} label="Pencarian" size='small' variant="outlined"
-            onChange={(e) => { setNameFilter(e.target.value) }}
-            slotProps={{
-              input: {
-                startAdornment: <SearchIcon></SearchIcon>,
-              },
-            }}
-          />
-          <Autocomplete
-            disablePortal
-            options={EmployeeRoleTypeValues}
-            sx={{ width: 300, mb: 1, mr: 1 }}
-            onChange={(event: React.SyntheticEvent, newValue: string | null) => {
-              setRoleFilter(newValue || "")
-            }}
-            renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Role Pegawai"/>}
-          />
-          <Autocomplete
-            disablePortal
-            options={["Active", "Inactive"]}
-            sx={{ width: 300, mb: 1, mr: 1 }}
-            onChange={(event: React.SyntheticEvent, newValue: string | null) => {
-              setStatusFilter(newValue || "")
-            }}
-            renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Status Pegawai"/>}
-          />
-        </Box>
-
         {!loading && <div>
           <StickyHeadTable
             columns={columns}
-            rows={data?.getAllUsers.filter((usr: any) => {
-              let condition = usr.username.toLowerCase().includes(nameFilter.toLowerCase()) 
-                && usr.employee.role.name.includes(roleFilter)
-                && usr.status.includes(statusFilter) 
-              return condition
-            }) ?? []}
-            withIndex={true}
-            onActionClick={handleActionTable}
+            rows={data?.getAllUsers || []}
+            csvname="user_data"
           />
         </div>}
 
@@ -192,7 +166,7 @@ export default function UserPage() {
           aria-describedby="modal-modal-description"
         >
           <Box sx={modalStyle}>
-            <Typography id="modal-modal-title" variant="h6" component="h2" sx={{mb: 2}}><b>DETAIL USER</b></Typography>
+            <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ mb: 2 }}><b>DETAIL USER</b></Typography>
             {/* FIELD START */}
             <Controller
               name="username" control={control} rules={{ required: 'Username tidak boleh kosong' }}

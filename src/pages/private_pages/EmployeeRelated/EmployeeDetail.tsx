@@ -12,29 +12,18 @@ import dayjs from 'dayjs';
 import { selectUser } from "../../../app/reducers/userSlice";
 import { RootState } from "../../../app/store";
 import { useDispatch, useSelector } from "react-redux";
-import StickyHeadTable, { StickyHeadTableColumn } from "../../../components/global_features/StickyHeadTable";
+import StickyHeadTable from "../../../components/global_features/StickyHeadTable";
 import { openSnackbar } from "../../../app/reducers/snackbarSlice";
 import { CustomGraphQLError } from "../../../types/apollo_client.types";
 import { a11yProps, CustomTabPanel } from "../../../components/CustomTabPanel";
 import { EmployeeRoleType } from "../../../types/staticData.types";
+import { GridColDef } from "@mui/x-data-grid";
 
 interface RowData {
   _id: string,
   name: string,
   description: string
 }
-const columns: StickyHeadTableColumn<RowData>[] = [
-  { id: "name", label: "Name", minWidth: 50, align: "center" },
-  { id: "description", label: "Description", align: "center" },
-  {
-    id: 'action',
-    label: 'Action',
-    actionLabel: 'Hapus',
-    align: "center",
-    buttonColor: (row) => 'error'
-  },
-]
-
 interface updateEmployeValues {
   name: string
   email: string
@@ -180,12 +169,27 @@ const EmployeeDetail: React.FC = () => {
     }
   }
 
-  const handleActionTable = (row: RowData, column: StickyHeadTableColumn<RowData>) => {
+  const handleActionTable = (row: RowData) => {
     let currentSkillData = [...skillData];
     currentSkillData = currentSkillData.filter((sk) => sk._id !== row._id)
     let updatedSkills = currentSkillData.map((sk) => sk._id);
     handleUpdateSkillData(currentSkillData, updatedSkills)
   }
+
+  const columns: GridColDef[] = [
+    { field: "index", headerName: "No", type: "number", flex: 1},
+    { field: "name", headerName: "Name", minWidth: 200, type: "string", flex: 2 },
+    { field: "description", headerName: "Description", minWidth: 200, type: "string", flex: 2 },
+    {
+      field: 'action', headerName: 'Hapus', minWidth: 100, flex: 1, sortable: false, filterable: false,
+      renderCell: (params) => (
+        <Button variant="contained" color="error"
+          onClick={() => { handleActionTable(params.row) }}>
+          Hapus
+        </Button>
+      ),
+    },
+  ]
 
   return (
     <div className="p-5" style={{ height: "100%" }}>
@@ -372,8 +376,7 @@ const EmployeeDetail: React.FC = () => {
                 <StickyHeadTable
                   columns={columns}
                   rows={skillData ?? []}
-                  withIndex={true}
-                  onActionClick={handleActionTable}
+                  withtoolbar={false}
                 />
               </div>}
             </Container>

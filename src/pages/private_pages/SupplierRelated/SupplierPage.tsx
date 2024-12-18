@@ -3,10 +3,10 @@ import AddIcon from '@mui/icons-material/Add';
 import AddSupplier from "../../../components/supplier_related/AddSupplier";
 import { GetAllSuppliersDocument } from "../../../graphql/supplier.generated";
 import { useQuery } from "@apollo/client";
-import StickyHeadTable, { StickyHeadTableColumn } from "../../../components/global_features/StickyHeadTable";
+import StickyHeadTable from "../../../components/global_features/StickyHeadTable";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import SearchIcon from '@mui/icons-material/Search';
+import { GridColDef } from "@mui/x-data-grid";
+import { EmployeeRoleTypeValues } from "../../../types/staticData.types";
 
 interface RowData {
   _id: string,
@@ -19,46 +19,63 @@ interface RowData {
   status: string
 }
 
-const columns: StickyHeadTableColumn<RowData>[] = [
-  { id: 'name', label: "Supplier", minWidth: 50, align: "center" },
-  {
-    id: 'phone_number', label: 'Nomer Telepon', minWidth: 100, align: "center",
-    renderComponent: (row) => { return (<>{row.person.phone_number}</>) }
-  },
-  {
-    id: 'email', label: 'Email', minWidth: 50, align: "center",
-    renderComponent: (row) => { return (<>{row.person.email}</>) }
-  },
-  {
-    id: 'address', label: 'Alamat', minWidth: 100, align: "center",
-    renderComponent: (row) => { return (<>{row.person.address}</>) }
-  },
-  {
-    id: 'status', label: 'Status', minWidth: 50, align: "center",
-    renderComponent: (row) => {
-      return (<>
-        {row.status == "Active" ?
-          <div className="badge whitespace-nowrap badge-success p-3 text-white gap-2">Active</div> :
-          <div className="badge whitespace-nowrap badge-warning p-3 gap-2">Inactive</div>}
-      </>)
-    }
-  },
-  {
-    id: 'action', label: 'Action', actionLabel: 'Detail', align: "center", buttonColor: (row) => 'secondary',
-  },
-]
-
 export default function SupplierPage() {
   let { data, loading, error, refetch } = useQuery(GetAllSuppliersDocument, { variables: { requiresAuth: true } })
   const navigate = useNavigate()
 
-  const [nameFilter, setNameFilter] = useState("")
-  const [statusFilter, setStatusFilter] = useState("")
-
-  const handleActionTable = (row: RowData, column: StickyHeadTableColumn<RowData>) => {
-    navigate(`/appuser/supplier/${row._id}`)
-    // refetch()
-  }
+  const columns: GridColDef<RowData>[] = [
+    { field: 'index', type: 'number', headerName: "No", minWidth: 50 },
+    { field: 'name', type: 'string', headerName: "Supplier", flex: 1, minWidth: 150 },
+    {
+      field: 'phone_number', type: 'string', headerName: 'Nomer Telepon',
+      renderCell: (params) => <>{params.row.person?.phone_number || '-'}</>,
+      valueGetter: (value, row) => row.person?.phone_number, flex: 1, minWidth: 150
+    },
+    {
+      field: 'email', type: 'string', headerName: 'Email',
+      renderCell: (params) => <>{params.row.person?.email || '-'}</>,
+      valueGetter: (value, row) => row.person?.email, flex: 1, minWidth: 150
+    },
+    {
+      field: 'address', type: 'string', headerName: 'Alamat',
+      renderCell: (params) => <>{params.row.person?.address || '-'}</>,
+      valueGetter: (value, row) => row.person?.address, flex: 1, minWidth: 150
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      type: "singleSelect", flex: 1, minWidth: 150,
+      renderCell: (params) => {
+        return (
+          <>
+            {params.row.status === "Active" ? (
+              <div className="badge whitespace-nowrap badge-success p-3 text-white gap-2">Active</div>
+            ) : (
+              <div className="badge whitespace-nowrap badge-warning p-3 gap-2">Inactive</div>
+            )}
+          </>
+        );
+      },
+      valueOptions: ["Active", "Inactive"],
+      valueGetter: (value, row) => row.status
+    },
+    {
+      field: 'action',
+      headerName: 'Action',
+      width: 150,
+      align: "center",
+      flex: 1, minWidth: 150, sortable: false,
+      renderCell: (params) => (
+        <Button
+          color="secondary"
+          variant="contained"
+          onClick={() => navigate(`/appuser/supplier/${params.row._id}`)}
+        >
+          Detail
+        </Button>
+      ),
+    },
+  ];
 
   return (
     <div className="p-5" style={{ height: "100%" }}>
@@ -67,41 +84,17 @@ export default function SupplierPage() {
         <div className="text-4xl font-bold mb-2">Supplier Perusahaan</div>
         <div className="flex justify-end"> <AddSupplier refetchSupplier={refetch} /> </div>
 
-        <Box display={"flex"} flexWrap={"wrap"}>
-          <TextField
-            color="secondary" sx={{ mb: 1, mr: 1 }} label="Pencarian" size='small' variant="outlined"
-            onChange={(e) => { setNameFilter(e.target.value) }}
-            slotProps={{
-              input: {
-                startAdornment: <SearchIcon></SearchIcon>,
-              },
-            }}
-          />
-          <Autocomplete
-            disablePortal
-            options={["Active", "Inactive"]}
-            sx={{ width: 300 }}
-            onChange={(event: React.SyntheticEvent, newValue: string | null) => {
-              setStatusFilter(newValue || "")
-            }}
-            renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Status Pegawai" />}
-          />
-        </Box>
-
         {!loading && !error &&
           data?.getAllSuppliers.length <= 0 ?
           <div className="flex justify-center items-center p-5 bg-accent shadow-md">
             PERUSAHAAN BELUM MEMILIKI SUPPLIER
-          </div> 
+          </div>
           :
           <div>
             <StickyHeadTable
               columns={columns}
-              rows={data?.getAllSuppliers.filter((sup: any) => {
-                return sup.name.toLowerCase().includes(nameFilter.toLowerCase()) && sup.status.includes(statusFilter)
-              }) ?? []}
-              withIndex={true}
-              onActionClick={handleActionTable}
+              rows={data?.getAllSuppliers || []}
+              csvname="supplier_data"
             />
           </div>}
       </div>

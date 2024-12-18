@@ -1,4 +1,4 @@
-import StickyHeadTable, { StickyHeadTableColumn } from '../../../components/global_features/StickyHeadTable';
+import StickyHeadTable from '../../../components/global_features/StickyHeadTable';
 import { Alert, AlertColor, Autocomplete, Box, Button, CircularProgress, MenuItem, Modal, Snackbar, Stack, TextField, Typography } from '@mui/material';
 import { useMutation, useQuery } from '@apollo/client';
 import { CreateCategoryDocument, DeleteCategoryDocument, GetCategoriesDocument, UpdateCategoryDocument } from '../../../graphql/category.generated';
@@ -10,6 +10,7 @@ import { openSnackbar } from '../../../app/reducers/snackbarSlice';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import { CategoryTypeValues } from '../../../types/staticData.types';
+import { GridColDef } from '@mui/x-data-grid';
 
 interface CreateCategoryValues {
   name: string
@@ -23,27 +24,6 @@ interface RowData {
   description: string;
   type: string;
 }
-
-const columns: StickyHeadTableColumn<RowData>[] = [
-  { id: 'name', label: 'Nama', minWidth: 50, align: "center" },
-  {
-    id: 'description', label: 'Deskripsi', minWidth: 200, align: "center",
-    format: (value) => value.length == 0 ? <div className="text-error">Belum ada deskripsi</div> : value
-  },
-  {
-    id: 'type', label: 'Type', minWidth: 50, align: "center",
-    renderComponent: (row: any) => {
-      return (<div className="badge whitespace-nowrap badge-neutral p-3 gap-2">{row.type}</div>)
-    }
-  },
-  {
-    id: 'action',
-    label: 'Action',
-    actionLabel: 'Ubah',
-    align: "center",
-    buttonColor: (row) => 'secondary'
-  },
-];
 
 const typeDropdownValues: string[] = CategoryTypeValues
 
@@ -94,7 +74,7 @@ export default function CategoryPage() {
     }
   }
 
-  const handleTableAction = (row: RowData, column: StickyHeadTableColumn<RowData>) => {
+  const handleTableAction = (row: RowData) => {
     setSelectedRow(row)
     handleOpenEditModal();
   }
@@ -138,6 +118,27 @@ export default function CategoryPage() {
     }
   }
 
+  const columns: GridColDef<RowData>[] = [
+    { field: 'index', type: 'number', headerName: "No", minWidth: 50 },
+    { field: 'name', headerName: 'Nama', minWidth: 150, type: "string", flex: 1 },
+    {
+      field: 'description', headerName: 'Deskripsi', minWidth: 200, type: "string", flex: 2,
+      renderCell: (params) => params.value.length === 0 ? (<div className="text-error">Belum ada deskripsi</div>) : (<>{params.value}</>),
+    },
+    {
+      field: 'type', headerName: 'Type', minWidth: 150, type: "singleSelect", flex: 1,
+      valueOptions: CategoryTypeValues,
+      valueGetter: (value, row) => row.type,
+      renderCell: (params) => (<div className="badge whitespace-nowrap badge-neutral p-3 gap-2"> {params.row.type} </div>),
+    },
+    {
+      field: 'action', headerName: 'Action', minWidth: 150, flex: 1, sortable: false,
+      renderCell: (params) => (<Button variant='contained' color='secondary'
+        onClick={() => { handleTableAction(params.row) }}> Ubah </Button>
+      ),
+    },
+  ];
+
   return (
     <div className="p-5" style={{ height: "100%" }}>
       <div className="flex flex-col" style={{ maxHeight: "100%" }}>
@@ -151,35 +152,11 @@ export default function CategoryPage() {
             onClick={() => { handleOpenAddModal() }}
           >Tambah Kategori</Button>
         </div>
-        {/* search bar */}
-        <Box display={"flex"}>
-          <TextField
-            color="secondary" sx={{ mb: 1, mr: 1 }} label="Pencarian" size='small' variant="outlined"
-            onChange={(e) => { setNameFilter(e.target.value) }}
-            slotProps={{
-              input: {
-                startAdornment: <SearchIcon></SearchIcon>,
-              },
-            }}
-          />
-          <Autocomplete
-            disablePortal
-            options={CategoryTypeValues}
-            sx={{ width: 300 }}
-            onChange={(event: React.SyntheticEvent, newValue: string | null) => {
-              setTypeFilter(newValue || "")
-            }}
-            renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Tipe kategori" />}
-          />
-        </Box>
+        
         {!loading && <StickyHeadTable
           columns={columns}
-          rows={data?.getCategories.filter((cat: any) => {
-            let condition = cat.name.toLowerCase().includes(nameFilter.toLowerCase()) && cat.type.includes(typeFilter)
-            return condition
-          }) ?? []}
-          withIndex={true}
-          onActionClick={handleTableAction}
+          rows={data?.getCategories || []}
+          csvname='category_data'
         />}
       </div>
 
