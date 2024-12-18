@@ -152,8 +152,10 @@ const AddProjectEmployee: React.FC<AddProjectEmployeeProps> = ({ projectId, data
   ]
 
   useEffect(() => {
-    console.log(dataEmployee)
-  }, [dataEmployee])
+    if(dataEmployee){
+      refetchEmployee()
+    }
+  }, [dataEmployee, refetchEmployee])
 
   return (<>
     <Button variant="contained" color='secondary' style={{ marginBottom: "1rem" }}
@@ -186,7 +188,7 @@ const AddProjectEmployee: React.FC<AddProjectEmployeeProps> = ({ projectId, data
           <StickyHeadTable
             tableSx={{ maxHeight: 300 }}
             columns={columns}
-            rows={dataEmployee?.getAllProjectEmployees.unregistered ?? []}
+            rows={dataEmployee?.getAllProjectEmployees.unregistered.filter((item: any) => item.person.name.toLowerCase().includes(nameFilter.toLowerCase())) ?? []}
             withIndex={true}
             csvname="pegawai_project"
           />

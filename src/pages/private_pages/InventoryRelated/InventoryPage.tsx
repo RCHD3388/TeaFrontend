@@ -22,8 +22,8 @@ export default function InventoryPage() {
         <div className="text-4xl font-bold mb-2">Inventori Perusahaan</div>
 
         <Box sx={{ width: '100%' }}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider', top: "0%", backgroundColor: "white" }}>
-            <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" indicatorColor='secondary'>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider', top: "0%", backgroundColor: "white"}}>
+            <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" indicatorColor='secondary' variant="scrollable">
               <Tab label="Data Warehouse" {...a11yProps(0)} sx={{ textDecoration: "none",textTransform: "none",
                 color: value === 0 ? 'secondary.main' : 'inherit',
                 '&.Mui-selected': { color: 'secondary.main' },

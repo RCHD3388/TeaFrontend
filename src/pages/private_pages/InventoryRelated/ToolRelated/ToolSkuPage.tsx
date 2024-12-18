@@ -75,7 +75,7 @@ const ToolSkuPage: React.FC = () => {
     {
       field: 'action', headerName: 'Action', minWidth: 150, flex: 1, sortable: false, filterable: false,
       renderCell: (params) => (<Button variant='contained' color='secondary' sx={{ textTransform: 'none' }}
-        onClick={() => { handleActionTable(params.row) }}> Detail / Edit </Button>
+        onClick={() => { handleActionTable(params.row) }}> Detail / Ubah </Button>
       ),
     }
   ]

@@ -54,7 +54,7 @@ export default function DetailProject() {
           {/* TAB CONTENT START*/}
           <Box sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider', top: "0%", backgroundColor: "white" }}>
-              <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" indicatorColor='secondary'>
+              <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" indicatorColor='secondary' variant="scrollable">
                 <Tab label="Detail Proyek" {...a11yProps(0)} sx={{
                   color: value === 0 ? 'secondary.main' : 'inherit',
                   '&.Mui-selected': { color: 'secondary.main' },

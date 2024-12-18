@@ -39,6 +39,7 @@ export default function StickyHeadTable<T extends object>({
           rows={rows ? 
             withIndex ? rows.map((row, index) => ({ ...row, index: index + 1 })) : rows 
             : []}
+          sx={{ zIndex: 0 }}
           columns={columns}
           slots={toolbarOption}
           initialState={{ pagination: { paginationModel: { page: 0, pageSize: 5 } } }}

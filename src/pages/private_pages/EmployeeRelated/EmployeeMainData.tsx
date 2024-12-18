@@ -40,7 +40,7 @@ const EmployeeMainData: React.FC = () => {
   }, [skillsData, refetchSkill])
 
   const columns: GridColDef[] = [
-    { field: 'index', type: 'number', headerName: "No", minWidth: 25 },
+    { field: 'index', type: 'number', headerName: "No", width: 100 },
     {
       field: 'person', headerName: 'Nama', minWidth: 150, type: "string", flex: 1,
       valueFormatter: (value, row) => row.person.name,
@@ -83,7 +83,7 @@ const EmployeeMainData: React.FC = () => {
       valueGetter: (value, row) => row.skill.map((sk: any) => sk.name).join(", ")
     },
     {
-      field: 'action', headerName: 'Action', minWidth: 100, sortable: false,
+      field: 'action', headerName: 'Action', minWidth: 150, sortable: false,
       renderCell: (params) => {
         const rowRole = params.row.role.name;
         const isDisabled =
@@ -93,11 +93,11 @@ const EmployeeMainData: React.FC = () => {
         return (
           <Button
             variant="contained"
-            color="secondary"
+            color="secondary" sx={{ textTransform: 'none' }}
             onClick={() => { handleActionTable(params.row) }}
             disabled={isDisabled}
           >
-            Detail
+            Detail / Ubah
           </Button>
         );
       },

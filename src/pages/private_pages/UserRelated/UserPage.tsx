@@ -137,8 +137,8 @@ export default function UserPage() {
     {
       field: 'action', headerName: 'Action', align: "center", flex: 1, minWidth: 150, sortable: false,
       renderCell: (params) => (
-        <Button variant="contained" color="secondary" onClick={() => { handleActionTable(params.row) }}>
-          Detail
+        <Button variant="contained" color="secondary" sx={{ textTransform: "none" }} onClick={() => { handleActionTable(params.row) }}>
+          Detail / Ubah
         </Button>
       ),
     }

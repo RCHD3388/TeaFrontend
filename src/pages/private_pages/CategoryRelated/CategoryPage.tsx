@@ -126,15 +126,15 @@ export default function CategoryPage() {
       renderCell: (params) => params.value.length === 0 ? (<div className="text-error">Belum ada deskripsi</div>) : (<>{params.value}</>),
     },
     {
-      field: 'type', headerName: 'Type', minWidth: 150, type: "singleSelect", flex: 1,
+      field: 'type', headerName: 'Type', minWidth: 175, type: "singleSelect", flex: 1,
       valueOptions: CategoryTypeValues,
       valueGetter: (value, row) => row.type,
       renderCell: (params) => (<div className="badge whitespace-nowrap badge-neutral p-3 gap-2"> {params.row.type} </div>),
     },
     {
-      field: 'action', headerName: 'Action', minWidth: 150, flex: 1, sortable: false,
-      renderCell: (params) => (<Button variant='contained' color='secondary'
-        onClick={() => { handleTableAction(params.row) }}> Ubah </Button>
+      field: 'action', headerName: 'Action', minWidth: 125, flex: 1, sortable: false,
+      renderCell: (params) => (<Button variant='contained' color='secondary' sx={{ textTransform: 'none' }}
+        onClick={() => { handleTableAction(params.row) }}> Detail / Ubah </Button>
       ),
     },
   ];

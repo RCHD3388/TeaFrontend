@@ -68,10 +68,10 @@ export default function SupplierPage() {
       renderCell: (params) => (
         <Button
           color="secondary"
-          variant="contained"
+          variant="contained" sx={{ textTransform: 'none' }}
           onClick={() => navigate(`/appuser/supplier/${params.row._id}`)}
         >
-          Detail
+          Detail / Ubah
         </Button>
       ),
     },

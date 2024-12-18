@@ -119,8 +119,8 @@ export default function InventoryCategoryPage() {
     ...mainColumns,
     {
       field: 'action_custom', headerName: 'Action', minWidth: 150, flex: 1, sortable: false, filterable: false,
-      renderCell: (params) => (<Button variant='contained' color='secondary'
-        onClick={() => { handleUnitMeasureEdit(params.row) }}> Detail / Edit </Button>
+      renderCell: (params) => (<Button variant='contained' color='secondary' sx={{ textTransform: 'none' }}
+        onClick={() => { handleUnitMeasureEdit(params.row) }}> Detail / Ubah </Button>
       ),
     },
   ]
@@ -129,8 +129,8 @@ export default function InventoryCategoryPage() {
     ...mainColumns,
     {
       field: 'action_custom', headerName: 'Action', minWidth: 150, flex: 1, sortable: false, filterable: false,
-      renderCell: (params) => (<Button variant='contained' color='secondary'
-        onClick={() => { handleMerkEdit(params.row) }}> Detail / Edit </Button>
+      renderCell: (params) => (<Button variant='contained' color='secondary' sx={{ textTransform: 'none' }}
+        onClick={() => { handleMerkEdit(params.row) }}> Detail / Ubah </Button>
       ),
     },
   ]

@@ -3,7 +3,7 @@ import AddIcon from '@mui/icons-material/Add';
 import AddSupplier from "../../../components/supplier_related/AddSupplier";
 import { GetAllSuppliersDocument } from "../../../graphql/supplier.generated";
 import { useQuery } from "@apollo/client";
-import StickyHeadTable, { StickyHeadTableColumn } from "../../../components/global_features/StickyHeadTable";
+import StickyHeadTable from "../../../components/global_features/StickyHeadTable";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import SearchIcon from '@mui/icons-material/Search';

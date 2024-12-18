@@ -163,13 +163,13 @@ const DetailEmployeeProject: React.FC<DetailEmployeeProjectProps> = ({ dataProje
         <>
           <Button variant="contained" color="secondary" sx={{ mr: 1 }}
             onClick={() => { navigate(`/appuser/employee/${params.row._id}`); }}
-            disabled={params.row.role.name === EmployeeRoleType.MANDOR}
+            disabled={user.role === EmployeeRoleType.MANDOR}
           >
             Detail
           </Button>
           <Button variant="contained" color="error"
             onClick={() => { handleActionTable(params.row) }}
-            disabled={params.row.role.name === EmployeeRoleType.MANDOR} >
+            disabled={user.role === EmployeeRoleType.MANDOR} >
             Hapus
           </Button>
         </>
