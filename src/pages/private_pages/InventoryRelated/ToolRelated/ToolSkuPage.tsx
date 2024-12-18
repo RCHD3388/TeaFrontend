@@ -67,10 +67,12 @@ const ToolSkuPage: React.FC = () => {
       field: 'merk', headerName: "Merk", minWidth: 150, type: "singleSelect", flex: 1,
       valueOptions: merkData?.getAllMerks.map((merk: any) => ({ label: merk.name, value: merk._id })) || [],
       renderCell: (params) => { return (<div className="badge whitespace-nowrap p-3 gap-2">{params.row.merk.name}</div>) },
+      valueFormatter: (value, row) => row.merk.name
     },
     {
       field: 'item_category', headerName: "Kategori", minWidth: 150, type: "singleSelect", flex: 1,
       renderCell: (params) => { return (<div className="badge whitespace-nowrap p-3 gap-2">{params.row.item_category.name}</div>) },
+      valueFormatter: (value, row) => row.item_category.name
     },
     {
       field: 'action', headerName: 'Action', minWidth: 150, flex: 1, sortable: false, filterable: false,

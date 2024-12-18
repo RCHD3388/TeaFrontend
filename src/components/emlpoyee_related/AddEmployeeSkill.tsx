@@ -89,7 +89,7 @@ const AddEmployeeSkill: React.FC<AddEmployeeSkillProps> = ({ refetchSkill }) => 
             />)}
           />
           <Controller
-            name="description" control={control} rules={{ required: 'Name is required' }}
+            name="description" control={control}
             render={({ field }) => (<TextField
               {...field} color="secondary"
               sx={{ width: "100%", mb: 1 }} label="Description" size='small' variant="outlined"

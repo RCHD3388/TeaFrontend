@@ -27,6 +27,8 @@ export default function StickyHeadTable<T extends object>({
         csvOptions={{
           fileName: csvname || "datacsv",
           fields: columns.filter((c) => !c.field.includes('action')).map((c) => c.field),
+          utf8WithBom: true,
+          delimiter: ';'
         }}
       />
     ),

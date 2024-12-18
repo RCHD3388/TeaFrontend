@@ -120,7 +120,8 @@ const AddProjectEmployee: React.FC<AddProjectEmployeeProps> = ({ projectId, data
     },
     {
       field: 'role', headerName: 'Role', minWidth: 150, align: "center", flex: 1,
-      renderCell: (params) => { return (<div className="badge whitespace-nowrap badge-neutral p-3 gap-2">{params.row.role.name}</div>) }
+      renderCell: (params) => { return (<div className="badge whitespace-nowrap badge-neutral p-3 gap-2">{params.row.role.name}</div>) },
+      valueFormatter: (value, row) => String(row.role.name)
     },
     {
       field: 'skill', headerName: 'Skill', minWidth: 150, type: "string", flex: 1,

@@ -219,167 +219,165 @@ const EmployeeDetail: React.FC = () => {
             </Tabs>
           </Box>
           <CustomTabPanel value={value} index={0}>
-            <Container sx={{ paddingTop: 4 }}>
-              {!loading && <div>
-                {/* FIELD START */}
-                <Controller
-                  name="name" control={control} rules={{ required: 'Name tidak boleh kosong' }}
-                  render={({ field }) => (<TextField
-                    {...field} color="secondary"
-                    sx={{ width: "100%", mb: 2 }} label="Name" size='small' variant="outlined"
-                    error={!!errors.name} helperText={errors.name ? errors.name.message : ''}
-                  />)}
-                />
-                <Controller
-                  name="email" control={control} rules={{
-                    required: 'Email tidak boleh kosong',
-                    pattern: {
-                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                      message: 'Email tidak valid'
-                    }
-                  }}
-                  render={({ field }) => (<TextField
-                    {...field} color="secondary"
-                    sx={{ width: "100%", mb: 2 }} label="Email" size='small' variant="outlined"
-                    error={!!errors.email} helperText={errors.email ? errors.email.message : ''}
-                  />)}
-                />
-                <Controller
-                  name="phone_number" control={control} rules={{
-                    required: 'Nomer telepon tidak boleh kosong',
-                    validate: (value) =>
-                      /^(\+62|62|0)[2-9]{1}[0-9]{7,12}$/.test(value) || 'Format nomor telepon tidak valid',
-                  }}
-                  render={({ field }) => (<TextField
-                    {...field} color="secondary"
-                    sx={{ width: "100%", mb: 2 }} label="Phone" size='small' variant="outlined"
-                    error={!!errors.phone_number} helperText={errors.phone_number ? errors.phone_number.message : ''}
-                  />)}
-                />
-                <Controller
-                  name="address" control={control} rules={{ required: 'Alamat tidak boleh kosong' }}
-                  render={({ field }) => (<TextField
-                    {...field} color="secondary"
-                    sx={{ width: "100%", mb: 2 }} label="Address" size='small' variant="outlined"
-                    error={!!errors.address} helperText={errors.address ? errors.address.message : ''}
-                  />)}
-                />
-                <div className="flex">
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <Controller
-                      name="hire_date" control={control}
-                      rules={{
-                        required: 'Tanggal tidak boleh kosong',
-                        validate: (value) => {
-                          if (value && dayjs(value).isAfter(dayjs())) { return 'Tanggal tidak boleh di masa depan'; }
-                          return true;
-                        },
-                      }}
-                      render={({ field, fieldState }) => (
-                        <DatePicker
-                          {...field}
-                          label="Hire Date"
-                          sx={{ mb: 2, mr: 1 }}
-                          value={field.value ? dayjs(field.value) : null}
-                          onChange={(date) => field.onChange(date?.format('YYYY-MM-DD') || null)}
-                          slotProps={{
-                            textField: {
-                              error: !!fieldState.error,
-                              helperText: fieldState.error ? fieldState.error.message : null,
-                              size: 'small',
-                              fullWidth: true,
-                              color: "secondary"
-                            },
-                          }}
-                        />
-                      )}
-                    />
-                  </LocalizationProvider>
+            {!loading && <div>
+              {/* FIELD START */}
+              <Controller
+                name="name" control={control} rules={{ required: 'Name tidak boleh kosong' }}
+                render={({ field }) => (<TextField
+                  {...field} color="secondary"
+                  sx={{ width: "100%", mb: 2 }} label="Name" size='small' variant="outlined"
+                  error={!!errors.name} helperText={errors.name ? errors.name.message : ''}
+                />)}
+              />
+              <Controller
+                name="email" control={control} rules={{
+                  required: 'Email tidak boleh kosong',
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: 'Email tidak valid'
+                  }
+                }}
+                render={({ field }) => (<TextField
+                  {...field} color="secondary"
+                  sx={{ width: "100%", mb: 2 }} label="Email" size='small' variant="outlined"
+                  error={!!errors.email} helperText={errors.email ? errors.email.message : ''}
+                />)}
+              />
+              <Controller
+                name="phone_number" control={control} rules={{
+                  required: 'Nomer telepon tidak boleh kosong',
+                  validate: (value) =>
+                    /^(\+62|62|0)[2-9]{1}[0-9]{7,12}$/.test(value) || 'Format nomor telepon tidak valid',
+                }}
+                render={({ field }) => (<TextField
+                  {...field} color="secondary"
+                  sx={{ width: "100%", mb: 2 }} label="Phone" size='small' variant="outlined"
+                  error={!!errors.phone_number} helperText={errors.phone_number ? errors.phone_number.message : ''}
+                />)}
+              />
+              <Controller
+                name="address" control={control} rules={{ required: 'Alamat tidak boleh kosong' }}
+                render={({ field }) => (<TextField
+                  {...field} color="secondary"
+                  sx={{ width: "100%", mb: 2 }} label="Address" size='small' variant="outlined"
+                  error={!!errors.address} helperText={errors.address ? errors.address.message : ''}
+                />)}
+              />
+              <div className="flex">
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <Controller
-                    name="salary" control={control} rules={{
-                      required: 'Gaji tidak boleh kosong',
-                      validate: (value) => value >= 50000 || 'Gaji harus minimal Rp. 50,000'
+                    name="hire_date" control={control}
+                    rules={{
+                      required: 'Tanggal tidak boleh kosong',
+                      validate: (value) => {
+                        if (value && dayjs(value).isAfter(dayjs())) { return 'Tanggal tidak boleh di masa depan'; }
+                        return true;
+                      },
                     }}
-                    render={({ field }) => (<TextField
-                      type="number"
-                      {...field} color="secondary"
-                      sx={{ width: "100%", mb: 2, ml: 1 }} label="Gaji" size='small' variant="outlined"
-                      error={!!errors.salary} helperText={errors.salary ? errors.salary.message : ''}
-                      InputProps={{ startAdornment: (<InputAdornment position="start">Rp.</InputAdornment>), }}
-                    />)}
-                  />
-                </div>
-                <div className="flex">
-                  <Controller
-                    name="status" control={control} rules={{ required: 'Status tidak boleh kosong' }}
-                    render={({ field }) => (
-                      <TextField
-                        {...field} color="secondary"
-                        select sx={{ width: "100%", mb: 2, mr: 1 }} label="Status" size="small" variant="outlined"
-                        error={!!errors.status}
-                        helperText={errors.status ? errors.status.message : ''}
-                      >
-                        <MenuItem value={"Active"}><div className="badge whitespace-nowrap badge-success p-3 text-white gap-2">Active</div></MenuItem>
-                        <MenuItem value={"Inactive"}><div className="badge whitespace-nowrap badge-warning p-3 gap-2">Inactive</div></MenuItem>
-                      </TextField>
+                    render={({ field, fieldState }) => (
+                      <DatePicker
+                        {...field}
+                        label="Hire Date"
+                        sx={{ mb: 2, mr: 1 }}
+                        value={field.value ? dayjs(field.value) : null}
+                        onChange={(date) => field.onChange(date?.format('YYYY-MM-DD') || null)}
+                        slotProps={{
+                          textField: {
+                            error: !!fieldState.error,
+                            helperText: fieldState.error ? fieldState.error.message : null,
+                            size: 'small',
+                            fullWidth: true,
+                            color: "secondary"
+                          },
+                        }}
+                      />
                     )}
                   />
-                  <Controller
-                    name="role_id" control={control} rules={{ required: 'Role tidak boleh kosong' }}
-                    render={({ field }) => (
-                      <TextField
-                        {...field} color="secondary"
-                        select sx={{ width: "100%", mb: 2, ml: 1 }} label="Role" size="small" variant="outlined"
-                        error={!!errors.role_id}
-                        helperText={errors.role_id ? errors.role_id.message : ''}
-                      >
-                        {!rolesLoading && rolesData.getAllRole.map((value: any, index: number) => {
-                          if (user.role == EmployeeRoleType.ADMIN && (value.name == EmployeeRoleType.ADMIN || value.name == EmployeeRoleType.OWNER)) return <></>
-                          return <MenuItem key={index} value={value._id}><div className="badge whitespace-nowrap badge-neutral p-3 gap-2">{value.name}</div></MenuItem>
-                        })}
-                      </TextField>
-                    )}
-                  />
-                </div>
-                {/* FIELD END */}
-
-                {/* BUTTON SUBMIT */}
-                <div className="flex justify-end">
-                  <Button
-                    onClick={handleSubmit(handleEditEmployee)}
-                    variant="contained"
-                    color="secondary"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : ("Perbarui")}
-                  </Button>
-                </div>
-                {/* BUTTON SUBMIT END */}
-
-                {/* PEGAWAI HANDLER */}
-                <div className="text-xl font-bold mb-2">Skill Pegawai</div>
-                <Box display={"flex"} gap={2} sx={{ mb: 2 }}>
-                  <Autocomplete
-                    disablePortal
-                    options={skillsLoading ? [] : skillsData.getAllSkill.map((sk: any) => { return { label: sk.name, value: sk._id } })}
-                    sx={{ width: 300 }}
-                    renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Skill Pegawai" inputRef={selectedNewSkill} />}
-                  />
-                  <Button
-                    onClick={handleAddEmployeeSkill}
-                    variant="contained"
-                    color="secondary"
-                  >
-                    Tambah Skill
-                  </Button>
-                </Box>
-                <StickyHeadTable
-                  columns={columns}
-                  rows={skillData ?? []}
-                  withtoolbar={false}
+                </LocalizationProvider>
+                <Controller
+                  name="salary" control={control} rules={{
+                    required: 'Gaji tidak boleh kosong',
+                    validate: (value) => value >= 50000 || 'Gaji harus minimal Rp. 50,000'
+                  }}
+                  render={({ field }) => (<TextField
+                    type="number"
+                    {...field} color="secondary"
+                    sx={{ width: "100%", mb: 2, ml: 1 }} label="Gaji" size='small' variant="outlined"
+                    error={!!errors.salary} helperText={errors.salary ? errors.salary.message : ''}
+                    InputProps={{ startAdornment: (<InputAdornment position="start">Rp.</InputAdornment>), }}
+                  />)}
                 />
-              </div>}
-            </Container>
+              </div>
+              <div className="flex">
+                <Controller
+                  name="status" control={control} rules={{ required: 'Status tidak boleh kosong' }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field} color="secondary"
+                      select sx={{ width: "100%", mb: 2, mr: 1 }} label="Status" size="small" variant="outlined"
+                      error={!!errors.status}
+                      helperText={errors.status ? errors.status.message : ''}
+                    >
+                      <MenuItem value={"Active"}><div className="badge whitespace-nowrap badge-success p-3 text-white gap-2">Active</div></MenuItem>
+                      <MenuItem value={"Inactive"}><div className="badge whitespace-nowrap badge-warning p-3 gap-2">Inactive</div></MenuItem>
+                    </TextField>
+                  )}
+                />
+                <Controller
+                  name="role_id" control={control} rules={{ required: 'Role tidak boleh kosong' }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field} color="secondary"
+                      select sx={{ width: "100%", mb: 2, ml: 1 }} label="Role" size="small" variant="outlined"
+                      error={!!errors.role_id}
+                      helperText={errors.role_id ? errors.role_id.message : ''}
+                    >
+                      {!rolesLoading && rolesData.getAllRole.map((value: any, index: number) => {
+                        if (user.role == EmployeeRoleType.ADMIN && (value.name == EmployeeRoleType.ADMIN || value.name == EmployeeRoleType.OWNER)) return <></>
+                        return <MenuItem key={index} value={value._id}><div className="badge whitespace-nowrap badge-neutral p-3 gap-2">{value.name}</div></MenuItem>
+                      })}
+                    </TextField>
+                  )}
+                />
+              </div>
+              {/* FIELD END */}
+
+              {/* BUTTON SUBMIT */}
+              <div className="flex justify-end">
+                <Button
+                  onClick={handleSubmit(handleEditEmployee)}
+                  variant="contained"
+                  color="secondary"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : ("Perbarui")}
+                </Button>
+              </div>
+              {/* BUTTON SUBMIT END */}
+
+              {/* PEGAWAI HANDLER */}
+              <div className="text-xl font-bold mb-2">Skill Pegawai</div>
+              <Box display={"flex"} gap={2} sx={{ mb: 2 }}>
+                <Autocomplete
+                  disablePortal
+                  options={skillsLoading ? [] : skillsData.getAllSkill.map((sk: any) => { return { label: sk.name, value: sk._id } })}
+                  sx={{ width: 300 }}
+                  renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Skill Pegawai" inputRef={selectedNewSkill} />}
+                />
+                <Button
+                  onClick={handleAddEmployeeSkill}
+                  variant="contained"
+                  color="secondary"
+                >
+                  Tambah Skill
+                </Button>
+              </Box>
+              <StickyHeadTable
+                columns={columns}
+                rows={skillData ?? []}
+                withtoolbar={false}
+              />
+            </div>}
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
             <h1>Project History</h1>

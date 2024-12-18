@@ -88,17 +88,20 @@ const MaterialPage: React.FC = () => {
       filterable: false, sortable: false,
       renderCell: (params) => {return <>
         {params.row.unit_measure.name} ({params.row.conversion}{params.row.minimum_unit_measure.name})
-      </>}
+      </>},
+      valueFormatter: (value, row) => `${row.unit_measure.name} (${row.conversion}${row.minimum_unit_measure.name})`
     },
     {
       field: 'merk', headerName: 'Merk', minWidth: 150, type: "singleSelect", flex: 1,
       valueOptions: merkData?.getAllMerks.map((merk: any) => merk.name) || [],
-      renderCell: (params) => <div className="badge whitespace-nowrap p-3 gap-2">{params.row.merk.name}</div>
+      renderCell: (params) => <div className="badge whitespace-nowrap p-3 gap-2">{params.row.merk.name}</div>,
+      valueFormatter: (value, row) => row.merk.name
     },
     {
       field: 'item_category', headerName: 'Kategori', minWidth: 150, type: "singleSelect", flex: 1,
       valueOptions: categoryData?.getCategories.map((cat: any) => cat.name) || [],
-      renderCell: (params) => <div className="badge whitespace-nowrap p-3 gap-2">{params.row.item_category.name}</div>
+      renderCell: (params) => <div className="badge whitespace-nowrap p-3 gap-2">{params.row.item_category.name}</div>,
+      valueFormatter: (value, row) => row.item_category.name
     },
     {
       field: 'action', headerName: 'Action', minWidth: 150, flex: 1, sortable: false, filterable: false,
