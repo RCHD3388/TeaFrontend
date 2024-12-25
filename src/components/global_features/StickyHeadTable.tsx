@@ -44,7 +44,7 @@ export default function StickyHeadTable<T extends object>({
           sx={{ zIndex: 0 }}
           columns={columns}
           slots={toolbarOption}
-          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 5 } } }}
+          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 } } }}
           pageSizeOptions={[10, 25, 50, 100]}
           getRowId={(row) => row._id}
         />
