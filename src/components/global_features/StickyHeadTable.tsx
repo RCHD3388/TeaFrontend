@@ -16,7 +16,7 @@ interface TableProps<T> {
 export default function StickyHeadTable<T extends object>({
   columns,
   rows,
-  tableSx = { maxHeight: 500 },
+  tableSx = { maxHeight: 600 },
   csvname,
   withtoolbar = true,
   withIndex = true
@@ -36,7 +36,7 @@ export default function StickyHeadTable<T extends object>({
 
   return (
     <div>
-      <Paper sx={{ maxHeight: 600, width: '100%', overflow: 'auto' }}>
+      <Paper sx={{ ...tableSx, width: '100%', overflow: 'auto' }}>
         <DataGrid
           rows={rows ? 
             withIndex ? rows.map((row, index) => ({ ...row, index: index + 1 })) : rows 
@@ -45,7 +45,7 @@ export default function StickyHeadTable<T extends object>({
           columns={columns}
           slots={toolbarOption}
           initialState={{ pagination: { paginationModel: { page: 0, pageSize: 5 } } }}
-          pageSizeOptions={[5, 25, 50, 100]}
+          pageSizeOptions={[10, 25, 50, 100]}
           getRowId={(row) => row._id}
         />
       </Paper>

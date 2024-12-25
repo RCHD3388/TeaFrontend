@@ -156,7 +156,7 @@ export default function InventoryCategoryPage() {
             :
             <div>
               <StickyHeadTable
-                tableSx={{ height: 150 }}
+                tableSx={{ height: 300 }}
                 columns={unitMeasureColumns}
                 rows={dataUMeasure?.getAllUnitMeasures ?? []}
                 csvname="daftar_satuan_unit"
@@ -181,7 +181,7 @@ export default function InventoryCategoryPage() {
             :
             <div>
               <StickyHeadTable
-                tableSx={{ height: 150 }}
+                tableSx={{ height: 300 }}
                 columns={merkColumns}
                 rows={dataMerk?.getAllMerks ?? []}
                 csvname="daftar_merk"
