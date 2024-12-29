@@ -128,14 +128,14 @@ export type UpdateMaterialMutation = { __typename?: 'Mutation', updateMaterial: 
 export type GetAllSkusQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetAllSkusQuery = { __typename?: 'Query', getAllSkus: Array<{ __typename?: 'Sku', _id: string, name: string, description?: string | null, merk: { __typename?: 'Merk', _id: string, name: string }, item_category: { __typename?: 'CategoryData', _id: string, name: string } }> };
+export type GetAllSkusQuery = { __typename?: 'Query', getAllSkus: Array<{ __typename?: 'Sku', _id: string, name: string, description?: string | null, status: string, merk: { __typename?: 'Merk', _id: string, name: string }, item_category: { __typename?: 'CategoryData', _id: string, name: string } }> };
 
 export type GetSkuByIdQueryVariables = Types.Exact<{
   id: Types.Scalars['String']['input'];
 }>;
 
 
-export type GetSkuByIdQuery = { __typename?: 'Query', getSkuById: { __typename?: 'Sku', _id: string, name: string, description?: string | null, merk: { __typename?: 'Merk', _id: string, name: string }, item_category: { __typename?: 'CategoryData', _id: string, name: string } } };
+export type GetSkuByIdQuery = { __typename?: 'Query', getSkuById: { __typename?: 'Sku', _id: string, name: string, description?: string | null, status: string, merk: { __typename?: 'Merk', _id: string, name: string }, item_category: { __typename?: 'CategoryData', _id: string, name: string } } };
 
 export type CreateSkuMutationVariables = Types.Exact<{
   createSkuInput: Types.CreateSkuInput;
@@ -904,6 +904,7 @@ export const GetAllSkusDocument = gql`
     _id
     name
     description
+    status
     merk {
       _id
       name
@@ -953,6 +954,7 @@ export const GetSkuByIdDocument = gql`
     _id
     name
     description
+    status
     merk {
       _id
       name

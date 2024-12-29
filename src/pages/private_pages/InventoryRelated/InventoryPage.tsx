@@ -1,5 +1,5 @@
-import { Autocomplete, Box, Button, Tab, Tabs, TextField } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Box, Tab, Tabs } from "@mui/material";
+import React from "react";
 import { a11yProps, CustomTabPanel } from "../../../components/CustomTabPanel";
 import InventoryMainPage from "./InventoryMainPage";
 import { useNavigate } from "react-router-dom";

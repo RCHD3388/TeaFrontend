@@ -12,10 +12,11 @@ import { selectUser } from "../../app/reducers/userSlice";
 import { EmployeeRoleType } from "../../types/staticData.types";
 
 
-interface AddInventoryItemProps {
+interface AddInventoryToolProps {
+  warehouseId: String | undefined
 }
 
-const AddInventoryItem: React.FC<AddInventoryItemProps> = ({ }) => {
+const AddInventoryTool: React.FC<AddInventoryToolProps> = ({ warehouseId }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const handleOpenModal = () => { setOpenModal(true) }
@@ -28,7 +29,7 @@ const AddInventoryItem: React.FC<AddInventoryItemProps> = ({ }) => {
         handleOpenModal()
       }}
       endIcon={<AddIcon />}
-    >Tambah Merk</Button>
+    >Tambah Peralatan</Button>
 
     <Modal
       open={openModal}
@@ -41,7 +42,7 @@ const AddInventoryItem: React.FC<AddInventoryItemProps> = ({ }) => {
         modalStyle.p = 2
         return modalStyle
       }}>
-        <Typography id="modal-modal-title" variant="h6" component="h2"><b>TAMBAH BARANG</b></Typography>
+        <Typography id="modal-modal-title" variant="h6" component="h2"><b>TAMBAH PERALATAN</b></Typography>
         {/* FIELD START */}
         
       </Box>
@@ -49,4 +50,4 @@ const AddInventoryItem: React.FC<AddInventoryItemProps> = ({ }) => {
   </>)
 }
 
-export default AddInventoryItem;
+export default AddInventoryTool;

@@ -75,7 +75,7 @@ const AddWarehouse: React.FC<AddWarehouseProps> = ({ refetchWarehouse }) => {
           handleOpenModal()
         }}
         endIcon={<AddIcon />}
-      >Tambah Warehouse</Button>
+      >Tambah Gudang</Button>
 
       <Modal
         open={openModal}
@@ -84,7 +84,7 @@ const AddWarehouse: React.FC<AddWarehouseProps> = ({ refetchWarehouse }) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={modalStyle}>
-          <Typography id="modal-modal-title" variant="h6" component="h2"><b>TAMBAH SUPPLIER BARU</b></Typography>
+          <Typography id="modal-modal-title" variant="h6" component="h2"><b>TAMBAH GUDANG BARU</b></Typography>
           {/* FIELD START */}
           <Controller
             name="name" control={control} rules={{ required: 'Name tidak boleh kosong' }}

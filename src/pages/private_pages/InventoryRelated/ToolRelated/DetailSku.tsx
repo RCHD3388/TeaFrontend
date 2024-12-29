@@ -16,7 +16,8 @@ interface UpdateSkuValues {
   name: string
   description: string,
   merk: string,
-  item_category: string
+  item_category: string,
+  status: string
 }
 
 const DetailSku: React.FC = () => {
@@ -40,13 +41,15 @@ const DetailSku: React.FC = () => {
       name: "",
       description: "",
       merk: "",
-      item_category: ""
+      item_category: "",
+      status: ""
     }
   });
 
   const handleEditSku = (data: UpdateSkuValues) => {
     if (skuData?.getSkuById) {
       setIsSubmitting(true)
+      
       updateSku({
         variables: {
           id: skuData.getSkuById._id,
@@ -54,7 +57,8 @@ const DetailSku: React.FC = () => {
             name: data.name,
             description: data.description,
             merk: data.merk,
-            item_category: data.item_category
+            item_category: data.item_category,
+            status: data.status
           },
           requiresAuth: true
         }
@@ -90,7 +94,8 @@ const DetailSku: React.FC = () => {
           name: skuData.getSkuById.name,
           description: skuData.getSkuById.description,
           merk: skuData.getSkuById.merk._id,
-          item_category: skuData.getSkuById.item_category._id
+          item_category: skuData.getSkuById.item_category._id,
+          status: skuData.getSkuById.status
         });
       }
     }
@@ -163,6 +168,22 @@ const DetailSku: React.FC = () => {
                       <div className="badge whitespace-nowrap p-3 gap-2">{value.name}</div>
                     </MenuItem>
                   })}
+                </TextField>
+              )}
+            />
+            <Controller
+              name="status" control={control} rules={{
+                required: 'Status tidak boleh kosong',
+              }}
+              render={({ field }) => (
+                <TextField
+                  {...field} color="secondary"
+                  select sx={{ width: "100%", mb: 1 }} label="Status" size="small" variant="outlined"
+                  error={!!errors.status}
+                  helperText={errors.status ? errors.status.message : ''}
+                >
+                  <MenuItem value={"Active"}> <div className="badge badge-success text-white whitespace-nowrap p-3 gap-2">Active</div></MenuItem>
+                  <MenuItem value={"Inactive"}> <div className="badge badge-warning whitespace-nowrap p-3 gap-2">Inactive</div></MenuItem>
                 </TextField>
               )}
             />

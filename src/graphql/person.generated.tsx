@@ -23,19 +23,19 @@ export type UpdateEmployeeMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateEmployeeMutation = { __typename?: 'Mutation', updateEmployee: { __typename?: 'Employee', _id: string, hire_date: any, salary?: number | null, status: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string, description: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string, description: string }> } };
+export type UpdateEmployeeMutation = { __typename?: 'Mutation', updateEmployee: { __typename?: 'Employee', _id: string, hire_date: any, salary?: number | null, status: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string, description: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string, description?: string | null }> } };
 
 export type GetEmployeeByIdQueryVariables = Types.Exact<{
   id: Types.Scalars['String']['input'];
 }>;
 
 
-export type GetEmployeeByIdQuery = { __typename?: 'Query', getEmployeeById: { __typename?: 'Employee', _id: string, hire_date: any, salary?: number | null, status: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string, description: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string, description: string }> } };
+export type GetEmployeeByIdQuery = { __typename?: 'Query', getEmployeeById: { __typename?: 'Employee', _id: string, hire_date: any, salary?: number | null, status: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string, description: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string, description?: string | null }> } };
 
 export type GetAllSkillQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type GetAllSkillQuery = { __typename?: 'Query', getAllSkill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string, description: string }> };
+export type GetAllSkillQuery = { __typename?: 'Query', getAllSkill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string, description?: string | null }> };
 
 export type GetAllRoleQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -47,7 +47,7 @@ export type CreateEmployeeSkillMutationVariables = Types.Exact<{
 }>;
 
 
-export type CreateEmployeeSkillMutation = { __typename?: 'Mutation', createEmployeeSkill: { __typename?: 'EmployeeSkill', _id: string, name: string, description: string } };
+export type CreateEmployeeSkillMutation = { __typename?: 'Mutation', createEmployeeSkill: { __typename?: 'EmployeeSkill', _id: string, name: string, description?: string | null } };
 
 export type UpdateEmployeeSkillMutationVariables = Types.Exact<{
   id: Types.Scalars['String']['input'];
@@ -55,14 +55,14 @@ export type UpdateEmployeeSkillMutationVariables = Types.Exact<{
 }>;
 
 
-export type UpdateEmployeeSkillMutation = { __typename?: 'Mutation', updateEmployeeSkill: { __typename?: 'EmployeeSkill', _id: string, name: string, description: string } };
+export type UpdateEmployeeSkillMutation = { __typename?: 'Mutation', updateEmployeeSkill: { __typename?: 'EmployeeSkill', _id: string, name: string, description?: string | null } };
 
 export type DeleteEmployeeSkillMutationVariables = Types.Exact<{
   id: Types.Scalars['String']['input'];
 }>;
 
 
-export type DeleteEmployeeSkillMutation = { __typename?: 'Mutation', deleteEmployeeSkill: { __typename?: 'EmployeeSkill', _id: string, name: string, description: string } };
+export type DeleteEmployeeSkillMutation = { __typename?: 'Mutation', deleteEmployeeSkill: { __typename?: 'EmployeeSkill', _id: string, name: string, description?: string | null } };
 
 
 export const GetAllEmployeesDocument = gql`

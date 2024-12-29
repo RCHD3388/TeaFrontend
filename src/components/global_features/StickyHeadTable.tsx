@@ -1,7 +1,5 @@
-import * as React from 'react';
 import Paper from '@mui/material/Paper';
 import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
-import { color } from 'framer-motion';
 import { theme } from '../../theme';
 
 interface TableProps<T> {

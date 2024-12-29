@@ -1,7 +1,4 @@
 import { Autocomplete, Box, Button, TextField } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
-import AddSupplier from "../../../components/supplier_related/AddSupplier";
-import { GetAllSuppliersDocument } from "../../../graphql/supplier.generated";
 import { useQuery } from "@apollo/client";
 import StickyHeadTable from "../../../components/global_features/StickyHeadTable";
 import { useNavigate } from "react-router-dom";
@@ -12,12 +9,9 @@ import AddProject from "../../../components/project_related/AddProject";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import { selectUser } from "../../../app/reducers/userSlice";
-import SearchIcon from '@mui/icons-material/Search';
 import { GetCategoriesDocument } from "../../../graphql/category.generated";
-import { Category } from "@mui/icons-material";
 import { CategoryType, EmployeeRoleType } from "../../../types/staticData.types";
 import { GridColDef } from "@mui/x-data-grid";
-import { get } from "react-hook-form";
 
 interface RowData {
   _id: string,

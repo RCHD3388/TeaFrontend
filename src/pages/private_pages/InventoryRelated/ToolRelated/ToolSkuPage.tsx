@@ -19,6 +19,7 @@ interface RowData {
     _id: string,
     name: string
   },
+  status: string,
   item_category: {
     _id: string,
     name: string
@@ -62,6 +63,15 @@ const ToolSkuPage: React.FC = () => {
         let value = params.row.description;
         return value.length == 0 ? <div className="text-error">Belum ada deskripsi</div> : value
       }
+    },
+    {
+      field: 'status', headerName: 'Status', minWidth: 150, type: "singleSelect", flex: 1,
+      valueOptions: ['Active', 'Inactive'],
+      renderCell: (params) => (
+        params.row.status === 'Active' ?
+          <div className="badge badge-success text-white whitespace-nowrap p-3 gap-2">{params.row.status}</div> :
+          <div className="badge badge-warning whitespace-nowrap p-3 gap-2">{params.row.status}</div>
+      )
     },
     {
       field: 'merk', headerName: "Merk", minWidth: 150, type: "singleSelect", flex: 1,

@@ -171,8 +171,8 @@ export default function InventoryDetail() {
             {/* BUTTON SUBMIT END */}
           </div>}
 
-          {/* HORIZONTAL LINE */}
-          <hr className="bg-gray-400" style={{ padding: 1, marginTop: 20, marginBottom: 20 }} />
+          {/* HORIZONTAL LINE
+          <hr className="bg-gray-400" style={{ padding: 1, marginTop: 20, marginBottom: 20 }} /> */}
 
           {/* DETAIL INVENTORY */}
           {warehouseId ? <DetailInventoryItem warehouseId={warehouseId} /> :

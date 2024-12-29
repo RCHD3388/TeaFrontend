@@ -1,0 +1,45 @@
+query GetWarehouseMaterials ($warehouse_id: String!){
+    getWarehouseMaterials(warehouse_id: $warehouse_id) {
+        _id
+        remain
+        price
+        date
+        material {
+            name
+            conversion
+            merk {
+                name
+            }
+            minimum_unit_measure {
+                name
+            }
+            unit_measure {
+                name
+            }
+            item_category {
+                name
+            }
+            id
+        }
+    }
+}
+
+query GetWarehouseTools ($warehouse_id: String!){
+    getWarehouseTools(warehouse_id: $warehouse_id) {
+        _id
+        date
+        tool {
+            id
+            price
+            sku {
+                name
+                merk {
+                    name
+                }
+                item_category {
+                    name
+                }
+            }
+        }
+    }
+}

@@ -1,9 +1,5 @@
-import { Autocomplete, Box, Button, TextField } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
-import AddSupplier from "../../../components/supplier_related/AddSupplier";
-import { GetAllSuppliersDocument } from "../../../graphql/supplier.generated";
+import { Autocomplete, Box, TextField } from "@mui/material";
 import { useQuery } from "@apollo/client";
-import StickyHeadTable from "../../../components/global_features/StickyHeadTable";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import SearchIcon from '@mui/icons-material/Search';
@@ -44,7 +40,7 @@ export default function InventoryMainPage() {
           onChange={(event: React.SyntheticEvent, newValue: string | null) => {
             setStatusFilter(newValue || "")
           }}
-          renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Status Pegawai" />}
+          renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Status Gudang" />}
         />
         <Autocomplete
           disablePortal

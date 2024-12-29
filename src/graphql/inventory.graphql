@@ -207,6 +207,7 @@ query GetAllSkus {
         _id
         name
         description
+        status
         merk {
             _id
             name
@@ -223,6 +224,7 @@ query GetSkuById ($id: String!) {
         _id
         name
         description
+        status
         merk {
             _id
             name
