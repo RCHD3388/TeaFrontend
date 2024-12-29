@@ -24,7 +24,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
         console.error(`GraphQL error [${code}]:`, err.message);
       }
       console.log(err)
-        console.error(`GraphQL error [${code}]:`, err.message);
+      console.error(`GraphQL error [${code}]:`, err.message);
     }
   }
 

@@ -13,7 +13,7 @@ export type FindProjectByIdQueryVariables = Types.Exact<{
 }>;
 
 
-export type FindProjectByIdQuery = { __typename?: 'Query', findProjectById: { __typename?: 'Project', _id: string, name: string, location: string, description: string, target_date?: any | null, createdAt: any, finished_at?: any | null, status: { __typename?: 'CategoryData', _id: string, name: string }, priority: { __typename?: 'CategoryData', _id: string, name: string }, project_leader: { __typename?: 'Employee', _id: string, person: { __typename?: 'Person', name: string, email: string } }, project_closing?: { __typename?: 'ProjectClosing', closed_by: { __typename?: 'Employee', person: { __typename?: 'Person', name: string } } } | null } };
+export type FindProjectByIdQuery = { __typename?: 'Query', findProjectById: { __typename?: 'Project', _id: string, name: string, location: string, description: string, target_date?: any | null, warehouse: string, createdAt: any, finished_at?: any | null, status: { __typename?: 'CategoryData', _id: string, name: string }, priority: { __typename?: 'CategoryData', _id: string, name: string }, project_leader: { __typename?: 'Employee', _id: string, person: { __typename?: 'Person', name: string, email: string } }, project_closing?: { __typename?: 'ProjectClosing', closed_by: { __typename?: 'Employee', person: { __typename?: 'Person', name: string } } } | null } };
 
 export type CreateProjectMutationVariables = Types.Exact<{
   createProjectInput: Types.CreateProjectInput;
@@ -134,6 +134,7 @@ export const FindProjectByIdDocument = gql`
         email
       }
     }
+    warehouse
     createdAt
     finished_at
     project_closing {

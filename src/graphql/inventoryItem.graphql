@@ -5,18 +5,25 @@ query GetWarehouseMaterials ($warehouse_id: String!){
         price
         date
         material {
+            _id
             name
+            description
             conversion
+            status
             merk {
+                _id
                 name
             }
             minimum_unit_measure {
+                _id
                 name
             }
             unit_measure {
+                _id
                 name
             }
             item_category {
+                _id
                 name
             }
             id

@@ -7,6 +7,8 @@ import React from "react";
 import { a11yProps, CustomTabPanel } from "../CustomTabPanel";
 import AddInventoryMaterial from "./AddInventoryMaterial";
 import AddInventoryTool from "./AddInventoryTool";
+import MaterialTable from "./inventory_detail_related/MaterialTable";
+import ToolTable from "./inventory_detail_related/ToolTable";
 
 interface DetailInventoryItemProps {
   warehouseId: string | undefined
@@ -48,8 +50,7 @@ const DetailInventoryItem: React.FC<DetailInventoryItemProps> = ({ warehouseId }
             <Box display={"flex"} justifyContent={"flex-end"} width={"100%"}>
               <AddInventoryMaterial warehouseId={warehouseId ?? ""} />
             </Box>}
-
-
+          <MaterialTable warehouseId={warehouseId}/>
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
           {/* ADD TOOL BUTTON & HANDLER */}
@@ -57,8 +58,7 @@ const DetailInventoryItem: React.FC<DetailInventoryItemProps> = ({ warehouseId }
             <Box display={"flex"} justifyContent={"flex-end"} width={"100%"}>
               <AddInventoryTool warehouseId={warehouseId ?? ""} />
             </Box>}
-          
-          
+          <ToolTable warehouseId={warehouseId}/>
         </CustomTabPanel>
 
       </div>

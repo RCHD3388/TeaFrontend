@@ -120,6 +120,7 @@ export type CreatePoDetailInput = {
 
 export type CreateProcessingDetailInput = {
   police_number?: InputMaybe<Scalars['String']['input']>;
+  processing_tool_detail?: InputMaybe<Array<ProcessingToolDetailInput>>;
   sender_name: Scalars['String']['input'];
   sender_phone: Scalars['String']['input'];
   vehicle_detail?: InputMaybe<Scalars['String']['input']>;
@@ -716,6 +717,11 @@ export type PersonInput = {
   phone_number: Scalars['String']['input'];
 };
 
+export type ProcessingToolDetailInput = {
+  sku: Scalars['String']['input'];
+  tool: Array<Scalars['String']['input']>;
+};
+
 export type Project = {
   __typename?: 'Project';
   _id: Scalars['String']['output'];
@@ -998,6 +1004,7 @@ export type RequestItemDetail = {
   item_type: Scalars['String']['output'];
   price?: Maybe<Scalars['Float']['output']>;
   quantity: Scalars['Float']['output'];
+  tool?: Maybe<Array<Tool>>;
 };
 
 export type RequestItemHeader = {

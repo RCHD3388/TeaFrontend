@@ -8,7 +8,7 @@ export type GetWarehouseMaterialsQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetWarehouseMaterialsQuery = { __typename?: 'Query', getWarehouseMaterials: Array<{ __typename?: 'MaterialTransaction', _id: string, remain: number, price: number, date: any, material: { __typename?: 'Material', name: string, conversion: number, id: string, merk: { __typename?: 'Merk', name: string }, minimum_unit_measure: { __typename?: 'UnitMeasure', name: string }, unit_measure: { __typename?: 'UnitMeasure', name: string }, item_category: { __typename?: 'CategoryData', name: string } } }> };
+export type GetWarehouseMaterialsQuery = { __typename?: 'Query', getWarehouseMaterials: Array<{ __typename?: 'MaterialTransaction', _id: string, remain: number, price: number, date: any, material: { __typename?: 'Material', _id: string, name: string, description?: string | null, conversion: number, status: string, id: string, merk: { __typename?: 'Merk', _id: string, name: string }, minimum_unit_measure: { __typename?: 'UnitMeasure', _id: string, name: string }, unit_measure: { __typename?: 'UnitMeasure', _id: string, name: string }, item_category: { __typename?: 'CategoryData', _id: string, name: string } } }> };
 
 export type GetWarehouseToolsQueryVariables = Types.Exact<{
   warehouse_id: Types.Scalars['String']['input'];
@@ -26,18 +26,25 @@ export const GetWarehouseMaterialsDocument = gql`
     price
     date
     material {
+      _id
       name
+      description
       conversion
+      status
       merk {
+        _id
         name
       }
       minimum_unit_measure {
+        _id
         name
       }
       unit_measure {
+        _id
         name
       }
       item_category {
+        _id
         name
       }
       id

@@ -43,6 +43,7 @@ query FindProjectById($id: String!){
         email
       }  
     }
+    warehouse
     createdAt
     finished_at
     project_closing{

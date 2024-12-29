@@ -12,6 +12,7 @@ import React, { useEffect } from "react";
 import MainDetailProject from "./ProjectDetailRelated/MainDetailProject";
 import DetailEmployeeProject from "./ProjectDetailRelated/DetailEmployeeProject";
 import { CustomGraphQLError } from "../../../types/apollo_client.types";
+import DetailInventoryItem from "../../../components/inventory_related/DetailInventoryItem";
 
 
 export default function DetailProject() {
@@ -88,7 +89,7 @@ export default function DetailProject() {
               />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={2}>
-              Inventory
+              <DetailInventoryItem warehouseId={data.findProjectById?.warehouse || ""}/>
             </CustomTabPanel>
             <CustomTabPanel value={value} index={3}>
               Pengeluaran

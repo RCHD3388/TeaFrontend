@@ -82,7 +82,7 @@ const EditMaterialModal: React.FC<EditMaterialModalProps> = ({
           }, requiresAuth: true
         }
       })
-      dispatch(openSnackbar({ severity: "success", message: "Berhasil Tambah Material" }))
+      dispatch(openSnackbar({ severity: "success", message: "Berhasil Edit Material" }))
       reset()
       refetchMaterials()
       handleCloseModal()
@@ -95,7 +95,7 @@ const EditMaterialModal: React.FC<EditMaterialModalProps> = ({
         if (typeof curError == "object") msg = curError[0];
         dispatch(openSnackbar({ severity: "error", message: msg }))
       } else {
-        dispatch(openSnackbar({ severity: "error", message: "Gagal Tambah Material, silakan coba lagi" }))
+        dispatch(openSnackbar({ severity: "error", message: "Gagal edit Material, silakan coba lagi" }))
       }
     } finally {
       setIsSubmitting(false)
