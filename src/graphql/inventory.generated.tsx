@@ -98,7 +98,9 @@ export type DeleteMerkMutationVariables = Types.Exact<{
 
 export type DeleteMerkMutation = { __typename?: 'Mutation', deleteMerk: { __typename?: 'Merk', _id: string, name: string, description?: string | null } };
 
-export type GetAllMaterialsQueryVariables = Types.Exact<{ [key: string]: never; }>;
+export type GetAllMaterialsQueryVariables = Types.Exact<{
+  filterInput?: Types.InputMaybe<Types.FilterInput>;
+}>;
 
 
 export type GetAllMaterialsQuery = { __typename?: 'Query', getAllMaterials: Array<{ __typename?: 'Material', _id: string, id: string, name: string, description?: string | null, status: string, conversion: number, merk: { __typename?: 'Merk', _id: string, name: string }, unit_measure: { __typename?: 'UnitMeasure', _id: string, name: string }, minimum_unit_measure: { __typename?: 'UnitMeasure', _id: string, name: string }, item_category: { __typename?: 'CategoryData', _id: string, name: string } }> };
@@ -701,8 +703,8 @@ export type DeleteMerkMutationHookResult = ReturnType<typeof useDeleteMerkMutati
 export type DeleteMerkMutationResult = Apollo.MutationResult<DeleteMerkMutation>;
 export type DeleteMerkMutationOptions = Apollo.BaseMutationOptions<DeleteMerkMutation, DeleteMerkMutationVariables>;
 export const GetAllMaterialsDocument = gql`
-    query GetAllMaterials {
-  getAllMaterials {
+    query GetAllMaterials($filterInput: FilterInput) {
+  getAllMaterials(filterInput: $filterInput) {
     _id
     id
     name
@@ -741,6 +743,7 @@ export const GetAllMaterialsDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllMaterialsQuery({
  *   variables: {
+ *      filterInput: // value for 'filterInput'
  *   },
  * });
  */

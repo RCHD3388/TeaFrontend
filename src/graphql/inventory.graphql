@@ -125,8 +125,8 @@ mutation DeleteMerk ($id: String!) {
 }
 
 # MATERIAL GRAPHQL
-query GetAllMaterials {
-    getAllMaterials {
+query GetAllMaterials ($filterInput: FilterInput){
+    getAllMaterials (filterInput: $filterInput){
         _id
         id
         name

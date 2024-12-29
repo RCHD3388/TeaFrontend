@@ -14,6 +14,7 @@ import { modalStyle } from "../../../theme";
 import { openSnackbar } from "../../../app/reducers/snackbarSlice";
 import { useDispatch } from "react-redux";
 import { GridColDef } from "@mui/x-data-grid";
+import { CustomGraphQLError } from "../../../types/apollo_client.types";
 
 enum UnitEditType {
   UNIT_MEASURE = "SATUAN UNIT",
@@ -82,7 +83,16 @@ export default function InventoryCategoryPage() {
           if (editType == UnitEditType.MERK) refetchMerk()
           handleCloseEditModal()
         }).catch((err) => {
-          dispatch(openSnackbar({ severity: "error", message: `Gagal hapus ${editType}, pastikan nama belum pernah digunakan` }))
+          let error = err.graphQLErrors[0];
+          if (error.code == "BAD_REQUEST") {
+            let curError = error.original?.message || error.message;
+            let msg = ""
+            if (typeof curError == "string") msg = curError;
+            if (typeof curError == "object") msg = curError[0];
+            dispatch(openSnackbar({ severity: "error", message: msg }))
+          } else {
+            dispatch(openSnackbar({ severity: "error", message: `Gagal hapus ${editType}, silakan coba lagi nanti` }))
+          }
         })
     } else {
       dispatch(openSnackbar({ severity: "error", message: `Gagal hapus ${editType}` }))
@@ -109,7 +119,16 @@ export default function InventoryCategoryPage() {
         if (editType == UnitEditType.MERK) refetchMerk()
         handleCloseEditModal()
       }).catch((err) => {
-        dispatch(openSnackbar({ severity: "error", message: `Gagal Ubah ${editType}, pastikan nama belum digunakan` }))
+        let error = err.graphQLErrors[0];
+        if (error.code == "BAD_REQUEST") {
+          let curError = error.original?.message || error.message;
+          let msg = ""
+          if (typeof curError == "string") msg = curError;
+          if (typeof curError == "object") msg = curError[0];
+          dispatch(openSnackbar({ severity: "error", message: msg }))
+        } else {
+          dispatch(openSnackbar({ severity: "error", message: `Gagal Ubah ${editType}, silakan coba lagi nanti` }))
+        }
       })
     }
   }

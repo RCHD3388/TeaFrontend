@@ -36,16 +36,24 @@ query GetWarehouseTools ($warehouse_id: String!){
         _id
         date
         tool {
+            _id
             id
-            price
             sku {
+                _id
                 name
+                status
                 merk {
+                    _id
                     name
                 }
                 item_category {
+                    _id
                     name
                 }
+            }
+            status {
+                _id
+                name
             }
         }
     }

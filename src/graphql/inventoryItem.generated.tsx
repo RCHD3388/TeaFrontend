@@ -15,7 +15,7 @@ export type GetWarehouseToolsQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetWarehouseToolsQuery = { __typename?: 'Query', getWarehouseTools: Array<{ __typename?: 'ToolTransaction', _id: string, date: any, tool: { __typename?: 'Tool', id: string, price: number, sku: { __typename?: 'Sku', name: string, merk: { __typename?: 'Merk', name: string }, item_category: { __typename?: 'CategoryData', name: string } } } }> };
+export type GetWarehouseToolsQuery = { __typename?: 'Query', getWarehouseTools: Array<{ __typename?: 'ToolTransaction', _id: string, date: any, tool: { __typename?: 'Tool', _id: string, id: string, sku: { __typename?: 'Sku', _id: string, name: string, status: string, merk: { __typename?: 'Merk', _id: string, name: string }, item_category: { __typename?: 'CategoryData', _id: string, name: string } }, status: { __typename?: 'CategoryData', _id: string, name: string } } }> };
 
 
 export const GetWarehouseMaterialsDocument = gql`
@@ -91,16 +91,24 @@ export const GetWarehouseToolsDocument = gql`
     _id
     date
     tool {
+      _id
       id
-      price
       sku {
+        _id
         name
+        status
         merk {
+          _id
           name
         }
         item_category {
+          _id
           name
         }
+      }
+      status {
+        _id
+        name
       }
     }
   }

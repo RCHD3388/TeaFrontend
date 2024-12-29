@@ -94,7 +94,7 @@ const ToolSkuPage: React.FC = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="text-2xl font-bold mb-1">Daftar Satuan Unit</div>
+      <div className="text-2xl font-bold mb-1">Daftar Sku Peralatan</div>
       <div className="flex justify-end">
         <AddSku refetchSkus={refetch} />
       </div>

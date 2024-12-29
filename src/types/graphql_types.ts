@@ -265,6 +265,11 @@ export type EmployeeSkill = {
   name: Scalars['String']['output'];
 };
 
+export type FilterInput = {
+  name?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
 export type FinishingDetail = {
   __typename?: 'FinishingDetail';
   police_number?: Maybe<Scalars['String']['output']>;
@@ -883,6 +888,11 @@ export type QueryGetAllMaterialByIdsArgs = {
 };
 
 
+export type QueryGetAllMaterialsArgs = {
+  filterInput?: InputMaybe<FilterInput>;
+};
+
+
 export type QueryGetAllProjectEmployeesArgs = {
   id: Scalars['String']['input'];
 };
@@ -1055,7 +1065,7 @@ export type Supplier = {
 
 export type Tool = {
   __typename?: 'Tool';
-  _id: Scalars['ID']['output'];
+  _id: Scalars['String']['output'];
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['String']['output'];
   price: Scalars['Float']['output'];
