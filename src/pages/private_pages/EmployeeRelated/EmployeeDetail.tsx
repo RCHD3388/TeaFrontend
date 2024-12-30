@@ -360,7 +360,7 @@ const EmployeeDetail: React.FC = () => {
               <Box display={"flex"} gap={2} sx={{ mb: 2 }}>
                 <Autocomplete
                   disablePortal
-                  options={skillsLoading ? [] : skillsData.getAllSkill.map((sk: any) => { return { label: sk.name, value: sk._id } })}
+                  options={skillsLoading || !skillsData ? [] : skillsData.getAllSkill.map((sk: any) => { return { label: sk.name, value: sk._id } })}
                   sx={{ width: 300 }}
                   renderInput={(params) => <TextField color="secondary" {...params} size="small" label="Skill Pegawai" inputRef={selectedNewSkill} />}
                 />

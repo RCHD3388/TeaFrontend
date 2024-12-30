@@ -242,16 +242,19 @@ export default function InventoryCategoryPage() {
               >
                 Kembali
               </Button>
-              <Button onClick={() => { handleDeleteInventoryCategrory() }}
-                variant="contained" color="error" disabled={isSubmitting}
-              >
-                Hapus
-              </Button>
-              <Button onClick={() => { handleEditInventoryCategrory() }}
-                variant="contained" color="primary" disabled={isSubmitting}
-              >
-                {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : ("Ubah")}
-              </Button>
+              <Box display={"flex"}>
+                <Button onClick={() => { handleDeleteInventoryCategrory() }}
+                  variant="contained" color="error" disabled={isSubmitting}
+                  sx={{ mr: 1 }}
+                >
+                  Hapus
+                </Button>
+                <Button onClick={() => { handleEditInventoryCategrory() }}
+                  variant="contained" color="primary" disabled={isSubmitting}
+                >
+                  {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : ("Ubah")}
+                </Button>
+              </Box>
             </Box>
           </Box>
         </Modal>

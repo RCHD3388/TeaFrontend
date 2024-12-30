@@ -9,12 +9,26 @@ import AddInventoryMaterial from "./AddInventoryMaterial";
 import AddInventoryTool from "./AddInventoryTool";
 import MaterialTable from "./inventory_detail_related/MaterialTable";
 import ToolTable from "./inventory_detail_related/ToolTable";
+import { GetWarehouseMaterialsDocument, GetWarehouseToolsDocument } from "../../graphql/inventoryItem.generated";
+import { useQuery } from "@apollo/client";
 
 interface DetailInventoryItemProps {
   warehouseId: string | undefined
 }
 
 const DetailInventoryItem: React.FC<DetailInventoryItemProps> = ({ warehouseId }) => {
+  let { data: materialData, loading: materialLoading, error: materialError, refetch: materialRefetch } = useQuery(GetWarehouseMaterialsDocument, {
+    variables: {
+      warehouse_id: warehouseId,
+      requiresAuth: true
+    }
+  });
+  let { data: toolData, loading: toolLoading, error: toolError, refetch: toolRefetch } = useQuery(GetWarehouseToolsDocument, {
+    variables: {
+      warehouse_id: warehouseId,
+      requiresAuth: true
+    }
+  });
   const user = useSelector((state: RootState) => selectUser(state))
   const [value, setValue] = React.useState(0);
 
@@ -48,9 +62,9 @@ const DetailInventoryItem: React.FC<DetailInventoryItemProps> = ({ warehouseId }
           {/* ADD MATERIAL BUTTON & HANDLER */}
           {checkUserValid() &&
             <Box display={"flex"} justifyContent={"flex-end"} width={"100%"}>
-              <AddInventoryMaterial warehouseId={warehouseId ?? ""} />
+              <AddInventoryMaterial warehouseId={warehouseId ?? ""} refetch={materialRefetch} />
             </Box>}
-          <MaterialTable warehouseId={warehouseId}/>
+          <MaterialTable warehouseId={warehouseId} data={materialData} loading={materialLoading} error={materialError} refetch={materialRefetch} />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
           {/* ADD TOOL BUTTON & HANDLER */}
@@ -58,7 +72,7 @@ const DetailInventoryItem: React.FC<DetailInventoryItemProps> = ({ warehouseId }
             <Box display={"flex"} justifyContent={"flex-end"} width={"100%"}>
               <AddInventoryTool warehouseId={warehouseId ?? ""} />
             </Box>}
-          <ToolTable warehouseId={warehouseId}/>
+          <ToolTable warehouseId={warehouseId} data={toolData} loading={toolLoading} error={toolError} refetch={toolRefetch} />
         </CustomTabPanel>
 
       </div>

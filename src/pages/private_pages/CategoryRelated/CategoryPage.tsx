@@ -152,7 +152,7 @@ export default function CategoryPage() {
             onClick={() => { handleOpenAddModal() }}
           >Tambah Kategori</Button>
         </div>
-        
+
         {!loading && <StickyHeadTable
           columns={columns}
           rows={data?.getCategories || []}
@@ -270,16 +270,19 @@ export default function CategoryPage() {
             >
               Kembali
             </Button>
-            <Button onClick={() => { handleDeleteCategory() }}
-              variant="contained" color="error" disabled={loading || isSubmitting}
-            >
-              Hapus
-            </Button>
-            <Button onClick={() => { handleEditCategory() }}
-              variant="contained" color="primary" disabled={isSubmitting}
-            >
-              {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : ("Ubah")}
-            </Button>
+            <Box display={"flex"}>
+              <Button onClick={() => { handleDeleteCategory() }}
+                variant="contained" color="error" disabled={loading || isSubmitting}
+                sx={{mr: 1}}
+              >
+                Hapus
+              </Button>
+              <Button onClick={() => { handleEditCategory() }}
+                variant="contained" color="primary" disabled={isSubmitting}
+              >
+                {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : ("Ubah")}
+              </Button>
+            </Box>
           </Box>
         </Box>
       </Modal>

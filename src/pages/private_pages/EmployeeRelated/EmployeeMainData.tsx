@@ -51,7 +51,7 @@ const EmployeeMainData: React.FC = () => {
       valueFormatter: (value, row) => formatDateToLong(row.hire_date),
     },
     {
-      field: 'salary', headerName: 'Salary', minWidth: 150, type: "string", flex: 1,
+      field: 'salary', headerName: 'Gaji Pegawai', minWidth: 150, maxWidth: 150, align: "right", type: "string", flex: 1,
       valueFormatter: (value, row) => formatCurrency(row.salary), // Format salary
     },
     {

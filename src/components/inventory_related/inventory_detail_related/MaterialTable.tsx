@@ -1,11 +1,9 @@
-import { ApolloQueryResult, useMutation, useQuery } from "@apollo/client";
-import { Box, Button, CircularProgress, MenuItem, Modal, TextField, Typography } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
+import { ApolloError, ApolloQueryResult } from "@apollo/client";
+import { Button, CircularProgress } from "@mui/material";
 import { useState } from "react";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import StickyHeadTable from "../../global_features/StickyHeadTable";
-import { GetWarehouseMaterialsDocument } from "../../../graphql/inventoryItem.generated";
+import { GetWarehouseMaterialsQuery, GetWarehouseMaterialsQueryVariables } from "../../../graphql/inventoryItem.generated";
 import { GridColDef } from "@mui/x-data-grid";
 import { formatDateToLong } from "../../../utils/service/FormatService";
 import EditMaterialModal from "../EditMaterialModal";
@@ -44,15 +42,14 @@ interface RowData {
 
 interface MaterialTableProps {
   warehouseId: String | undefined
+  data: any,
+  loading: boolean,
+  error: ApolloError | undefined,
+  refetch: (variables?: GetWarehouseMaterialsQueryVariables) => Promise<ApolloQueryResult<GetWarehouseMaterialsQuery>>;
 }
 
-const MaterialTable: React.FC<MaterialTableProps> = ({ warehouseId }) => {
-  let { data, loading, error, refetch } = useQuery(GetWarehouseMaterialsDocument, {
-    variables: {
-      warehouse_id: warehouseId,
-      requiresAuth: true
-    }
-  });
+const MaterialTable: React.FC<MaterialTableProps> = ({ warehouseId, data, loading, error, refetch }) => {
+
   const user = useSelector((state: RootState) => selectUser(state))
   const [openEditModal, setOpenEditModal] = useState(false);
   const handleOpenEditModal = () => { setOpenEditModal(true) }
@@ -65,12 +62,16 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ warehouseId }) => {
   }
 
   const columns: GridColDef[] = [
-    { field: 'index', type: 'number', headerName: "No", minWidth: 50 },
+    { field: 'index', type: 'number', headerName: "No", align: "right", minWidth: 50 },
     {
-      field: 'material', headerName: 'Material', minWidth: 150, type: "string", flex: 1,
+      field: 'material', headerName: 'Material', minWidth: 150, align: "center", type: "string", flex: 1,
       renderCell: (params) => (
         <>{params.row.material.name} ({params.row.material.merk.name})</>
       )
+    },
+    {
+      field: 'quantity', headerName: 'Jumlah', minWidth: 100, maxWidth: 100, type: "string", align: 'right', flex: 1,
+      renderCell: (params) => ( <>{params.row.remain}</>)
     },
     {
       field: 'detail', headerName: 'Satuan Ukuran', minWidth: 150, type: "string", flex: 1,
@@ -81,7 +82,7 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ warehouseId }) => {
     {
       field: 'kategori_barang', headerName: 'Kategori Barang', minWidth: 150, type: "string", flex: 1,
       renderCell: (params) => (
-        <>{params.row.material.item_category.name}</>
+        <div className="badge whitespace-nowrap p-3 gap-2">{params.row.material.item_category.name}</div>
       )
     },
     {
@@ -92,7 +93,7 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ warehouseId }) => {
     },
   ]
 
-  const specialColumns: GridColDef[] = [...columns,     {
+  const specialColumns: GridColDef[] = [...columns, {
     field: 'action', headerName: 'Action', minWidth: 150, flex: 1, sortable: false, filterable: false,
     renderCell: (params) => (<Button variant='contained' color='secondary' sx={{ textTransform: 'none' }}
       onClick={() => { handleActionTable(params.row.material) }}> Detail / Ubah </Button>
@@ -100,12 +101,14 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ warehouseId }) => {
   }];
 
   return (<>
-    <StickyHeadTable
-      columns={user && user.loggedIn && user.role !== EmployeeRoleType.MANDOR ? specialColumns : columns}
-      rows={data?.getWarehouseMaterials || []}
-      csvname="project_data"
-    />
-    {user && user.loggedIn && user.role !== EmployeeRoleType.MANDOR &&<EditMaterialModal
+    {loading ? <div className="flex justify-center items-center" style={{ width: "100%" }}><CircularProgress color="secondary" /></div> :
+      <StickyHeadTable
+        columns={user && user.loggedIn && user.role !== EmployeeRoleType.MANDOR ? specialColumns : columns}
+        rows={data?.getWarehouseMaterials || []}
+        csvname="project_material_stock"
+      />
+    }
+    {user && user.loggedIn && user.role !== EmployeeRoleType.MANDOR && <EditMaterialModal
       row={selectedRow}
       refetchMaterials={refetch}
       openModal={openEditModal}

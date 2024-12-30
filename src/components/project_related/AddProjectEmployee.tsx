@@ -153,7 +153,7 @@ const AddProjectEmployee: React.FC<AddProjectEmployeeProps> = ({ projectId, data
   ]
 
   useEffect(() => {
-    if(dataEmployee){
+    if (dataEmployee) {
       refetchEmployee()
     }
   }, [dataEmployee, refetchEmployee])
@@ -185,7 +185,6 @@ const AddProjectEmployee: React.FC<AddProjectEmployeeProps> = ({ projectId, data
             onChange={(e) => { setNameFilter(e.target.value) }}
           />)}
           {isDataEmpty && <p className="text-error font-bold">Pilih data pegawai terlebih dahulu untuk ditambahkan pada proyek</p>}
-          {isConfirmation && <p>Lakukan konfirmasi, pasikan data pegawai yang ingin anda tambahkan pada proyek tersebut telah sesuai dengan keinginan anda</p>}
           <StickyHeadTable
             tableSx={{ maxHeight: 300 }}
             columns={columns}
@@ -193,6 +192,9 @@ const AddProjectEmployee: React.FC<AddProjectEmployeeProps> = ({ projectId, data
             withIndex={true}
             csvname="pegawai_project"
           />
+          {isConfirmation && <span className="alert bg-warning p-2">
+            Konfirmasi dan pastikan data pegawai yang ingin anda tambahkan pada project telah sesuai dan benar
+          </span>}
         </div>
         <Box display="flex" justifyContent="space-between" alignItems="center" sx={{ mt: 2 }}>
           <Button

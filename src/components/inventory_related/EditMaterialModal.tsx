@@ -23,7 +23,7 @@ interface CreateMaterialValues {
 }
 
 interface EditMaterialModalProps {
-  refetchMaterials: (variables?: GetAllMaterialsQueryVariables) => Promise<ApolloQueryResult<GetAllMaterialsQuery>>;
+  refetchMaterials: (variables?: any) => Promise<ApolloQueryResult<any>>;
   openModal: boolean;
   handleOpenModal: () => void;
   handleCloseModal: () => void;

@@ -17,6 +17,20 @@ export type GetWarehouseToolsQueryVariables = Types.Exact<{
 
 export type GetWarehouseToolsQuery = { __typename?: 'Query', getWarehouseTools: Array<{ __typename?: 'ToolTransaction', _id: string, date: any, tool: { __typename?: 'Tool', _id: string, id: string, sku: { __typename?: 'Sku', _id: string, name: string, status: string, merk: { __typename?: 'Merk', _id: string, name: string }, item_category: { __typename?: 'CategoryData', _id: string, name: string } }, status: { __typename?: 'CategoryData', _id: string, name: string } } }> };
 
+export type AddInventoryMaterialMutationVariables = Types.Exact<{
+  createMaterialTransactionInput: Types.CreateMaterialTransactionInput;
+}>;
+
+
+export type AddInventoryMaterialMutation = { __typename?: 'Mutation', addInventoryMaterial: Array<{ __typename?: 'MaterialTransaction', _id: string, in: number, out: number, remain: number, price: number, warehouse: string, transaction_code: string, date: any }> };
+
+export type AddInventoryToolMutationVariables = Types.Exact<{
+  addOnlyToolTransactionInput: Types.AddOnlyToolTransactionInput;
+}>;
+
+
+export type AddInventoryToolMutation = { __typename?: 'Mutation', addInventoryTool: boolean };
+
 
 export const GetWarehouseMaterialsDocument = gql`
     query GetWarehouseMaterials($warehouse_id: String!) {
@@ -147,3 +161,76 @@ export type GetWarehouseToolsQueryHookResult = ReturnType<typeof useGetWarehouse
 export type GetWarehouseToolsLazyQueryHookResult = ReturnType<typeof useGetWarehouseToolsLazyQuery>;
 export type GetWarehouseToolsSuspenseQueryHookResult = ReturnType<typeof useGetWarehouseToolsSuspenseQuery>;
 export type GetWarehouseToolsQueryResult = Apollo.QueryResult<GetWarehouseToolsQuery, GetWarehouseToolsQueryVariables>;
+export const AddInventoryMaterialDocument = gql`
+    mutation AddInventoryMaterial($createMaterialTransactionInput: CreateMaterialTransactionInput!) {
+  addInventoryMaterial(
+    createMaterialTransactionInput: $createMaterialTransactionInput
+  ) {
+    _id
+    in
+    out
+    remain
+    price
+    warehouse
+    transaction_code
+    date
+  }
+}
+    `;
+export type AddInventoryMaterialMutationFn = Apollo.MutationFunction<AddInventoryMaterialMutation, AddInventoryMaterialMutationVariables>;
+
+/**
+ * __useAddInventoryMaterialMutation__
+ *
+ * To run a mutation, you first call `useAddInventoryMaterialMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddInventoryMaterialMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addInventoryMaterialMutation, { data, loading, error }] = useAddInventoryMaterialMutation({
+ *   variables: {
+ *      createMaterialTransactionInput: // value for 'createMaterialTransactionInput'
+ *   },
+ * });
+ */
+export function useAddInventoryMaterialMutation(baseOptions?: Apollo.MutationHookOptions<AddInventoryMaterialMutation, AddInventoryMaterialMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddInventoryMaterialMutation, AddInventoryMaterialMutationVariables>(AddInventoryMaterialDocument, options);
+      }
+export type AddInventoryMaterialMutationHookResult = ReturnType<typeof useAddInventoryMaterialMutation>;
+export type AddInventoryMaterialMutationResult = Apollo.MutationResult<AddInventoryMaterialMutation>;
+export type AddInventoryMaterialMutationOptions = Apollo.BaseMutationOptions<AddInventoryMaterialMutation, AddInventoryMaterialMutationVariables>;
+export const AddInventoryToolDocument = gql`
+    mutation AddInventoryTool($addOnlyToolTransactionInput: AddOnlyToolTransactionInput!) {
+  addInventoryTool(addOnlyToolTransactionInput: $addOnlyToolTransactionInput)
+}
+    `;
+export type AddInventoryToolMutationFn = Apollo.MutationFunction<AddInventoryToolMutation, AddInventoryToolMutationVariables>;
+
+/**
+ * __useAddInventoryToolMutation__
+ *
+ * To run a mutation, you first call `useAddInventoryToolMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddInventoryToolMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addInventoryToolMutation, { data, loading, error }] = useAddInventoryToolMutation({
+ *   variables: {
+ *      addOnlyToolTransactionInput: // value for 'addOnlyToolTransactionInput'
+ *   },
+ * });
+ */
+export function useAddInventoryToolMutation(baseOptions?: Apollo.MutationHookOptions<AddInventoryToolMutation, AddInventoryToolMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddInventoryToolMutation, AddInventoryToolMutationVariables>(AddInventoryToolDocument, options);
+      }
+export type AddInventoryToolMutationHookResult = ReturnType<typeof useAddInventoryToolMutation>;
+export type AddInventoryToolMutationResult = Apollo.MutationResult<AddInventoryToolMutation>;
+export type AddInventoryToolMutationOptions = Apollo.BaseMutationOptions<AddInventoryToolMutation, AddInventoryToolMutationVariables>;

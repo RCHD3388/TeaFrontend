@@ -58,3 +58,20 @@ query GetWarehouseTools ($warehouse_id: String!){
         }
     }
 }
+
+mutation AddInventoryMaterial ($createMaterialTransactionInput: CreateMaterialTransactionInput!){
+    addInventoryMaterial(createMaterialTransactionInput: $createMaterialTransactionInput) {
+        _id
+        in
+        out
+        remain
+        price
+        warehouse
+        transaction_code
+        date
+    }
+}
+
+mutation AddInventoryTool ($addOnlyToolTransactionInput: AddOnlyToolTransactionInput!){
+    addInventoryTool(addOnlyToolTransactionInput: $addOnlyToolTransactionInput)
+}
