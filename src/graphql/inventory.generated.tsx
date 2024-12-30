@@ -127,7 +127,9 @@ export type UpdateMaterialMutationVariables = Types.Exact<{
 
 export type UpdateMaterialMutation = { __typename?: 'Mutation', updateMaterial: { __typename?: 'Material', _id: string, id: string, name: string, description?: string | null, status: string, conversion: number } };
 
-export type GetAllSkusQueryVariables = Types.Exact<{ [key: string]: never; }>;
+export type GetAllSkusQueryVariables = Types.Exact<{
+  filter?: Types.InputMaybe<Types.FilterInput>;
+}>;
 
 
 export type GetAllSkusQuery = { __typename?: 'Query', getAllSkus: Array<{ __typename?: 'Sku', _id: string, name: string, description?: string | null, status: string, merk: { __typename?: 'Merk', _id: string, name: string }, item_category: { __typename?: 'CategoryData', _id: string, name: string } }> };
@@ -902,8 +904,8 @@ export type UpdateMaterialMutationHookResult = ReturnType<typeof useUpdateMateri
 export type UpdateMaterialMutationResult = Apollo.MutationResult<UpdateMaterialMutation>;
 export type UpdateMaterialMutationOptions = Apollo.BaseMutationOptions<UpdateMaterialMutation, UpdateMaterialMutationVariables>;
 export const GetAllSkusDocument = gql`
-    query GetAllSkus {
-  getAllSkus {
+    query GetAllSkus($filter: FilterInput) {
+  getAllSkus(filter: $filter) {
     _id
     name
     description
@@ -932,6 +934,7 @@ export const GetAllSkusDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllSkusQuery({
  *   variables: {
+ *      filter: // value for 'filter'
  *   },
  * });
  */

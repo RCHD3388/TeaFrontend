@@ -35,6 +35,7 @@ const AddInventoryMaterial: React.FC<AddInventoryMaterialProps> = ({ warehouseId
   const handleCloseModal = () => { setOpenModal(false) }
   const dispatch = useDispatch();
 
+  const [isEmpty, setIsEmpty] = useState(false);
   const [isConfirmation, setIsConfirmation] = useState(false);
 
   let { data: materialData, loading: materialLoading, error: materialError, refetch: refetchMaterial } = useQuery(GetAllMaterialsDocument, {
@@ -83,7 +84,11 @@ const AddInventoryMaterial: React.FC<AddInventoryMaterialProps> = ({ warehouseId
   }
   const handleSubmitButton = async () => {
     if (isConfirmation == false) {
-      setIsConfirmation(true)
+      if(rows.length <= 0) {
+        setIsEmpty(true)
+      }else {
+        setIsConfirmation(true)
+      }
     } else if (isConfirmation == true) {
       // confirmed
       try {
@@ -135,6 +140,7 @@ const AddInventoryMaterial: React.FC<AddInventoryMaterialProps> = ({ warehouseId
       }}>
         <Typography id="modal-modal-title" variant="h6" component="h2" mb={2}><b>TAMBAH MATERIAL</b></Typography>
         <Box overflow={"auto"} maxHeight={300} sx={{ mb: 3 }}>
+        {isEmpty &&<span className="text-error">Anda perlu memberikan minimal satu material yang akan dimasukan untuk konfirmasi</span>}
           <table className="table table-xs border-2">
             <thead className="bg-secondary text-white font-normal text-base" style={{ position: "sticky", top: 0 }}>
               <tr>

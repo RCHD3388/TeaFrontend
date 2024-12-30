@@ -898,6 +898,11 @@ export type QueryGetAllProjectEmployeesArgs = {
 };
 
 
+export type QueryGetAllSkusArgs = {
+  filter?: InputMaybe<FilterInput>;
+};
+
+
 export type QueryGetAllSkusByIdsArgs = {
   ids: Array<Scalars['String']['input']>;
 };

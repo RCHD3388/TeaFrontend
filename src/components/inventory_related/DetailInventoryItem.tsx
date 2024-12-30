@@ -70,7 +70,7 @@ const DetailInventoryItem: React.FC<DetailInventoryItemProps> = ({ warehouseId }
           {/* ADD TOOL BUTTON & HANDLER */}
           {checkUserValid() &&
             <Box display={"flex"} justifyContent={"flex-end"} width={"100%"}>
-              <AddInventoryTool warehouseId={warehouseId ?? ""} />
+              <AddInventoryTool warehouseId={warehouseId ?? ""} refetch={toolRefetch}/>
             </Box>}
           <ToolTable warehouseId={warehouseId} data={toolData} loading={toolLoading} error={toolError} refetch={toolRefetch} />
         </CustomTabPanel>

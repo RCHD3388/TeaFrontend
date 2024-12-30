@@ -202,8 +202,8 @@ mutation UpdateMaterial ($id: String!, $updateMaterialInput: UpdateMaterialInput
 }
 
 # TOOL SKU GRAPHQL
-query GetAllSkus {
-    getAllSkus {
+query GetAllSkus ($filter: FilterInput){
+    getAllSkus (filter: $filter){
         _id
         name
         description
