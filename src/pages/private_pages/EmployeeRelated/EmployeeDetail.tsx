@@ -277,7 +277,7 @@ const EmployeeDetail: React.FC = () => {
                     render={({ field, fieldState }) => (
                       <DatePicker
                         {...field}
-                        label="Hire Date"
+                        label="Tanggal Rekrut"
                         sx={{ mb: 2, mr: 1 }}
                         value={field.value ? dayjs(field.value) : null}
                         onChange={(date) => field.onChange(date?.format('YYYY-MM-DD') || null)}

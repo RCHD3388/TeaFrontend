@@ -180,7 +180,7 @@ const DetailEmployeeProject: React.FC<DetailEmployeeProjectProps> = ({ dataProje
   return (
     <div style={{ height: "100%" }}>
       <div className="flex flex-col" style={{ maxHeight: "100%" }}>
-        <div className="text-2xl font-bold mb-2">Detail Pegawai</div>
+        <div className="text-2xl font-bold mb-2">Daftar Pegawai</div>
         {!empLoading && !empError && <div>
           {(user.role == EmployeeRoleType.ADMIN || user.role == EmployeeRoleType.OWNER) && <div className="flex justify-end">
             <AddProjectEmployee projectId={dataProject.findProjectById._id} dataEmployee={empData} loadingEmployee={empLoading} errorEmployee={empError} refetchEmployee={empRefetch} />
@@ -233,7 +233,7 @@ const DetailEmployeeProject: React.FC<DetailEmployeeProjectProps> = ({ dataProje
                 color="primary"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : ("Konfirm")}
+                {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : ("Konfirmasi")}
               </Button>
             </Box>
           </Box>

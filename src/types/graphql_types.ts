@@ -1121,6 +1121,7 @@ export type UpdateAttendanceInput = {
 export type UpdateAttendanceModuleInput = {
   attendance: Array<UpdateAttendanceInput>;
   description?: InputMaybe<Scalars['String']['input']>;
+  start_date: Scalars['DateTime']['input'];
 };
 
 export type UpdateCategoryInput = {

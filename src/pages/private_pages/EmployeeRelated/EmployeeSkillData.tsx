@@ -80,7 +80,8 @@ const EmployeeSkillData: React.FC = () => {
   const columns: GridColDef<RowData>[] = [
     { field: "index", headerName: "No", type: "number", flex: 1 },
     { field: "name", headerName: "Name", minWidth: 200, type: "string", flex: 2 },
-    { field: "description", headerName: "Description", minWidth: 200, type: "string", flex: 2, 
+    {
+      field: "description", headerName: "Description", minWidth: 200, type: "string", flex: 2,
       renderCell: (params) => {
         let value = params.row.description;
         return value.length == 0 ? <div className="text-error">Belum ada deskripsi</div> : value
@@ -146,16 +147,19 @@ const EmployeeSkillData: React.FC = () => {
             >
               Kembali
             </Button>
-            <Button onClick={() => { handleDeleteSkill() }}
-              variant="contained" color="error" disabled={loading || isSubmitting}
-            >
-              Hapus
-            </Button>
-            <Button onClick={() => { handleEditSkill() }}
-              variant="contained" color="primary" disabled={isSubmitting}
-            >
-              {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : ("Ubah")}
-            </Button>
+            <div className="d-flex">
+              <Button onClick={() => { handleDeleteSkill() }}
+                variant="contained" color="error" disabled={loading || isSubmitting}
+                sx={{ mr: 1 }}
+              >
+                Hapus
+              </Button>
+              <Button onClick={() => { handleEditSkill() }}
+                variant="contained" color="primary" disabled={isSubmitting}
+              >
+                {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : ("Ubah")}
+              </Button>
+            </div>
           </Box>
         </Box>
       </Modal>

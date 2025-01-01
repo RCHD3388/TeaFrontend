@@ -176,7 +176,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
                 render={({ field, fieldState }) => (
                   <DatePicker
                     {...field}
-                    label="Hire Date"
+                    label="Tanggal Rekrut"
                     sx={{ mb: 1, mr: 0.5 }}
                     value={field.value ? dayjs(field.value) : null}
                     onChange={(date) => field.onChange(date?.format('YYYY-MM-DD') || null)}

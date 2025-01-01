@@ -169,3 +169,68 @@ mutation RemoveProjectEmployee ($id: String!, $employee: String!, $description: 
         }
     }
 }
+
+mutation CreateAttendance ($createAttendanceInput: CreateAttendanceModuleInput!) {
+    createAttendance(createAttendanceInput: $createAttendanceInput) {
+        _id
+        start_date
+        end_date
+        submit_status
+        description
+    }
+}
+
+query FindAllAttendanceModules ($projectId: String!){
+    findAllAttendanceModules(projectId: $projectId) {
+        _id
+        start_date
+        end_date
+        submit_status
+        description
+    }
+}
+
+query FindOneAttendanceModule ($projectId: String!, $moduleId: String!){
+    findOneAttendanceModule(projectId: $projectId, moduleId: $moduleId) {
+        _id
+        start_date
+        end_date
+        submit_status
+        description
+        attendance {
+            date
+            attendance_detail {
+                check_in
+                check_out
+                employee {
+                    _id
+                    hire_date
+                    salary
+                    status
+                    person {
+                        name
+                        email
+                        phone_number
+                        address
+                    }
+                }
+            }
+        }
+    }
+}
+
+mutation UpdateAttendanceModule ($projectId: String!, $moduleId: String! $updateAttendanceModuleInput: UpdateAttendanceModuleInput!){
+    updateAttendanceModule(
+        projectId: $projectId
+        moduleId: $moduleId
+        updateAttendanceModuleInput: $updateAttendanceModuleInput
+    ) {
+        _id
+    }
+}
+
+mutation DeleteAttendanceModule ($projectId: String!, $moduleId: String!){
+    deleteAttendanceModule(projectId: $projectId, moduleId: $moduleId) {
+        _id
+    }
+}

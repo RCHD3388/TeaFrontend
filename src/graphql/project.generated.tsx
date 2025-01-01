@@ -54,6 +54,45 @@ export type RemoveProjectEmployeeMutationVariables = Types.Exact<{
 
 export type RemoveProjectEmployeeMutation = { __typename?: 'Mutation', removeProjectEmployee: { __typename?: 'Employee', _id: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string }> } };
 
+export type CreateAttendanceMutationVariables = Types.Exact<{
+  createAttendanceInput: Types.CreateAttendanceModuleInput;
+}>;
+
+
+export type CreateAttendanceMutation = { __typename?: 'Mutation', createAttendance: { __typename?: 'AttendanceModule', _id: string, start_date: any, end_date: any, submit_status: boolean, description: string } };
+
+export type FindAllAttendanceModulesQueryVariables = Types.Exact<{
+  projectId: Types.Scalars['String']['input'];
+}>;
+
+
+export type FindAllAttendanceModulesQuery = { __typename?: 'Query', findAllAttendanceModules: Array<{ __typename?: 'AttendanceModule', _id: string, start_date: any, end_date: any, submit_status: boolean, description: string }> };
+
+export type FindOneAttendanceModuleQueryVariables = Types.Exact<{
+  projectId: Types.Scalars['String']['input'];
+  moduleId: Types.Scalars['String']['input'];
+}>;
+
+
+export type FindOneAttendanceModuleQuery = { __typename?: 'Query', findOneAttendanceModule: { __typename?: 'AttendanceModule', _id: string, start_date: any, end_date: any, submit_status: boolean, description: string, attendance: Array<{ __typename?: 'Attendance', date: any, attendance_detail: Array<{ __typename?: 'AttendanceDetail', check_in: boolean, check_out: boolean, employee: { __typename?: 'Employee', _id: string, hire_date: any, salary?: number | null, status: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string } } }> }> } };
+
+export type UpdateAttendanceModuleMutationVariables = Types.Exact<{
+  projectId: Types.Scalars['String']['input'];
+  moduleId: Types.Scalars['String']['input'];
+  updateAttendanceModuleInput: Types.UpdateAttendanceModuleInput;
+}>;
+
+
+export type UpdateAttendanceModuleMutation = { __typename?: 'Mutation', updateAttendanceModule: { __typename?: 'AttendanceModule', _id: string } };
+
+export type DeleteAttendanceModuleMutationVariables = Types.Exact<{
+  projectId: Types.Scalars['String']['input'];
+  moduleId: Types.Scalars['String']['input'];
+}>;
+
+
+export type DeleteAttendanceModuleMutation = { __typename?: 'Mutation', deleteAttendanceModule: { __typename?: 'AttendanceModule', _id: string } };
+
 
 export const FindAllProjectsDocument = gql`
     query FindAllProjects {
@@ -438,3 +477,221 @@ export function useRemoveProjectEmployeeMutation(baseOptions?: Apollo.MutationHo
 export type RemoveProjectEmployeeMutationHookResult = ReturnType<typeof useRemoveProjectEmployeeMutation>;
 export type RemoveProjectEmployeeMutationResult = Apollo.MutationResult<RemoveProjectEmployeeMutation>;
 export type RemoveProjectEmployeeMutationOptions = Apollo.BaseMutationOptions<RemoveProjectEmployeeMutation, RemoveProjectEmployeeMutationVariables>;
+export const CreateAttendanceDocument = gql`
+    mutation CreateAttendance($createAttendanceInput: CreateAttendanceModuleInput!) {
+  createAttendance(createAttendanceInput: $createAttendanceInput) {
+    _id
+    start_date
+    end_date
+    submit_status
+    description
+  }
+}
+    `;
+export type CreateAttendanceMutationFn = Apollo.MutationFunction<CreateAttendanceMutation, CreateAttendanceMutationVariables>;
+
+/**
+ * __useCreateAttendanceMutation__
+ *
+ * To run a mutation, you first call `useCreateAttendanceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAttendanceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAttendanceMutation, { data, loading, error }] = useCreateAttendanceMutation({
+ *   variables: {
+ *      createAttendanceInput: // value for 'createAttendanceInput'
+ *   },
+ * });
+ */
+export function useCreateAttendanceMutation(baseOptions?: Apollo.MutationHookOptions<CreateAttendanceMutation, CreateAttendanceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateAttendanceMutation, CreateAttendanceMutationVariables>(CreateAttendanceDocument, options);
+      }
+export type CreateAttendanceMutationHookResult = ReturnType<typeof useCreateAttendanceMutation>;
+export type CreateAttendanceMutationResult = Apollo.MutationResult<CreateAttendanceMutation>;
+export type CreateAttendanceMutationOptions = Apollo.BaseMutationOptions<CreateAttendanceMutation, CreateAttendanceMutationVariables>;
+export const FindAllAttendanceModulesDocument = gql`
+    query FindAllAttendanceModules($projectId: String!) {
+  findAllAttendanceModules(projectId: $projectId) {
+    _id
+    start_date
+    end_date
+    submit_status
+    description
+  }
+}
+    `;
+
+/**
+ * __useFindAllAttendanceModulesQuery__
+ *
+ * To run a query within a React component, call `useFindAllAttendanceModulesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindAllAttendanceModulesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindAllAttendanceModulesQuery({
+ *   variables: {
+ *      projectId: // value for 'projectId'
+ *   },
+ * });
+ */
+export function useFindAllAttendanceModulesQuery(baseOptions: Apollo.QueryHookOptions<FindAllAttendanceModulesQuery, FindAllAttendanceModulesQueryVariables> & ({ variables: FindAllAttendanceModulesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindAllAttendanceModulesQuery, FindAllAttendanceModulesQueryVariables>(FindAllAttendanceModulesDocument, options);
+      }
+export function useFindAllAttendanceModulesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindAllAttendanceModulesQuery, FindAllAttendanceModulesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindAllAttendanceModulesQuery, FindAllAttendanceModulesQueryVariables>(FindAllAttendanceModulesDocument, options);
+        }
+export function useFindAllAttendanceModulesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FindAllAttendanceModulesQuery, FindAllAttendanceModulesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FindAllAttendanceModulesQuery, FindAllAttendanceModulesQueryVariables>(FindAllAttendanceModulesDocument, options);
+        }
+export type FindAllAttendanceModulesQueryHookResult = ReturnType<typeof useFindAllAttendanceModulesQuery>;
+export type FindAllAttendanceModulesLazyQueryHookResult = ReturnType<typeof useFindAllAttendanceModulesLazyQuery>;
+export type FindAllAttendanceModulesSuspenseQueryHookResult = ReturnType<typeof useFindAllAttendanceModulesSuspenseQuery>;
+export type FindAllAttendanceModulesQueryResult = Apollo.QueryResult<FindAllAttendanceModulesQuery, FindAllAttendanceModulesQueryVariables>;
+export const FindOneAttendanceModuleDocument = gql`
+    query FindOneAttendanceModule($projectId: String!, $moduleId: String!) {
+  findOneAttendanceModule(projectId: $projectId, moduleId: $moduleId) {
+    _id
+    start_date
+    end_date
+    submit_status
+    description
+    attendance {
+      date
+      attendance_detail {
+        check_in
+        check_out
+        employee {
+          _id
+          hire_date
+          salary
+          status
+          person {
+            name
+            email
+            phone_number
+            address
+          }
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useFindOneAttendanceModuleQuery__
+ *
+ * To run a query within a React component, call `useFindOneAttendanceModuleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindOneAttendanceModuleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindOneAttendanceModuleQuery({
+ *   variables: {
+ *      projectId: // value for 'projectId'
+ *      moduleId: // value for 'moduleId'
+ *   },
+ * });
+ */
+export function useFindOneAttendanceModuleQuery(baseOptions: Apollo.QueryHookOptions<FindOneAttendanceModuleQuery, FindOneAttendanceModuleQueryVariables> & ({ variables: FindOneAttendanceModuleQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindOneAttendanceModuleQuery, FindOneAttendanceModuleQueryVariables>(FindOneAttendanceModuleDocument, options);
+      }
+export function useFindOneAttendanceModuleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindOneAttendanceModuleQuery, FindOneAttendanceModuleQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindOneAttendanceModuleQuery, FindOneAttendanceModuleQueryVariables>(FindOneAttendanceModuleDocument, options);
+        }
+export function useFindOneAttendanceModuleSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FindOneAttendanceModuleQuery, FindOneAttendanceModuleQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FindOneAttendanceModuleQuery, FindOneAttendanceModuleQueryVariables>(FindOneAttendanceModuleDocument, options);
+        }
+export type FindOneAttendanceModuleQueryHookResult = ReturnType<typeof useFindOneAttendanceModuleQuery>;
+export type FindOneAttendanceModuleLazyQueryHookResult = ReturnType<typeof useFindOneAttendanceModuleLazyQuery>;
+export type FindOneAttendanceModuleSuspenseQueryHookResult = ReturnType<typeof useFindOneAttendanceModuleSuspenseQuery>;
+export type FindOneAttendanceModuleQueryResult = Apollo.QueryResult<FindOneAttendanceModuleQuery, FindOneAttendanceModuleQueryVariables>;
+export const UpdateAttendanceModuleDocument = gql`
+    mutation UpdateAttendanceModule($projectId: String!, $moduleId: String!, $updateAttendanceModuleInput: UpdateAttendanceModuleInput!) {
+  updateAttendanceModule(
+    projectId: $projectId
+    moduleId: $moduleId
+    updateAttendanceModuleInput: $updateAttendanceModuleInput
+  ) {
+    _id
+  }
+}
+    `;
+export type UpdateAttendanceModuleMutationFn = Apollo.MutationFunction<UpdateAttendanceModuleMutation, UpdateAttendanceModuleMutationVariables>;
+
+/**
+ * __useUpdateAttendanceModuleMutation__
+ *
+ * To run a mutation, you first call `useUpdateAttendanceModuleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAttendanceModuleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAttendanceModuleMutation, { data, loading, error }] = useUpdateAttendanceModuleMutation({
+ *   variables: {
+ *      projectId: // value for 'projectId'
+ *      moduleId: // value for 'moduleId'
+ *      updateAttendanceModuleInput: // value for 'updateAttendanceModuleInput'
+ *   },
+ * });
+ */
+export function useUpdateAttendanceModuleMutation(baseOptions?: Apollo.MutationHookOptions<UpdateAttendanceModuleMutation, UpdateAttendanceModuleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateAttendanceModuleMutation, UpdateAttendanceModuleMutationVariables>(UpdateAttendanceModuleDocument, options);
+      }
+export type UpdateAttendanceModuleMutationHookResult = ReturnType<typeof useUpdateAttendanceModuleMutation>;
+export type UpdateAttendanceModuleMutationResult = Apollo.MutationResult<UpdateAttendanceModuleMutation>;
+export type UpdateAttendanceModuleMutationOptions = Apollo.BaseMutationOptions<UpdateAttendanceModuleMutation, UpdateAttendanceModuleMutationVariables>;
+export const DeleteAttendanceModuleDocument = gql`
+    mutation DeleteAttendanceModule($projectId: String!, $moduleId: String!) {
+  deleteAttendanceModule(projectId: $projectId, moduleId: $moduleId) {
+    _id
+  }
+}
+    `;
+export type DeleteAttendanceModuleMutationFn = Apollo.MutationFunction<DeleteAttendanceModuleMutation, DeleteAttendanceModuleMutationVariables>;
+
+/**
+ * __useDeleteAttendanceModuleMutation__
+ *
+ * To run a mutation, you first call `useDeleteAttendanceModuleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteAttendanceModuleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteAttendanceModuleMutation, { data, loading, error }] = useDeleteAttendanceModuleMutation({
+ *   variables: {
+ *      projectId: // value for 'projectId'
+ *      moduleId: // value for 'moduleId'
+ *   },
+ * });
+ */
+export function useDeleteAttendanceModuleMutation(baseOptions?: Apollo.MutationHookOptions<DeleteAttendanceModuleMutation, DeleteAttendanceModuleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteAttendanceModuleMutation, DeleteAttendanceModuleMutationVariables>(DeleteAttendanceModuleDocument, options);
+      }
+export type DeleteAttendanceModuleMutationHookResult = ReturnType<typeof useDeleteAttendanceModuleMutation>;
+export type DeleteAttendanceModuleMutationResult = Apollo.MutationResult<DeleteAttendanceModuleMutation>;
+export type DeleteAttendanceModuleMutationOptions = Apollo.BaseMutationOptions<DeleteAttendanceModuleMutation, DeleteAttendanceModuleMutationVariables>;

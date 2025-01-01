@@ -13,6 +13,7 @@ import MainDetailProject from "./ProjectDetailRelated/MainDetailProject";
 import DetailEmployeeProject from "./ProjectDetailRelated/DetailEmployeeProject";
 import { CustomGraphQLError } from "../../../types/apollo_client.types";
 import DetailInventoryItem from "../../../components/inventory_related/DetailInventoryItem";
+import AttendanceProjectEmployee from "./ProjectDetailRelated/AttendanceProjectEmployee";
 
 
 export default function DetailProject() {
@@ -60,16 +61,20 @@ export default function DetailProject() {
                   color: value === 0 ? 'secondary.main' : 'inherit',
                   '&.Mui-selected': { color: 'secondary.main' },
                 }} />
-                <Tab label="Pegawai Proyek" {...a11yProps(1)} sx={{
+                <Tab label="Daftar Pegawai" {...a11yProps(1)} sx={{
                   color: value === 1 ? 'secondary.main' : 'inherit',
                   '&.Mui-selected': { color: 'secondary.main' },
                 }} />
-                <Tab label="Inventori Proyek" {...a11yProps(1)} sx={{
+                <Tab label="Absensi Pegawai" {...a11yProps(1)} sx={{
                   color: value === 2 ? 'secondary.main' : 'inherit',
                   '&.Mui-selected': { color: 'secondary.main' },
                 }} />
-                <Tab label="Pengeluaran Proyek" {...a11yProps(1)} sx={{
+                <Tab label="Inventori Proyek" {...a11yProps(1)} sx={{
                   color: value === 3 ? 'secondary.main' : 'inherit',
+                  '&.Mui-selected': { color: 'secondary.main' },
+                }} />
+                <Tab label="Pengeluaran Proyek" {...a11yProps(1)} sx={{
+                  color: value === 4 ? 'secondary.main' : 'inherit',
                   '&.Mui-selected': { color: 'secondary.main' },
                 }} />
               </Tabs>
@@ -89,9 +94,12 @@ export default function DetailProject() {
               />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={2}>
-              <DetailInventoryItem warehouseId={data.findProjectById?.warehouse || ""}/>
+              <AttendanceProjectEmployee projectId={data.findProjectById._id || ""}/>
             </CustomTabPanel>
             <CustomTabPanel value={value} index={3}>
+              <DetailInventoryItem warehouseId={data.findProjectById?.warehouse || ""}/>
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={4}>
               Pengeluaran
             </CustomTabPanel>
           </Box>
