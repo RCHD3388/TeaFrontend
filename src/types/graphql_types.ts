@@ -248,7 +248,7 @@ export type EmployeeProjectHistory = {
   description: Scalars['String']['output'];
   join_at: Scalars['DateTime']['output'];
   left_at?: Maybe<Scalars['DateTime']['output']>;
-  project: Scalars['String']['output'];
+  project: Project;
 };
 
 export type EmployeeRole = {

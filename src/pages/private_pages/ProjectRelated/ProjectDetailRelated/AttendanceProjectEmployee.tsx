@@ -69,15 +69,17 @@ const AttendanceProjectEmployee: React.FC<AttendanceProjectEmployeeProps> = ({ p
             <div className="flex justify-end">
               <AddAttendanceModule projectId={projectId || ""} refetchProjectAttendance={attendanceRefetch} />
             </div>
-            {!attendanceLoading && !attendanceError &&
-              attendanceData.findAllAttendanceModules.map((d: any) => <AttendanceCard key={d._id} {...d} onDetailClick={() => {
+            {!attendanceLoading && !attendanceError && <>
+              {attendanceData.findAllAttendanceModules.length == 0 ? <div className="flex justify-center items-center p-5 bg-accent shadow-md">
+                BELUM MEMILIKI MODULE ABSENSI
+              </div> : attendanceData.findAllAttendanceModules.map((d: any) => <AttendanceCard key={d._id} {...d} onDetailClick={() => {
                 setPage(2);
                 setSelectedAttendanceId(d._id);
               }} onDeleteClick={() => {
                 setSelectedAttendanceId(d._id);
                 setOpenDeleteModal(true);
-              }} withDelete={d.submit_status == false} />)
-            }
+              }} withDelete={d.submit_status == false} />)}
+            </>}
           </>
         }
 
@@ -100,8 +102,6 @@ const AttendanceProjectEmployee: React.FC<AttendanceProjectEmployeeProps> = ({ p
           </div>
         )}
       </div>
-
-
 
       {/* DELETE MODAL */}
       {attendanceData && selectedAttendanceId && <Modal

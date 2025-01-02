@@ -18,6 +18,7 @@ import { CustomGraphQLError } from "../../../types/apollo_client.types";
 import { a11yProps, CustomTabPanel } from "../../../components/CustomTabPanel";
 import { EmployeeRoleType } from "../../../types/staticData.types";
 import { GridColDef } from "@mui/x-data-grid";
+import ProjectHistoryCard from "../../../components/emlpoyee_related/ProjectHistoryCard";
 
 interface RowData {
   _id: string,
@@ -212,14 +213,16 @@ const EmployeeDetail: React.FC = () => {
                 color: value === 0 ? 'secondary.main' : 'inherit',
                 '&.Mui-selected': { color: 'secondary.main' },
               }} />
-              <Tab label="Histori Proyek Pegawai" {...a11yProps(1)} sx={{
-                color: value === 1 ? 'secondary.main' : 'inherit',
-                '&.Mui-selected': { color: 'secondary.main' },
-              }} />
+              {(employeeData?.getEmployeeById.role.name === EmployeeRoleType.PEGAWAI ||
+                employeeData?.getEmployeeById.role.name === EmployeeRoleType.MANDOR) &&
+                <Tab label="Histori Proyek Pegawai" {...a11yProps(1)} sx={{
+                  color: value === 1 ? 'secondary.main' : 'inherit',
+                  '&.Mui-selected': { color: 'secondary.main' },
+                }} />}
             </Tabs>
           </Box>
           <CustomTabPanel value={value} index={0}>
-            {!loading && <div>
+            {!loading && !employeeDataError && <div>
               {/* FIELD START */}
               <Controller
                 name="name" control={control} rules={{ required: 'Name tidak boleh kosong' }}
@@ -380,7 +383,20 @@ const EmployeeDetail: React.FC = () => {
             </div>}
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
-            <h1>Project History</h1>
+            {!loading && !employeeDataError && employeeData.getEmployeeById.project_history.map((history: any, index: number) => {
+              console.log(history)
+              return <ProjectHistoryCard
+                key={index}
+                join_at={history.join_at}
+                left_at={history.left_at}
+                description={history.description}
+                project={{
+                  _id: history.project._id,
+                  name: history.project.name,
+                }}
+                onViewDetails={(projectId) => {navigate("/appuser/project/" + projectId)}}
+              />
+            })}
           </CustomTabPanel>
         </Box>
       </div>

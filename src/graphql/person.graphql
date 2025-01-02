@@ -87,6 +87,15 @@ query GetEmployeeById($id: String!) {
       name
       description
     }
+    project_history {
+      join_at
+      left_at
+      description
+      project {
+          _id
+          name
+      }
+    }
   }
 }
 

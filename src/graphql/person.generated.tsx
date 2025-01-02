@@ -30,7 +30,7 @@ export type GetEmployeeByIdQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetEmployeeByIdQuery = { __typename?: 'Query', getEmployeeById: { __typename?: 'Employee', _id: string, hire_date: any, salary?: number | null, status: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string, description: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string, description?: string | null }> } };
+export type GetEmployeeByIdQuery = { __typename?: 'Query', getEmployeeById: { __typename?: 'Employee', _id: string, hire_date: any, salary?: number | null, status: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string }, role: { __typename?: 'EmployeeRole', _id: string, name: string, description: string }, skill: Array<{ __typename?: 'EmployeeSkill', _id: string, name: string, description?: string | null }>, project_history: Array<{ __typename?: 'EmployeeProjectHistory', join_at: any, left_at?: any | null, description: string, project: { __typename?: 'Project', _id: string, name: string } }> } };
 
 export type GetAllSkillQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
@@ -243,6 +243,15 @@ export const GetEmployeeByIdDocument = gql`
       _id
       name
       description
+    }
+    project_history {
+      join_at
+      left_at
+      description
+      project {
+        _id
+        name
+      }
     }
   }
 }

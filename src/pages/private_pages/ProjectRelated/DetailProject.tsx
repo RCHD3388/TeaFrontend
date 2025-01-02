@@ -30,10 +30,11 @@ export default function DetailProject() {
 
   useEffect(() => {
     if (error) {
-      let graphqlErrorFetch = error?.graphQLErrors[0] as CustomGraphQLError || null;
-      if (graphqlErrorFetch?.original?.statusCode == "404") {
-        navigate("/appuser/notfound")
-      }
+      // let graphqlErrorFetch = error?.graphQLErrors[0] as CustomGraphQLError || null;
+      // if (graphqlErrorFetch?.original?.statusCode == "404") {
+      //   navigate("/appuser/notfound")
+      // }
+      navigate("/appuser/notfound")
     }
   }, [error])
 
