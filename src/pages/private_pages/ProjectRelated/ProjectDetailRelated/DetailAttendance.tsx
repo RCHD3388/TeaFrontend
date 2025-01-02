@@ -10,6 +10,9 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { openSnackbar } from "../../../../app/reducers/snackbarSlice";
 import { GetBadReqMsg } from "../../../../utils/helpers/ErrorMessageHelper";
+import { current } from "@reduxjs/toolkit";
+import { formatDateToLong } from "../../../../utils/service/FormatService";
+import AttendanceReportModal from "../../../../components/project_related/attendance_related/AttendanceReportModal";
 
 interface UpdateValue {
   description: string
@@ -37,7 +40,7 @@ const DetailAttendance: React.FC<DetailAttendanceProps> = ({ projectId, moduleId
   const [updateAttendanceModule] = useMutation(UpdateAttendanceModuleDocument);
   const dispatch = useDispatch();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { handleSubmit, control, formState: { errors }, reset } = useForm<UpdateValue>({defaultValues: { description: ""}});
+  const { handleSubmit, control, formState: { errors }, reset } = useForm<UpdateValue>({ defaultValues: { description: "" } });
 
   const handleUpdate: SubmitHandler<UpdateValue> = async (data) => {
     setIsSubmitting(true)
@@ -74,6 +77,26 @@ const DetailAttendance: React.FC<DetailAttendanceProps> = ({ projectId, moduleId
     }
   };
 
+  const handleAttendanceChange = (date: any, employee: any, type: string) => {
+    setCurrentAttendance(currentAttendance.map((att: any) => {
+      if (att.date === date) {
+        return {
+          ...att,
+          attendance_detail: att.attendance_detail.map((det: any) => {
+            if (det.employee._id === employee) {
+              return {
+                ...det,
+                [type]: !det[type]
+              }
+            }
+            return det
+          })
+        }
+      }
+      return att
+    }))
+  }
+
   useEffect(() => {
     if (data) {
       reset({
@@ -84,6 +107,12 @@ const DetailAttendance: React.FC<DetailAttendanceProps> = ({ projectId, moduleId
       setCurrentAttendance(data.findOneAttendanceModule.attendance)
     }
   }, [data])
+
+  useEffect(() => {
+    if (data) {
+      refetch()
+    }
+  }, [data, refetch])
 
   return (
     <div>
@@ -150,54 +179,51 @@ const DetailAttendance: React.FC<DetailAttendanceProps> = ({ projectId, moduleId
         />
       </Box>
       <Box sx={{ my: 2 }}>
-        <div className="overflow-x-auto" style={{ maxHeight: 360 }}>
+        {loading ? <CircularProgress /> : <div className="overflow-x-auto" style={{ maxHeight: 360 }}>
           <table className="table table-xs table-pin-rows table-pin-cols">
             {/* head */}
             <thead>
               <tr>
                 <th className="text-base">Pegawai</th>
-                <td align="center">Tgl 21</td>
-                <td align="center">Tgl 22</td>
-                <td align="center">Tgl 23</td>
-                <td align="center">Tgl 24</td>
-                <td align="center">Tgl 25</td>
-                <td align="center">Tgl 26</td>
-                <td align="center">Tgl 27</td>
+                {currentAttendance.map((att: any) => {
+                  return <td className="text-base" key={att.date} align="center">
+                    <div className="flex flex-col">
+                      <span className="">{formatDateToLong(att.date, true)}</span>
+                      <div className="flex justify-evenly">
+                        <span>IN</span><span>OUT</span>
+                      </div>
+                    </div>
+                  </td>
+                })}
               </tr>
             </thead>
             <tbody>
               {/* row 1 */}
-              <tr>
-                <th className="text-base">Richard Rafer Guy</th>
-                <td align="center"><input type="checkbox" defaultChecked className="checkbox" /></td>
-                <td align="center"><input type="checkbox" defaultChecked className="checkbox" /></td>
-                <td align="center"><input type="checkbox" defaultChecked className="checkbox" /></td>
-                <td align="center"><input type="checkbox" defaultChecked className="checkbox" /></td>
-                <td align="center"><input type="checkbox" defaultChecked className="checkbox" /></td>
-                <td align="center"><input type="checkbox" defaultChecked className="checkbox" /></td>
-                <td align="center"><input type="checkbox" defaultChecked className="checkbox" /></td>
-              </tr>
-              <tr>
-                <th className="text-base">Yoga Pramana</th>
-                <td align="center"><input type="checkbox" defaultChecked className="checkbox" /></td>
-                <td align="center"><input type="checkbox" defaultChecked className="checkbox" /></td>
-                <td align="center"><input type="checkbox" defaultChecked className="checkbox" /></td>
-                <td align="center"><input type="checkbox" defaultChecked className="checkbox" /></td>
-                <td align="center"><input type="checkbox" defaultChecked className="checkbox" /></td>
-                <td align="center"><input type="checkbox" defaultChecked className="checkbox" /></td>
-                <td align="center"><input type="checkbox" defaultChecked className="checkbox" /></td>
-              </tr>
+              {currentAttendance.length > 0 && currentAttendance[0].attendance_detail.map((att_det: any, index: number) => {
+                return (
+                  <tr key={index}>
+                    <th className="text-base" style={{ textTransform: "capitalize" }}>{att_det.employee.person.name}</th>
+                    {currentAttendance.map((att: any) => {
+                      let det = att.attendance_detail.find((det: any) => det.employee._id === att_det.employee._id)
+                      return <td key={att._id} align="center">
+                        <div className="flex justify-evenly">
+                          <input type="checkbox" className="checkbox" defaultChecked={det.check_in} onChange={(e) => { handleAttendanceChange(att.date, det.employee._id, "check_in") }} />
+                          <input type="checkbox" className="checkbox" defaultChecked={det.check_out} onChange={(e) => { handleAttendanceChange(att.date, det.employee._id, "check_out") }} />
+                        </div>
+                      </td>
+                    })}
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
-        </div>
+        </div>}
       </Box>
       <Box display={"flex"} justifyContent={"end"}>
         <Button onClick={handleSubmit(handleUpdate)} variant="contained" color="secondary" sx={{ mr: 1 }} disabled={isSubmitting} >
           {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : ("Perbarui")}
         </Button>
-        <Button onClick={handleSubmit(handleUpdate)} variant="contained" color="success" disabled={isSubmitting} >
-          {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : ("Submit Absensi")}
-        </Button>
+        <AttendanceReportModal/>
       </Box>
     </div>
   );

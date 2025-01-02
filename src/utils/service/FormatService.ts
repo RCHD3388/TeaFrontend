@@ -1,11 +1,16 @@
-export const formatDateToLong = (isoString: string): string => {
+export const formatDateToLong = (isoString: string, shortMonth: boolean = false): string => {
   const date = new Date(isoString);
   const day = date.getDate();
+  const monthShortNames = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  ];
   const monthNames = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
   ];
-  const month = monthNames[date.getMonth()];
+
+  const month = shortMonth ? monthShortNames[date.getMonth()] : monthNames[date.getMonth()];
   const year = date.getFullYear();
 
   return `${day} ${month} ${year}`;
