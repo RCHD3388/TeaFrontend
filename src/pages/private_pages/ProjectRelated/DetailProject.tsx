@@ -14,11 +14,13 @@ import DetailEmployeeProject from "./ProjectDetailRelated/DetailEmployeeProject"
 import { CustomGraphQLError } from "../../../types/apollo_client.types";
 import DetailInventoryItem from "../../../components/inventory_related/DetailInventoryItem";
 import AttendanceProjectEmployee from "./ProjectDetailRelated/AttendanceProjectEmployee";
+import { FindAllRequestClosingDocument } from "../../../graphql/project_closing.generated";
 
 
 export default function DetailProject() {
   const { projectId } = useParams()
   const { data, loading, error, refetch } = useQuery(FindProjectByIdDocument, { variables: { id: projectId, requiresAuth: true } })
+  const { data: projectClosingData, error: projectClosingError, loading: projectClosingLoading, refetch: projectClosingRefetch } = useQuery(FindAllRequestClosingDocument, { variables: { id: projectId, requiresAuth: true } })
   const user = useSelector((state: RootState) => selectUser(state))
   const navigate = useNavigate()
   const getProject = () => { return data.findProjectById }
@@ -30,10 +32,6 @@ export default function DetailProject() {
 
   useEffect(() => {
     if (error) {
-      // let graphqlErrorFetch = error?.graphQLErrors[0] as CustomGraphQLError || null;
-      // if (graphqlErrorFetch?.original?.statusCode == "404") {
-      //   navigate("/appuser/notfound")
-      // }
       navigate("/appuser/notfound")
     }
   }, [error])
@@ -85,6 +83,9 @@ export default function DetailProject() {
                 dataProject={data}
                 refetchDetailProject={refetch}
                 loadingProject={loading} errorProject={error}
+                dataProjectClosing={projectClosingData}
+                loadingProjectClosing={projectClosingLoading} errorProjectClosing={projectClosingError}
+                refetchProjectClosing={projectClosingRefetch}
               />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>

@@ -27,6 +27,6 @@ export const SIDEBAR_ITEMS: ISidebarItem[] = [
   {id: 6, link_to: "/appuser/employee", link_name: "Pegawai", icon: employee_svg, role: ["owner", "admin"]},
   {id: 7, link_to: "/appuser/user", link_name: "User", icon: user_svg, role: ["owner", "admin"]},
   {id: 8, link_to: "/appuser/category", link_name: "Kategori", icon: category_svg, role: ["owner", "admin"]},
-  {id: 9, link_to: "/appuser/request", link_name: "Request", icon: process_svg, role: ["owner", "admin", "mandor"]},
-  {id: 10, link_to: "/appuser/approval", link_name: "Approval", icon: request_svg, role: ["owner", "admin", "mandor"]},
+  {id: 9, link_to: "/appuser/request", link_name: "Permintaan", icon: process_svg, role: ["owner", "admin", "mandor"]},
+  {id: 10, link_to: "/appuser/approval", link_name: "Persetujuan", icon: request_svg, role: ["owner", "admin", "mandor"]},
 ]

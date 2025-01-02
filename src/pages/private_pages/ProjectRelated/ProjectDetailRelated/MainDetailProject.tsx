@@ -17,6 +17,8 @@ import { formatDateToLong } from "../../../../utils/service/FormatService";
 import { RootState } from "../../../../app/store";
 import { selectUser } from "../../../../app/reducers/userSlice";
 import { CategoryType, EmployeeRoleType } from "../../../../types/staticData.types";
+import { FindAllRequestClosingQuery, FindAllRequestClosingQueryVariables } from "../../../../graphql/project_closing.generated";
+import RequestProjectClosing from "../../../../components/project_related/RequestProjectClosing";
 
 interface updateProjectValues {
   name: string;
@@ -32,10 +34,17 @@ interface MainDetailProjectProps {
   dataProject: any,
   loadingProject: boolean,
   errorProject: ApolloError | undefined,
-  refetchDetailProject: (variables?: FindProjectByIdQueryVariables) => Promise<ApolloQueryResult<FindAllProjectsQuery>>;
+  refetchDetailProject: (variables?: FindProjectByIdQueryVariables) => Promise<ApolloQueryResult<FindAllProjectsQuery>>,
+  dataProjectClosing: any,
+  loadingProjectClosing: boolean,
+  errorProjectClosing: ApolloError | undefined,
+  refetchProjectClosing: (variables?: FindAllRequestClosingQueryVariables) => Promise<ApolloQueryResult<FindAllRequestClosingQuery>>
 }
 
-const MainDetailProject: React.FC<MainDetailProjectProps> = ({ dataProject, loadingProject, errorProject, refetchDetailProject }) => {
+const MainDetailProject: React.FC<MainDetailProjectProps> = ({
+  dataProject, loadingProject, errorProject, refetchDetailProject,
+  dataProjectClosing, loadingProjectClosing, errorProjectClosing, refetchProjectClosing
+}) => {
   const user = useSelector((state: RootState) => selectUser(state))
   const { data: empData, loading: empLoading, error: empError, refetch: empRefetch } = useQuery(GetAllEmployeesDocument, {
     variables: {
@@ -50,6 +59,7 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({ dataProject, load
       requiresAuth: true
     }
   })
+
   const [updateProject] = useMutation(UpdateProjectDocument)
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -124,6 +134,10 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({ dataProject, load
       }
     }
   }, [loadingProject, dataProject, errorProject])
+
+  useEffect(() => {
+    console.log(dataProjectClosing)
+  }, [dataProjectClosing])
 
   return (
     <div style={{ height: "100%" }}>
@@ -262,14 +276,14 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({ dataProject, load
 
             {/* BUTTON SUBMIT */}
             <div className="flex justify-between">
-              <Button
-                onClick={() => { }}
-                variant="contained"
-                color="error"
-                disabled={isSubmitting}
-              >
-                Closing Proyek
-              </Button>
+              <RequestProjectClosing disabledCondition={isSubmitting ||
+                (!loadingProjectClosing &&
+                  !errorProjectClosing &&
+                  dataProjectClosing.findAllRequestClosing.findIndex((req: any) => {
+                    return req.handled_date == null
+                  })) != -1} refetchProjectClosing={refetchProjectClosing}
+                project_id={dataProject.findProjectById._id || ""}
+              />
               <Button
                 onClick={handleSubmit(handleEditProject)}
                 variant="contained"

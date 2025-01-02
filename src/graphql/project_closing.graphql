@@ -1,0 +1,21 @@
+query FindAllRequestClosing ($projectId: String){
+    findAllRequestClosing(projectId: $projectId) {
+        _id
+        title
+        description
+        requested_at
+        status
+        handled_date
+    }
+}
+
+mutation CreateRequestClosing ($createRequestClosingInput: CreateRequestClosingInput!){
+    createRequestClosing(createRequestClosingInput: $createRequestClosingInput) {
+        _id
+        title
+        description
+        requested_at
+        status
+        handled_date
+    }
+}

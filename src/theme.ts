@@ -6,10 +6,10 @@ export const theme = createTheme({
   },
   palette: {
     primary: {
-      main: '#c1e8c4', 
+      main: '#c1e8c4',
     },
     secondary: {
-      main: '#223634', 
+      main: '#223634',
     },
   },
 });
@@ -20,11 +20,12 @@ export const modalStyle = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   maxWidth: "90%",
-  width: 500, 
+  width: 500,
   maxHeight: '90vh',
   bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
+  border: 'none', // Menghilangkan border untuk tampilan bersih
+  borderRadius: 2, // Membuat sudut lebih bulat untuk nuansa premium
+  boxShadow: '0px 10px 30px rgba(0, 0, 0, 0.15)', // Shadow lembut dengan kesan modern
+  padding: 4, // Padding konsisten untuk ruang dalam yang nyaman
   overflowY: 'auto',
 };

@@ -46,11 +46,32 @@ query FindProjectById($id: String!){
     warehouse
     createdAt
     finished_at
-    project_closing{
-      closed_by{
-        person{
-            name
-        }
+    project_closing {
+      note
+      document
+      closed_by {
+        _id
+        hire_date
+        salary
+        status
+      }
+      material_used {
+        _id
+        in
+        out
+        remain
+        price
+        warehouse
+        transaction_code
+        date
+      }
+      request_project_closing {
+        _id
+        title
+        description
+        requested_at
+        status
+        handled_date
       }
     }
   }

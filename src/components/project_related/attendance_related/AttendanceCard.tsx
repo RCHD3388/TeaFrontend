@@ -34,7 +34,7 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
   }
 
   return (
-    <div className="p-3 mb-3 bg-accent flex justify-between items-start rounded-lg shadow-md">
+    <div className="p-3 mb-3 flex justify-between items-start bg-accent shadow-md border border-gray-300 rounded-lg">
       <div className="">
         <div className="">
           <div className="text-lg mb-1">

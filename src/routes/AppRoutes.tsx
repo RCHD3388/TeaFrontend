@@ -17,6 +17,8 @@ import DetailProject from "../pages/private_pages/ProjectRelated/DetailProject";
 import InventoryPage from "../pages/private_pages/InventoryRelated/InventoryPage";
 import InventoryDetail from "../pages/private_pages/InventoryRelated/InventoryDetail";
 import DetailSku from "../pages/private_pages/InventoryRelated/ToolRelated/DetailSku";
+import RequestPage from "../pages/private_pages/RequestRelated/RequestPage";
+import ApprovalPage from "../pages/private_pages/ApprovalRelated/ApprovalPage";
 
 const AppRoutes: React.FC = () => {
   const router = createBrowserRouter([
@@ -55,8 +57,8 @@ const AppRoutes: React.FC = () => {
           { path: ":employeeId", element: <EmployeeDetail/>}
         ]},
         { path: "user", element: <UserPage /> },
-        { path: "request", element: <DashboardPage /> },
-        { path: "approval", element: <DashboardPage /> },
+        { path: "request", element: <RequestPage /> },
+        { path: "approval", element: <ApprovalPage /> },
         { path: "category", element: <CategoryPage /> },
         { path: "*", element: <NotFoundPage/>}
       ]

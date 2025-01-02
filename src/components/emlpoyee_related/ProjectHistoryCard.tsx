@@ -21,8 +21,8 @@ const ProjectHistoryCard: React.FC<ProjectHistoryProps> = ({
   onViewDetails,
 }) => {
   return (
-    <div className="card w-full bg-base-100 shadow-md border border-gray-300 rounded-lg">
-      <div className="card-body p-4">
+    <div className="card w-full bg-base-100 shadow-md border border-gray-300 rounded-lg mb-2">
+      <div className="p-4">
         <h2 className="card-title text-xl font-bold text-gray-800" style={{textTransform: "uppercase"}}>
           Proyek : {project.name}
         </h2>
@@ -45,7 +45,7 @@ const ProjectHistoryCard: React.FC<ProjectHistoryProps> = ({
             color="secondary"
             onClick={() => onViewDetails(project._id)}
           >
-            View Details
+            Lihat Proyek
           </Button>
         </div>
       </div>

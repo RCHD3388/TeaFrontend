@@ -13,7 +13,7 @@ export type FindProjectByIdQueryVariables = Types.Exact<{
 }>;
 
 
-export type FindProjectByIdQuery = { __typename?: 'Query', findProjectById: { __typename?: 'Project', _id: string, name: string, location: string, description: string, target_date?: any | null, warehouse: string, createdAt: any, finished_at?: any | null, status: { __typename?: 'CategoryData', _id: string, name: string }, priority: { __typename?: 'CategoryData', _id: string, name: string }, project_leader: { __typename?: 'Employee', _id: string, person: { __typename?: 'Person', name: string, email: string } }, project_closing?: { __typename?: 'ProjectClosing', closed_by: { __typename?: 'Employee', person: { __typename?: 'Person', name: string } } } | null } };
+export type FindProjectByIdQuery = { __typename?: 'Query', findProjectById: { __typename?: 'Project', _id: string, name: string, location: string, description: string, target_date?: any | null, warehouse: string, createdAt: any, finished_at?: any | null, status: { __typename?: 'CategoryData', _id: string, name: string }, priority: { __typename?: 'CategoryData', _id: string, name: string }, project_leader: { __typename?: 'Employee', _id: string, person: { __typename?: 'Person', name: string, email: string } }, project_closing?: { __typename?: 'ProjectClosing', note?: string | null, document?: string | null, closed_by: { __typename?: 'Employee', _id: string, hire_date: any, salary?: number | null, status: string }, material_used: Array<{ __typename?: 'MaterialTransaction', _id: string, in: number, out: number, remain: number, price: number, warehouse: string, transaction_code: string, date: any }>, request_project_closing: { __typename?: 'RequestProjectClosing', _id: string, title: string, description?: string | null, requested_at: any, status: string, handled_date?: any | null } } | null } };
 
 export type CreateProjectMutationVariables = Types.Exact<{
   createProjectInput: Types.CreateProjectInput;
@@ -177,10 +177,31 @@ export const FindProjectByIdDocument = gql`
     createdAt
     finished_at
     project_closing {
+      note
+      document
       closed_by {
-        person {
-          name
-        }
+        _id
+        hire_date
+        salary
+        status
+      }
+      material_used {
+        _id
+        in
+        out
+        remain
+        price
+        warehouse
+        transaction_code
+        date
+      }
+      request_project_closing {
+        _id
+        title
+        description
+        requested_at
+        status
+        handled_date
       }
     }
   }
