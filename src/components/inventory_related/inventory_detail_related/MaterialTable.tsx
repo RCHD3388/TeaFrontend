@@ -64,7 +64,7 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ warehouseId, data, loadin
   const columns: GridColDef[] = [
     { field: 'index', type: 'number', headerName: "No", align: "right", minWidth: 50 },
     {
-      field: 'material', headerName: 'Material', minWidth: 150, align: "center", type: "string", flex: 1,
+      field: 'material', headerName: 'Material', minWidth: 150, type: "string", flex: 1,
       renderCell: (params) => (
         <>{params.row.material.name} ({params.row.material.merk.name})</>
       )

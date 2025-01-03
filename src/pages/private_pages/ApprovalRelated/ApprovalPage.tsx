@@ -4,6 +4,7 @@ import { setPageValueByName } from "../../../app/reducers/pageTabSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import RequestCost from "../RequestRelated/RequestCost";
+import ApprovalItemTransaction from "./ApprovalItemTransaction";
 
 export default function ApprovalPage() {
   const value = useSelector((state: RootState) => state.pageTab.page.find(p => p.name === "approval_page")?.value || 0);
@@ -42,7 +43,7 @@ export default function ApprovalPage() {
 
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
-
+            <ApprovalItemTransaction />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={2}>
             <RequestCost request_page={false} />

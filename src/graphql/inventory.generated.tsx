@@ -8,6 +8,11 @@ export type GetAllWarehousesQueryVariables = Types.Exact<{ [key: string]: never;
 
 export type GetAllWarehousesQuery = { __typename?: 'Query', getAllWarehouses: Array<{ __typename?: 'Warehouse', _id: string, name: string, description?: string | null, type: string, address: string, status: string }> };
 
+export type GetAllWarehousesByUserQueryVariables = Types.Exact<{ [key: string]: never; }>;
+
+
+export type GetAllWarehousesByUserQuery = { __typename?: 'Query', getAllWarehousesByUser: Array<{ __typename?: 'Warehouse', _id: string, name: string, description?: string | null, type: string, project_leader?: string | null, address: string, status: string }> };
+
 export type GetWarehouseByIdQueryVariables = Types.Exact<{
   id: Types.Scalars['String']['input'];
 }>;
@@ -201,6 +206,51 @@ export type GetAllWarehousesQueryHookResult = ReturnType<typeof useGetAllWarehou
 export type GetAllWarehousesLazyQueryHookResult = ReturnType<typeof useGetAllWarehousesLazyQuery>;
 export type GetAllWarehousesSuspenseQueryHookResult = ReturnType<typeof useGetAllWarehousesSuspenseQuery>;
 export type GetAllWarehousesQueryResult = Apollo.QueryResult<GetAllWarehousesQuery, GetAllWarehousesQueryVariables>;
+export const GetAllWarehousesByUserDocument = gql`
+    query GetAllWarehousesByUser {
+  getAllWarehousesByUser {
+    _id
+    name
+    description
+    type
+    project_leader
+    address
+    status
+  }
+}
+    `;
+
+/**
+ * __useGetAllWarehousesByUserQuery__
+ *
+ * To run a query within a React component, call `useGetAllWarehousesByUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllWarehousesByUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllWarehousesByUserQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllWarehousesByUserQuery(baseOptions?: Apollo.QueryHookOptions<GetAllWarehousesByUserQuery, GetAllWarehousesByUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllWarehousesByUserQuery, GetAllWarehousesByUserQueryVariables>(GetAllWarehousesByUserDocument, options);
+      }
+export function useGetAllWarehousesByUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllWarehousesByUserQuery, GetAllWarehousesByUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllWarehousesByUserQuery, GetAllWarehousesByUserQueryVariables>(GetAllWarehousesByUserDocument, options);
+        }
+export function useGetAllWarehousesByUserSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetAllWarehousesByUserQuery, GetAllWarehousesByUserQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAllWarehousesByUserQuery, GetAllWarehousesByUserQueryVariables>(GetAllWarehousesByUserDocument, options);
+        }
+export type GetAllWarehousesByUserQueryHookResult = ReturnType<typeof useGetAllWarehousesByUserQuery>;
+export type GetAllWarehousesByUserLazyQueryHookResult = ReturnType<typeof useGetAllWarehousesByUserLazyQuery>;
+export type GetAllWarehousesByUserSuspenseQueryHookResult = ReturnType<typeof useGetAllWarehousesByUserSuspenseQuery>;
+export type GetAllWarehousesByUserQueryResult = Apollo.QueryResult<GetAllWarehousesByUserQuery, GetAllWarehousesByUserQueryVariables>;
 export const GetWarehouseByIdDocument = gql`
     query GetWarehouseById($id: String!) {
   getWarehouseById(id: $id) {

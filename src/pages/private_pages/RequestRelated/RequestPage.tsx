@@ -10,7 +10,6 @@ export default function RequestPage() {
   const value = useSelector((state: RootState) => state.pageTab.page.find(p => p.name === "request_page")?.value || 0);
   const dispatch = useDispatch()
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    console.log(newValue)
     dispatch(setPageValueByName({ name: "request_page", value: newValue }))
   };
 

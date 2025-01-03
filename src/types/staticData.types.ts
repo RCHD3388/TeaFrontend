@@ -65,3 +65,10 @@ export enum RequestStatusType {
   SELESAI = 'selesai',
 }
 export const RequestStatusTypeValues = Object.values(RequestStatusType)
+
+export interface itemDetail {
+  item: String
+  item_name: String
+  quantity: number
+  item_type: String
+}

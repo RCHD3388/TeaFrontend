@@ -9,6 +9,18 @@ query GetAllWarehouses {
     }
 }
 
+query GetAllWarehousesByUser {
+    getAllWarehousesByUser {
+        _id
+        name
+        description
+        type
+        project_leader
+        address
+        status
+    }
+}
+
 query GetWarehouseById ($id: String!) {
     getWarehouseById(id: $id) {
         _id

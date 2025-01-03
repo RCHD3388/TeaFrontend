@@ -226,6 +226,13 @@ export type CreateWarehouseInput = {
   status?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type CustomOneRequestItem = {
+  __typename?: 'CustomOneRequestItem';
+  materials: Array<Material>;
+  request_item_header: RequestItemHeader;
+  skus: Array<Sku>;
+};
+
 export type Employee = {
   __typename?: 'Employee';
   _id: Scalars['String']['output'];
@@ -823,6 +830,7 @@ export type Query = {
   findAllRequestItemTransaction: Array<RequestItemHeader>;
   findOneAttendanceModule: AttendanceModule;
   findOneRequestCost: RequestCost;
+  findOneRequestItemTransaction: CustomOneRequestItem;
   findProjectById: Project;
   findYourApprovalItemTransaction: Array<RequestItemHeader>;
   findYourRequestItemTransaction: Array<RequestItemHeader>;
@@ -882,6 +890,11 @@ export type QueryFindOneAttendanceModuleArgs = {
 
 
 export type QueryFindOneRequestCostArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QueryFindOneRequestItemTransactionArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -1195,7 +1208,6 @@ export type UpdateRequestCostStatusInput = {
 export type UpdateRequestInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   price?: InputMaybe<Scalars['Float']['input']>;
-  requested_from?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
 };
 

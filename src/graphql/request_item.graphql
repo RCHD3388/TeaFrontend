@@ -1,0 +1,171 @@
+mutation CreateRequestItemTransaction ($createRequestItemInput: CreateRequestItemInput!){
+    createRequestItemTransaction(createRequestItemInput: $createRequestItemInput) {
+        _id
+        title
+        type
+        description
+        requested_at
+        status
+    }
+}
+
+query FindYourRequestItemTransaction {
+    findYourRequestItemTransaction {
+        _id
+        title
+        type
+        description
+        requested_at
+        status
+        requested_from {
+            _id
+            name
+            description
+            address
+        }
+        requested_by {
+            _id
+            person {
+                name
+                email
+            }
+        }
+        requested_to {
+            _id
+            name
+            description
+            type
+            address
+        }
+    }
+}
+
+query FindYourApprovalItemTransaction {
+    findYourApprovalItemTransaction {
+        _id
+        title
+        type
+        description
+        requested_at
+        status
+        requested_from {
+            _id
+            name
+            description
+            address
+        }
+        requested_by {
+            _id
+            person {
+                name
+                email
+            }
+        }
+        requested_to {
+            _id
+            name
+            description
+            type
+            address
+        }
+    }
+}
+
+query FindOneRequestItemTransaction ($id: String!){
+    findOneRequestItemTransaction(id: $id) {
+        request_item_header {
+            _id
+            title
+            type
+            description
+            requested_at
+            status
+            request_item_detail {
+                tool {
+                    _id
+                    id
+                    description
+                    warranty_number
+                    warranty_expired_date
+                    price
+                    sku {
+                        _id
+                        name
+                    }
+                }
+                _id
+                item
+                price
+                item_type
+                quantity
+            }
+            finishing_detail {
+                sender_name
+                sender_phone
+                police_number
+                vehicle_detail
+                recipient_name
+                recipient_phone
+                recipient_description
+            }
+            requested_to {
+                _id
+                name
+                description
+                type
+                project_leader
+                address
+                status
+            }
+            requested_by {
+                _id
+                hire_date
+                person {
+                    name
+                    email
+                    phone_number
+                    address
+                }
+            }
+            requested_from {
+                _id
+                name
+                description
+                type
+                project_leader
+                address
+                status
+            }
+        }
+        skus {
+            _id
+            name
+            description
+            status
+            merk {
+                _id
+                name
+            }
+        }
+        materials {
+            _id
+            id
+            name
+            description
+            status
+            conversion
+            minimum_unit_measure {
+                _id
+                name
+            }
+            unit_measure {
+                _id
+                name
+            }
+            merk {
+                _id
+                name
+            }
+        }
+    }
+}
