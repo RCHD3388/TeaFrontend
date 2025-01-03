@@ -20,7 +20,10 @@ import { FindAllRequestClosingDocument } from "../../../graphql/project_closing.
 export default function DetailProject() {
   const { projectId } = useParams()
   const { data, loading, error, refetch } = useQuery(FindProjectByIdDocument, { variables: { id: projectId, requiresAuth: true } })
-  const { data: projectClosingData, error: projectClosingError, loading: projectClosingLoading, refetch: projectClosingRefetch } = useQuery(FindAllRequestClosingDocument, { variables: { id: projectId, requiresAuth: true } })
+  const { data: projectClosingData, error: projectClosingError, loading: projectClosingLoading, refetch: projectClosingRefetch } = useQuery(FindAllRequestClosingDocument, { variables: { 
+    projectId: projectId, 
+    requiresAuth: true 
+  }})
   const user = useSelector((state: RootState) => selectUser(state))
   const navigate = useNavigate()
   const getProject = () => { return data.findProjectById }

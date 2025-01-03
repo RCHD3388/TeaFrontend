@@ -26,6 +26,6 @@ export const modalStyle = {
   border: 'none', // Menghilangkan border untuk tampilan bersih
   borderRadius: 2, // Membuat sudut lebih bulat untuk nuansa premium
   boxShadow: '0px 10px 30px rgba(0, 0, 0, 0.15)', // Shadow lembut dengan kesan modern
-  padding: 4, // Padding konsisten untuk ruang dalam yang nyaman
+  p: 4, // Padding konsisten untuk ruang dalam yang nyaman
   overflowY: 'auto',
 };

@@ -24,6 +24,16 @@ export enum EmployeeRoleType {
   PEGAWAI = "pegawai",
 }
 
+export enum RequestStatus {
+  MENUNGGU = 'menunggu persetujuan',
+  DISETUJUI = 'disetujui',
+  DITOLAK = 'ditolak',
+  PROSES = 'proses',
+  PENGIRIMAN = 'pengiriman',
+  DIBATALKAN = 'dibatalkan',
+  SELESAI = 'selesai',
+}
+
 export const EmployeeRoleTypeValues = Object.values(EmployeeRoleType)
 
 export enum WarehouseType {

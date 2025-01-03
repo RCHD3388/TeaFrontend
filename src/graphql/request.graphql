@@ -1,0 +1,63 @@
+query FindAllRequestCosts {
+    findAllRequestCosts {
+        _id
+        title
+        description
+        requested_at
+        status
+        price
+        handled_date
+        requested_from {
+            _id
+            name
+            location
+            description
+            createdAt
+            finished_at
+            target_date
+            warehouse
+        }
+        project_cost_category {
+            _id
+            name
+            description
+            type
+        }
+        requested_by {
+            _id
+            hire_date
+            salary
+            status
+        }
+        handled_by {
+            _id
+            hire_date
+            salary
+            status
+        }
+    }
+}
+
+mutation CreateRequestCost ($createRequestCostInput: CreateRequestCostInput!){
+    createRequestCost(createRequestCostInput: $createRequestCostInput) {
+        _id
+        title
+        description
+        requested_at
+        status
+        price
+        handled_date
+    }
+}
+
+mutation UpdateRequestCost ($id: String!, $updateRequestCostStatusInput: UpdateRequestCostStatusInput!){
+    updateRequestCost(id: $id, updateRequestCostStatusInput: $updateRequestCostStatusInput) {
+        _id
+        title
+        description
+        requested_at
+        status
+        price
+        handled_date
+    }
+}

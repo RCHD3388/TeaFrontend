@@ -135,10 +135,6 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({
     }
   }, [loadingProject, dataProject, errorProject])
 
-  useEffect(() => {
-    console.log(dataProjectClosing)
-  }, [dataProjectClosing])
-
   return (
     <div style={{ height: "100%" }}>
       <div className="flex flex-col" style={{ maxHeight: "100%" }}>

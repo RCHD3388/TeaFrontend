@@ -4,6 +4,7 @@ import { persistStore, persistReducer } from 'redux-persist';
 import localStorage from 'redux-persist/lib/storage';
 import userSlice from "./reducers/userSlice";
 import snackbarReducer  from "./reducers/snackbarSlice";
+import pageTabReducer  from "./reducers/pageTabSlice";
 
 const persistConfig = {
   key: 'user',
@@ -15,7 +16,8 @@ const persistedUserSlice = persistReducer(persistConfig, userSlice);
 export const store = configureStore({
   reducer: {
     user: persistedUserSlice,
-    snackbar: snackbarReducer 
+    snackbar: snackbarReducer,
+    pageTab: pageTabReducer
   }
 });
 
