@@ -20,6 +20,7 @@ import DetailSku from "../pages/private_pages/InventoryRelated/ToolRelated/Detai
 import RequestPage from "../pages/private_pages/RequestRelated/RequestPage";
 import ApprovalPage from "../pages/private_pages/ApprovalRelated/ApprovalPage";
 import DetailRequestCost from "../components/request_related/request_cost_related/DetailRequestCost";
+import CreateRequestItemTransaction from "../components/request_related/request_item_related/CreateRequestItemTransaction";
 
 const AppRoutes: React.FC = () => {
   const router = createBrowserRouter([
@@ -60,7 +61,8 @@ const AppRoutes: React.FC = () => {
         { path: "user", element: <UserPage /> },
         { path: "request", children: [
           { index: true, element: <RequestPage />},
-          { path: "cost/:requestCostId", element: <DetailRequestCost/>}
+          { path: "cost/:requestCostId", element: <DetailRequestCost/>},
+          { path: "add_request_item", element: <CreateRequestItemTransaction />}
         ] },
         { path: "approval", element: <ApprovalPage /> },
         { path: "category", element: <CategoryPage /> },

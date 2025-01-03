@@ -8,6 +8,7 @@ export interface PageTabState {
 const initialState: PageTabState = {
   page: [
     { name: 'request_page', value: 0 },
+    { name: 'approval_page', value: 0 },
   ]
 };
 

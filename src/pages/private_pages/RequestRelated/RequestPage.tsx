@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import { PageTabState, setPageValueByName } from "../../../app/reducers/pageTabSlice";
 import RequestCost from "./RequestCost";
+import RequestItemTransaction from "../../../components/request_related/request_item_related/RequestItemTransaction";
 
 export default function RequestPage() {
   const value = useSelector((state: RootState) => state.pageTab.page.find(p => p.name === "request_page")?.value || 0);
@@ -40,10 +41,10 @@ export default function RequestPage() {
 
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
-
+            <RequestItemTransaction/>
           </CustomTabPanel>
           <CustomTabPanel value={value} index={2}>
-            <RequestCost/>
+            <RequestCost request_page={true}/>
           </CustomTabPanel>
         </Box>
       </div>
