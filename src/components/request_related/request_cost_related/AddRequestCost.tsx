@@ -6,7 +6,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { openSnackbar } from "../../../app/reducers/snackbarSlice";
 import { modalStyle } from "../../../theme";
-import { CreateRequestCostDocument, FindAllRequestCostsQuery, FindAllRequestCostsQueryVariables } from "../../../graphql/request.generated";
+import { CreateRequestCostDocument, FindAllRequestCostsQuery, FindAllRequestCostsQueryVariables } from "../../../graphql/request_cost.generated";
 import { GetBadReqMsg } from "../../../utils/helpers/ErrorMessageHelper";
 import { CategoryType } from "../../../types/staticData.types";
 import { GetCategoriesDocument } from "../../../graphql/category.generated";
@@ -41,7 +41,7 @@ const AddRequestCost: React.FC<AddRequestCostProps> = ({ refetchRequestCost }) =
     }
   })
 
-  useEffect(() => {console.log(catData)}, [catData])
+  useEffect(() => {if(catData) {catRefetch()}}, [catData, catRefetch])
 
   const { handleSubmit, control, formState: { errors }, reset } = useForm<CreateRequestCostValues>({
     defaultValues: {

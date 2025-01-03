@@ -392,6 +392,7 @@ export type Mutation = {
   updatePurchaseTransaction: PurchaseTransaction;
   updateRequestClosing: RequestProjectClosing;
   updateRequestCost: RequestCost;
+  updateRequestCostDetail: RequestCost;
   updateSku: Sku;
   updateSupplier: Supplier;
   updateTool: Tool;
@@ -666,6 +667,12 @@ export type MutationUpdateRequestCostArgs = {
 };
 
 
+export type MutationUpdateRequestCostDetailArgs = {
+  id: Scalars['String']['input'];
+  updateRequestInput: UpdateRequestInput;
+};
+
+
 export type MutationUpdateSkuArgs = {
   id: Scalars['String']['input'];
   updateSkuInput: UpdateSkuInput;
@@ -815,6 +822,7 @@ export type Query = {
   findAllRequestCosts: Array<RequestCost>;
   findAllRequestItemTransaction: Array<RequestItemHeader>;
   findOneAttendanceModule: AttendanceModule;
+  findOneRequestCost: RequestCost;
   findProjectById: Project;
   findYourApprovalItemTransaction: Array<RequestItemHeader>;
   findYourRequestItemTransaction: Array<RequestItemHeader>;
@@ -870,6 +878,11 @@ export type QueryFindAllRequestClosingArgs = {
 export type QueryFindOneAttendanceModuleArgs = {
   moduleId: Scalars['String']['input'];
   projectId: Scalars['String']['input'];
+};
+
+
+export type QueryFindOneRequestCostArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -1000,6 +1013,7 @@ export type ReceiveItemInput = {
 export type RequestCost = {
   __typename?: 'RequestCost';
   _id: Scalars['String']['output'];
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   handled_by?: Maybe<Employee>;
   handled_date?: Maybe<Scalars['DateTime']['output']>;
@@ -1010,6 +1024,7 @@ export type RequestCost = {
   requested_from: Project;
   status: Scalars['String']['output'];
   title: Scalars['String']['output'];
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type RequestItemDetail = {
@@ -1175,6 +1190,13 @@ export type UpdateProjectInput = {
 
 export type UpdateRequestCostStatusInput = {
   status: Scalars['String']['input'];
+};
+
+export type UpdateRequestInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  price?: InputMaybe<Scalars['Float']['input']>;
+  requested_from?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateRequestPurchaseTransactionInput = {

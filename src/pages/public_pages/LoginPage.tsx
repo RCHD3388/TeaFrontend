@@ -20,7 +20,7 @@ const LoginPage: React.FC = () => {
     login({ variables: { data: {username, password}, requiresAuth: false}})
     .then((response) => {
       let data = response.data.login;
-      dispatch(setUser({username: data.username, role: data.role, access_token: data.access_token, name: data.name}))
+      dispatch(setUser({username: data.username, role: data.role, access_token: data.access_token, name: data.name, _id: data._id}))
     })
     .catch((err) => {
       let error = err.graphQLErrors[0];

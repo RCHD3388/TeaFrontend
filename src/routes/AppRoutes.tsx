@@ -19,6 +19,7 @@ import InventoryDetail from "../pages/private_pages/InventoryRelated/InventoryDe
 import DetailSku from "../pages/private_pages/InventoryRelated/ToolRelated/DetailSku";
 import RequestPage from "../pages/private_pages/RequestRelated/RequestPage";
 import ApprovalPage from "../pages/private_pages/ApprovalRelated/ApprovalPage";
+import DetailRequestCost from "../components/request_related/request_cost_related/DetailRequestCost";
 
 const AppRoutes: React.FC = () => {
   const router = createBrowserRouter([
@@ -57,7 +58,10 @@ const AppRoutes: React.FC = () => {
           { path: ":employeeId", element: <EmployeeDetail/>}
         ]},
         { path: "user", element: <UserPage /> },
-        { path: "request", element: <RequestPage /> },
+        { path: "request", children: [
+          { index: true, element: <RequestPage />},
+          { path: "cost/:requestCostId", element: <DetailRequestCost/>}
+        ] },
         { path: "approval", element: <ApprovalPage /> },
         { path: "category", element: <CategoryPage /> },
         { path: "*", element: <NotFoundPage/>}

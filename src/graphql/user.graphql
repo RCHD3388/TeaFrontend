@@ -1,5 +1,6 @@
 mutation Login($data: LoginInput!) {
   login(data: $data) {
+    _id
     username
     role
     access_token

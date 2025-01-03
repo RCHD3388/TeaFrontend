@@ -23,6 +23,21 @@ export type UpdateRequestCostMutationVariables = Types.Exact<{
 
 export type UpdateRequestCostMutation = { __typename?: 'Mutation', updateRequestCost: { __typename?: 'RequestCost', _id: string, title: string, description?: string | null, requested_at: any, status: string, price: number, handled_date?: any | null } };
 
+export type UpdateRequestCostDetailMutationVariables = Types.Exact<{
+  id: Types.Scalars['String']['input'];
+  updateRequestInput: Types.UpdateRequestInput;
+}>;
+
+
+export type UpdateRequestCostDetailMutation = { __typename?: 'Mutation', updateRequestCostDetail: { __typename?: 'RequestCost', _id: string, title: string, description?: string | null, requested_at: any, status: string, price: number, handled_date?: any | null } };
+
+export type FindOneRequestCostQueryVariables = Types.Exact<{
+  id: Types.Scalars['String']['input'];
+}>;
+
+
+export type FindOneRequestCostQuery = { __typename?: 'Query', findOneRequestCost: { __typename?: 'RequestCost', _id: string, title: string, description?: string | null, requested_at: any, status: string, price: number, handled_date?: any | null, createdAt?: any | null, updatedAt?: any | null, project_cost_category: { __typename?: 'CategoryData', _id: string, name: string, type: string, description?: string | null }, requested_from: { __typename?: 'Project', _id: string, name: string, location: string, description: string, warehouse: string }, requested_by: { __typename?: 'Employee', _id: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string } }, handled_by?: { __typename?: 'Employee', _id: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string } } | null } };
+
 
 export const FindAllRequestCostsDocument = gql`
     query FindAllRequestCosts {
@@ -179,3 +194,122 @@ export function useUpdateRequestCostMutation(baseOptions?: Apollo.MutationHookOp
 export type UpdateRequestCostMutationHookResult = ReturnType<typeof useUpdateRequestCostMutation>;
 export type UpdateRequestCostMutationResult = Apollo.MutationResult<UpdateRequestCostMutation>;
 export type UpdateRequestCostMutationOptions = Apollo.BaseMutationOptions<UpdateRequestCostMutation, UpdateRequestCostMutationVariables>;
+export const UpdateRequestCostDetailDocument = gql`
+    mutation UpdateRequestCostDetail($id: String!, $updateRequestInput: UpdateRequestInput!) {
+  updateRequestCostDetail(id: $id, updateRequestInput: $updateRequestInput) {
+    _id
+    title
+    description
+    requested_at
+    status
+    price
+    handled_date
+  }
+}
+    `;
+export type UpdateRequestCostDetailMutationFn = Apollo.MutationFunction<UpdateRequestCostDetailMutation, UpdateRequestCostDetailMutationVariables>;
+
+/**
+ * __useUpdateRequestCostDetailMutation__
+ *
+ * To run a mutation, you first call `useUpdateRequestCostDetailMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateRequestCostDetailMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateRequestCostDetailMutation, { data, loading, error }] = useUpdateRequestCostDetailMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      updateRequestInput: // value for 'updateRequestInput'
+ *   },
+ * });
+ */
+export function useUpdateRequestCostDetailMutation(baseOptions?: Apollo.MutationHookOptions<UpdateRequestCostDetailMutation, UpdateRequestCostDetailMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateRequestCostDetailMutation, UpdateRequestCostDetailMutationVariables>(UpdateRequestCostDetailDocument, options);
+      }
+export type UpdateRequestCostDetailMutationHookResult = ReturnType<typeof useUpdateRequestCostDetailMutation>;
+export type UpdateRequestCostDetailMutationResult = Apollo.MutationResult<UpdateRequestCostDetailMutation>;
+export type UpdateRequestCostDetailMutationOptions = Apollo.BaseMutationOptions<UpdateRequestCostDetailMutation, UpdateRequestCostDetailMutationVariables>;
+export const FindOneRequestCostDocument = gql`
+    query FindOneRequestCost($id: String!) {
+  findOneRequestCost(id: $id) {
+    _id
+    title
+    description
+    requested_at
+    status
+    price
+    handled_date
+    createdAt
+    updatedAt
+    project_cost_category {
+      _id
+      name
+      type
+      description
+    }
+    requested_from {
+      _id
+      name
+      location
+      description
+      warehouse
+    }
+    requested_by {
+      _id
+      person {
+        name
+        email
+        phone_number
+        address
+      }
+    }
+    handled_by {
+      _id
+      person {
+        name
+        email
+        phone_number
+        address
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useFindOneRequestCostQuery__
+ *
+ * To run a query within a React component, call `useFindOneRequestCostQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindOneRequestCostQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindOneRequestCostQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useFindOneRequestCostQuery(baseOptions: Apollo.QueryHookOptions<FindOneRequestCostQuery, FindOneRequestCostQueryVariables> & ({ variables: FindOneRequestCostQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindOneRequestCostQuery, FindOneRequestCostQueryVariables>(FindOneRequestCostDocument, options);
+      }
+export function useFindOneRequestCostLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindOneRequestCostQuery, FindOneRequestCostQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindOneRequestCostQuery, FindOneRequestCostQueryVariables>(FindOneRequestCostDocument, options);
+        }
+export function useFindOneRequestCostSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FindOneRequestCostQuery, FindOneRequestCostQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FindOneRequestCostQuery, FindOneRequestCostQueryVariables>(FindOneRequestCostDocument, options);
+        }
+export type FindOneRequestCostQueryHookResult = ReturnType<typeof useFindOneRequestCostQuery>;
+export type FindOneRequestCostLazyQueryHookResult = ReturnType<typeof useFindOneRequestCostLazyQuery>;
+export type FindOneRequestCostSuspenseQueryHookResult = ReturnType<typeof useFindOneRequestCostSuspenseQuery>;
+export type FindOneRequestCostQueryResult = Apollo.QueryResult<FindOneRequestCostQuery, FindOneRequestCostQueryVariables>;

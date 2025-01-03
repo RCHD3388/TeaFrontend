@@ -61,3 +61,60 @@ mutation UpdateRequestCost ($id: String!, $updateRequestCostStatusInput: UpdateR
         handled_date
     }
 }
+
+mutation UpdateRequestCostDetail ($id: String!, $updateRequestInput: UpdateRequestInput!){
+    updateRequestCostDetail(id: $id, updateRequestInput: $updateRequestInput) {
+        _id
+        title
+        description
+        requested_at
+        status
+        price
+        handled_date
+    }
+}
+
+query FindOneRequestCost($id: String!){
+    findOneRequestCost(id: $id) {
+        _id
+        title
+        description
+        requested_at
+        status
+        price
+        handled_date
+        createdAt
+        updatedAt
+        project_cost_category {
+            _id
+            name
+            type
+            description
+        }
+        requested_from {
+            _id
+            name
+            location
+            description
+            warehouse
+        }
+        requested_by {
+            _id
+            person {
+                name
+                email
+                phone_number
+                address
+            }
+        }
+        handled_by {
+            _id
+            person {
+                name
+                email
+                phone_number
+                address
+            }
+        }
+    }
+}
