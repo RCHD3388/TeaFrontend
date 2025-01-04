@@ -10,6 +10,37 @@ export type CreateRequestItemTransactionMutationVariables = Types.Exact<{
 
 export type CreateRequestItemTransactionMutation = { __typename?: 'Mutation', createRequestItemTransaction: { __typename?: 'RequestItemHeader', _id: string, title: string, type: string, description?: string | null, requested_at: any, status: string } };
 
+export type CancelItemRequestMutationVariables = Types.Exact<{
+  id: Types.Scalars['String']['input'];
+}>;
+
+
+export type CancelItemRequestMutation = { __typename?: 'Mutation', cancelItemRequest: { __typename?: 'RequestItemHeader', _id: string } };
+
+export type UpdateAvailableStatusItemRequestMutationVariables = Types.Exact<{
+  id: Types.Scalars['String']['input'];
+  status: Types.Scalars['String']['input'];
+}>;
+
+
+export type UpdateAvailableStatusItemRequestMutation = { __typename?: 'Mutation', updateAvailableStatusItemRequest: { __typename?: 'RequestItemHeader', _id: string } };
+
+export type ProcessingItemRequestMutationVariables = Types.Exact<{
+  id: Types.Scalars['String']['input'];
+  createProcessingDetailInput: Types.CreateProcessingDetailInput;
+}>;
+
+
+export type ProcessingItemRequestMutation = { __typename?: 'Mutation', processingItemRequest: { __typename?: 'RequestItemHeader', _id: string } };
+
+export type ClosingItemRequestMutationVariables = Types.Exact<{
+  id: Types.Scalars['String']['input'];
+  createFinishingDetailInput: Types.CreateFinishingDetailInput;
+}>;
+
+
+export type ClosingItemRequestMutation = { __typename?: 'Mutation', closingItemRequest: { __typename?: 'RequestItemHeader', _id: string } };
+
 export type FindYourRequestItemTransactionQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
@@ -66,6 +97,147 @@ export function useCreateRequestItemTransactionMutation(baseOptions?: Apollo.Mut
 export type CreateRequestItemTransactionMutationHookResult = ReturnType<typeof useCreateRequestItemTransactionMutation>;
 export type CreateRequestItemTransactionMutationResult = Apollo.MutationResult<CreateRequestItemTransactionMutation>;
 export type CreateRequestItemTransactionMutationOptions = Apollo.BaseMutationOptions<CreateRequestItemTransactionMutation, CreateRequestItemTransactionMutationVariables>;
+export const CancelItemRequestDocument = gql`
+    mutation CancelItemRequest($id: String!) {
+  cancelItemRequest(id: $id) {
+    _id
+  }
+}
+    `;
+export type CancelItemRequestMutationFn = Apollo.MutationFunction<CancelItemRequestMutation, CancelItemRequestMutationVariables>;
+
+/**
+ * __useCancelItemRequestMutation__
+ *
+ * To run a mutation, you first call `useCancelItemRequestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCancelItemRequestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [cancelItemRequestMutation, { data, loading, error }] = useCancelItemRequestMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useCancelItemRequestMutation(baseOptions?: Apollo.MutationHookOptions<CancelItemRequestMutation, CancelItemRequestMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CancelItemRequestMutation, CancelItemRequestMutationVariables>(CancelItemRequestDocument, options);
+      }
+export type CancelItemRequestMutationHookResult = ReturnType<typeof useCancelItemRequestMutation>;
+export type CancelItemRequestMutationResult = Apollo.MutationResult<CancelItemRequestMutation>;
+export type CancelItemRequestMutationOptions = Apollo.BaseMutationOptions<CancelItemRequestMutation, CancelItemRequestMutationVariables>;
+export const UpdateAvailableStatusItemRequestDocument = gql`
+    mutation UpdateAvailableStatusItemRequest($id: String!, $status: String!) {
+  updateAvailableStatusItemRequest(id: $id, status: $status) {
+    _id
+  }
+}
+    `;
+export type UpdateAvailableStatusItemRequestMutationFn = Apollo.MutationFunction<UpdateAvailableStatusItemRequestMutation, UpdateAvailableStatusItemRequestMutationVariables>;
+
+/**
+ * __useUpdateAvailableStatusItemRequestMutation__
+ *
+ * To run a mutation, you first call `useUpdateAvailableStatusItemRequestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAvailableStatusItemRequestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAvailableStatusItemRequestMutation, { data, loading, error }] = useUpdateAvailableStatusItemRequestMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      status: // value for 'status'
+ *   },
+ * });
+ */
+export function useUpdateAvailableStatusItemRequestMutation(baseOptions?: Apollo.MutationHookOptions<UpdateAvailableStatusItemRequestMutation, UpdateAvailableStatusItemRequestMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateAvailableStatusItemRequestMutation, UpdateAvailableStatusItemRequestMutationVariables>(UpdateAvailableStatusItemRequestDocument, options);
+      }
+export type UpdateAvailableStatusItemRequestMutationHookResult = ReturnType<typeof useUpdateAvailableStatusItemRequestMutation>;
+export type UpdateAvailableStatusItemRequestMutationResult = Apollo.MutationResult<UpdateAvailableStatusItemRequestMutation>;
+export type UpdateAvailableStatusItemRequestMutationOptions = Apollo.BaseMutationOptions<UpdateAvailableStatusItemRequestMutation, UpdateAvailableStatusItemRequestMutationVariables>;
+export const ProcessingItemRequestDocument = gql`
+    mutation ProcessingItemRequest($id: String!, $createProcessingDetailInput: CreateProcessingDetailInput!) {
+  processingItemRequest(
+    id: $id
+    createProcessingDetailInput: $createProcessingDetailInput
+  ) {
+    _id
+  }
+}
+    `;
+export type ProcessingItemRequestMutationFn = Apollo.MutationFunction<ProcessingItemRequestMutation, ProcessingItemRequestMutationVariables>;
+
+/**
+ * __useProcessingItemRequestMutation__
+ *
+ * To run a mutation, you first call `useProcessingItemRequestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useProcessingItemRequestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [processingItemRequestMutation, { data, loading, error }] = useProcessingItemRequestMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      createProcessingDetailInput: // value for 'createProcessingDetailInput'
+ *   },
+ * });
+ */
+export function useProcessingItemRequestMutation(baseOptions?: Apollo.MutationHookOptions<ProcessingItemRequestMutation, ProcessingItemRequestMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ProcessingItemRequestMutation, ProcessingItemRequestMutationVariables>(ProcessingItemRequestDocument, options);
+      }
+export type ProcessingItemRequestMutationHookResult = ReturnType<typeof useProcessingItemRequestMutation>;
+export type ProcessingItemRequestMutationResult = Apollo.MutationResult<ProcessingItemRequestMutation>;
+export type ProcessingItemRequestMutationOptions = Apollo.BaseMutationOptions<ProcessingItemRequestMutation, ProcessingItemRequestMutationVariables>;
+export const ClosingItemRequestDocument = gql`
+    mutation ClosingItemRequest($id: String!, $createFinishingDetailInput: CreateFinishingDetailInput!) {
+  closingItemRequest(
+    id: $id
+    createFinishingDetailInput: $createFinishingDetailInput
+  ) {
+    _id
+  }
+}
+    `;
+export type ClosingItemRequestMutationFn = Apollo.MutationFunction<ClosingItemRequestMutation, ClosingItemRequestMutationVariables>;
+
+/**
+ * __useClosingItemRequestMutation__
+ *
+ * To run a mutation, you first call `useClosingItemRequestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useClosingItemRequestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [closingItemRequestMutation, { data, loading, error }] = useClosingItemRequestMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      createFinishingDetailInput: // value for 'createFinishingDetailInput'
+ *   },
+ * });
+ */
+export function useClosingItemRequestMutation(baseOptions?: Apollo.MutationHookOptions<ClosingItemRequestMutation, ClosingItemRequestMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ClosingItemRequestMutation, ClosingItemRequestMutationVariables>(ClosingItemRequestDocument, options);
+      }
+export type ClosingItemRequestMutationHookResult = ReturnType<typeof useClosingItemRequestMutation>;
+export type ClosingItemRequestMutationResult = Apollo.MutationResult<ClosingItemRequestMutation>;
+export type ClosingItemRequestMutationOptions = Apollo.BaseMutationOptions<ClosingItemRequestMutation, ClosingItemRequestMutationVariables>;
 export const FindYourRequestItemTransactionDocument = gql`
     query FindYourRequestItemTransaction {
   findYourRequestItemTransaction {

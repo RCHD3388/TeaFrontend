@@ -14,6 +14,7 @@ import { selectUser } from "../../app/reducers/userSlice";
 import { EmployeeRoleType } from "../../types/staticData.types";
 import { CreateRequestClosingDocument, FindAllRequestClosingQuery, FindAllRequestClosingQueryVariables } from "../../graphql/project_closing.generated";
 import { GetBadReqMsg } from "../../utils/helpers/ErrorMessageHelper";
+import { useNavigate } from "react-router-dom";
 
 interface CreateRequestClosingValues {
   title: string
@@ -23,16 +24,18 @@ interface CreateRequestClosingValues {
 interface RequestProjectClosingProps {
   refetchProjectClosing: (variables?: FindAllRequestClosingQueryVariables) => Promise<ApolloQueryResult<FindAllRequestClosingQuery>>,
   disabledCondition: boolean
-  project_id: string
+  project_id: string,
+  closing_id: string | null
 }
 
-const RequestProjectClosing: React.FC<RequestProjectClosingProps> = ({ refetchProjectClosing, disabledCondition, project_id }) => {
+const RequestProjectClosing: React.FC<RequestProjectClosingProps> = ({ refetchProjectClosing, disabledCondition, project_id, closing_id }) => {
   const [createRequestClosing] = useMutation(CreateRequestClosingDocument);
   const [openModal, setOpenModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const handleOpenModal = () => { setOpenModal(true) }
   const handleCloseModal = () => { setOpenModal(false) }
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const { handleSubmit, control, setValue, formState: { errors }, reset } = useForm<CreateRequestClosingValues>({
     defaultValues: {
@@ -66,16 +69,27 @@ const RequestProjectClosing: React.FC<RequestProjectClosingProps> = ({ refetchPr
   }
 
   return (<>
-    <Button
-      onClick={async () => {
-        handleOpenModal()
-      }}
-      disabled={disabledCondition}
-      variant="contained"
-      color="error"
-    >
-      {disabledCondition ? "Menunggu hasil pengajuan" : "Pengajuan Penutupan Proyek"}
-    </Button>
+    {!disabledCondition ?
+      <Button
+        onClick={async () => {
+          handleOpenModal()
+        }}
+        variant="contained"
+        color="error"
+      >
+        Pengajuan Penutupan Proyek
+      </Button>
+      :
+      <Button
+        onClick={async () => {
+          navigate(`/appuser/request/closing/${closing_id}`)
+        }}
+        variant="contained"
+        color="info"
+      >
+        Melihat Detail Permintaan Penutupan
+      </Button>
+    }
 
     <Modal
       open={openModal}

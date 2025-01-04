@@ -24,10 +24,10 @@ export const formatCurrency = (value: number, locale: string = 'id-ID', currency
 
 export const RequestStatusColors: { [key in RequestStatus]: string } = {
   [RequestStatus.MENUNGGU]: 'bg-yellow-100 text-yellow-800',
-  [RequestStatus.DISETUJUI]: 'bg-green-100 text-green-800',
+  [RequestStatus.DISETUJUI]: 'bg-orange-100 text-orange-800',
   [RequestStatus.DITOLAK]: 'bg-red-100 text-red-800',
   [RequestStatus.PROSES]: 'bg-blue-100 text-blue-800',
   [RequestStatus.PENGIRIMAN]: 'bg-indigo-100 text-indigo-800',
   [RequestStatus.DIBATALKAN]: 'bg-gray-100 text-gray-800',
-  [RequestStatus.SELESAI]: 'bg-purple-100 text-purple-800',
+  [RequestStatus.SELESAI]: 'bg-teal-100 text-teal-800',
 };

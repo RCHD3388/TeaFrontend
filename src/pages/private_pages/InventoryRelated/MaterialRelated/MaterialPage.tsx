@@ -72,7 +72,7 @@ const MaterialPage: React.FC = () => {
   }, [categoryData, refetchCategory])
 
   const columns: GridColDef<RowData>[] = [
-    { field: 'index', headerName: "ID", width: 100, type: "string" },
+    { field: 'index', headerName: "ID", width: 100, type: "string", align: "right", headerAlign: "right" },
     { field: 'name', headerName: 'Nama', minWidth: 150, flex: 1, type: "string" },
     {
       field: 'status', headerName: 'Status', minWidth: 150, type: "singleSelect", flex: 1,

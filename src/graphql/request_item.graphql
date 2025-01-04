@@ -9,6 +9,30 @@ mutation CreateRequestItemTransaction ($createRequestItemInput: CreateRequestIte
     }
 }
 
+mutation CancelItemRequest ($id: String!){
+    cancelItemRequest(id: $id) {
+        _id
+    }
+}
+
+mutation UpdateAvailableStatusItemRequest ($id: String!, $status: String!){
+    updateAvailableStatusItemRequest(id: $id, status: $status) {
+        _id
+    }
+}
+
+mutation ProcessingItemRequest ($id: String!, $createProcessingDetailInput: CreateProcessingDetailInput!){
+    processingItemRequest(id: $id, createProcessingDetailInput: $createProcessingDetailInput) {
+        _id
+    }
+}
+
+mutation ClosingItemRequest ($id: String!, $createFinishingDetailInput: CreateFinishingDetailInput!){
+    closingItemRequest(id: $id, createFinishingDetailInput: $createFinishingDetailInput) {
+        _id
+    }
+}
+
 query FindYourRequestItemTransaction {
     findYourRequestItemTransaction {
         _id

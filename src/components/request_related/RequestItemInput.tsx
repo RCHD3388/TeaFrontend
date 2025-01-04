@@ -91,7 +91,10 @@ const RequestItemInput: React.FC<RequestItemInputProps> = ({ itemDetail, setItem
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <Autocomplete
               disablePortal value={value} options={RequestItem_ItemTypeValues}
-              onChange={(_, data) => onChange(data)}
+              onChange={(_, data) => {
+                setValue("item", "");
+                onChange(data)
+              }}
               sx={{ width: "100%", mr: 0.5 }}
               renderInput={(params) => (
                 <TextField
@@ -138,8 +141,8 @@ const RequestItemInput: React.FC<RequestItemInputProps> = ({ itemDetail, setItem
             {itemDetail.length > 0 ? itemDetail.map((item, index) => (
               <tr key={index}>
                 <td className="text-sm" align="center" style={{ whiteSpace: "nowrap", textOverflow: "ellipsis" }}>{item.item_name}</td>
-                <td className="text-sm" align="center"><TextField type="number" value={item.quantity} size="small" sx={{ width: 100 }} 
-                  onChange={(e) => { handleQuantityChange(index, Number(e.target.value)) }}
+                <td className="text-sm" align="center"><TextField type="Number" value={item.quantity} size="small" sx={{ width: 100 }}
+                  onChange={(e) => { if(Number(e.target.value) > 0) handleQuantityChange(index, Number(e.target.value)) }}
                 ></TextField></td>
                 <td className="text-sm" align="center">{item.item_type}</td>
                 <td className="text-sm text-center">

@@ -19,3 +19,50 @@ mutation CreateRequestClosing ($createRequestClosingInput: CreateRequestClosingI
         handled_date
     }
 }
+
+mutation UpdateRequestClosing ($id: String!, $updateRequestStatusInput: UpdateRequestStatusInput!){
+    updateRequestClosing(id: $id, updateRequestStatusInput: $updateRequestStatusInput) {
+        _id
+        title
+        description
+        requested_at
+        status
+        handled_date
+    }
+}
+
+query FindOneRequestClosing ($id: String!){
+    findOneRequestClosing(id: $id) {
+        _id
+        title
+        description
+        requested_at
+        status
+        handled_date
+        handled_by {
+            _id
+            person {
+                name
+                email
+                phone_number
+                address
+            }
+        }
+        requested_by {
+            _id
+            person {
+                name
+                email
+                phone_number
+                address
+            }
+        }
+        requested_from {
+            _id
+            name
+            location
+            description
+            warehouse
+        }
+    }
+}

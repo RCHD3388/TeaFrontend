@@ -114,6 +114,13 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({
     }
   }
 
+  const getClosingId = () => {
+    let data = dataProjectClosing.findAllRequestClosing.find((req: any) => {
+      return req.handled_date == null
+    })
+    return data?._id ?? null
+  }
+
   useEffect(() => {
     if (errorProject) {
       let graphqlErrorFetch = errorProject?.graphQLErrors[0] as CustomGraphQLError || null;
@@ -272,12 +279,15 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({
 
             {/* BUTTON SUBMIT */}
             <div className="flex justify-between">
-              <RequestProjectClosing disabledCondition={isSubmitting ||
-                (!loadingProjectClosing &&
-                  !errorProjectClosing &&
-                  dataProjectClosing.findAllRequestClosing.findIndex((req: any) => {
-                    return req.handled_date == null
-                  })) != -1} refetchProjectClosing={refetchProjectClosing}
+              <RequestProjectClosing
+                disabledCondition={isSubmitting ||
+                  (!loadingProjectClosing &&
+                    !errorProjectClosing &&
+                    dataProjectClosing.findAllRequestClosing.findIndex((req: any) => {
+                      return req.handled_date == null
+                    })) != -1}
+                closing_id={loadingProjectClosing ? null : getClosingId()}
+                refetchProjectClosing={refetchProjectClosing}
                 project_id={dataProject.findProjectById._id || ""}
               />
               <Button

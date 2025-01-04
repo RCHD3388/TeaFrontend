@@ -12,42 +12,38 @@ import RequestItemInput from '../RequestItemInput';
 import { useDispatch } from 'react-redux';
 import { openSnackbar } from '../../../app/reducers/snackbarSlice';
 import { GetBadReqMsg } from '../../../utils/helpers/ErrorMessageHelper';
+import { CreatePurchaseOrderDocument } from '../../../graphql/purchasing.generated';
 
-interface CreateRequestItemTransactionValues {
+interface CreateRequestValues {
   title: String
-  type: String
   description: String
   requested_from: String
-  requested_to: String
 }
 
-interface CreateRequestItemTransactionProps { }
+interface CreatePurchaseOrderProps { }
 
-const CreateRequestItemTransaction: React.FC<CreateRequestItemTransactionProps> = ({ }) => {
+const CreatePurchaseOrder: React.FC<CreatePurchaseOrderProps> = ({ }) => {
   const navigate = useNavigate()
-  let { data: allWHData, loading: allWHLoading, error: allWHError, refetch: allWHRefetch } = useQuery(GetAllWarehousesDocument, { variables: { requiresAuth: true } })
   let { data: userWHData, loading: userWHLoading, error: userWHError, refetch: userWHRefetch } = useQuery(GetAllWarehousesByUserDocument, { variables: { requiresAuth: true } })
-  const [createRequestItemTransaction] = useMutation(CreateRequestItemTransactionDocument)
+  const [createPurchaseOrder] = useMutation(CreatePurchaseOrderDocument)
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEmpty, setIsEmpty] = useState(false);
 
   const [requestItemDetail, setRequestItemDetail] = useState<itemDetail[]>([])
   const dispatch = useDispatch();
 
-  const { handleSubmit, control, watch, setValue, formState: { errors }, reset } = useForm<CreateRequestItemTransactionValues>({
+  const { handleSubmit, control, watch, setValue, formState: { errors }, reset } = useForm<CreateRequestValues>({
     defaultValues: {
       title: "",
       description: "",
-      type: "",
       requested_from: "",
-      requested_to: "",
     },
   });
 
-  const handleSubmitRequest = async (data: CreateRequestItemTransactionValues) => {
+  // DONE
+  const handleSubmitRequest = async (data: CreateRequestValues) => {
     setIsEmpty(false);
     let requested_from = (data.requested_from as any).value;
-    let requested_to = (data.requested_to as any).value;
 
     if (requestItemDetail.length == 0) {
       setIsEmpty(true);
@@ -56,19 +52,17 @@ const CreateRequestItemTransaction: React.FC<CreateRequestItemTransactionProps> 
 
     setIsSubmitting(true)
     try {
-      await createRequestItemTransaction({
+      await createPurchaseOrder({
         variables: {
-          createRequestItemInput: {
+          createPurchaseOrderInput: {
             title: data.title,
             description: data.description,
-            type: data.type,
             requested_from: requested_from,
-            requested_to: requested_to,
-            request_item_detail: requestItemDetail.map((item) => { return { item: item.item, item_type: item.item_type, quantity: Number(item.quantity) } })
+            purchase_order_detail: requestItemDetail.map((item) => { return { item: item.item, item_type: item.item_type, quantity: Number(item.quantity) } })
           }, requiresAuth: true
         }
       })
-      dispatch(openSnackbar({ severity: "success", message: "Berhasil mengajukan permintaan perpindahan barang" }))
+      dispatch(openSnackbar({ severity: "success", message: "Berhasil mengajukan permintaan pembelian" }))
       navigate(-1)
     } catch (error: any) {
       let msg = GetBadReqMsg("Gagal mengajukan permintaan, silakan coba lagi nanti", error)
@@ -79,7 +73,6 @@ const CreateRequestItemTransaction: React.FC<CreateRequestItemTransactionProps> 
   }
 
   // refetch new data
-  useEffect(() => { if (allWHData) { allWHRefetch(); } }, [allWHData, allWHRefetch]);
   useEffect(() => { if (userWHData) { userWHRefetch(); } }, [userWHData, userWHRefetch]);
 
   return (
@@ -93,7 +86,7 @@ const CreateRequestItemTransaction: React.FC<CreateRequestItemTransactionProps> 
           >
             <ReplyAllIcon fontSize="medium"></ReplyAllIcon>
           </IconButton>
-          <div className="text-4xl font-bold mb-2">Pengajuan Perpindahan Barang</div>
+          <div className="text-4xl font-bold mb-2">Membuat Permintaan Pembelian</div>
         </Box>
       </div>
 
@@ -115,24 +108,6 @@ const CreateRequestItemTransaction: React.FC<CreateRequestItemTransactionProps> 
           />)}
         />
         <Controller
-          name="type" control={control} rules={{ required: 'Tipe perpindahan tidak boleh kosong' }}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <Autocomplete
-              disablePortal
-              options={RequestItemTypeValues}
-              onChange={(_, data) => onChange(data)}
-              value={value}
-              renderInput={(params) => (
-                <TextField
-                  {...params} label="Tipe Perpindahan" sx={{ width: "100%", mb: 1 }}
-                  error={!!error} helperText={error ? error.message : null}
-                  color="secondary" size="small"
-                />
-              )}
-            />
-          )}
-        />
-        <Controller
           name="requested_from" control={control} rules={{ required: 'Gudang asal tidak boleh kosong' }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <Autocomplete
@@ -146,29 +121,6 @@ const CreateRequestItemTransaction: React.FC<CreateRequestItemTransactionProps> 
               renderInput={(params) => (
                 <TextField
                   {...params} label="Gudang Asal" sx={{ width: "100%", mb: 1 }}
-                  error={!!error} helperText={error ? error.message : null}
-                  color="secondary" size="small"
-                />
-              )}
-            />
-          )}
-        />
-        <Controller
-          name="requested_to" control={control} rules={{ required: 'Gudang tujuan tidak boleh kosong' }}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <Autocomplete
-              disablePortal
-
-              options={allWHLoading || !allWHData ? [] : allWHData.getAllWarehouses.filter((wh: any) => {
-                let requested_from_data: any = watch("requested_from") || {};
-                return wh._id !== (requested_from_data?.value || "")
-              }).map((wh: any) => { return { label: `${wh.name} ( ${wh.address} }`, value: wh._id } })}
-
-              onChange={(_, data) => onChange(data)}
-              value={value}
-              renderInput={(params) => (
-                <TextField
-                  {...params} label="Gudang Tujuan" sx={{ width: "100%", mb: 1 }}
                   error={!!error} helperText={error ? error.message : null}
                   color="secondary" size="small"
                 />
@@ -201,4 +153,4 @@ const CreateRequestItemTransaction: React.FC<CreateRequestItemTransactionProps> 
   )
 }
 
-export default CreateRequestItemTransaction
+export default CreatePurchaseOrder

@@ -233,6 +233,13 @@ export type CustomOneRequestItem = {
   skus: Array<Sku>;
 };
 
+export type CustomOneRequestPo = {
+  __typename?: 'CustomOneRequestPO';
+  materials: Array<Material>;
+  purchase_order: PurchaseOrder;
+  skus: Array<Sku>;
+};
+
 export type Employee = {
   __typename?: 'Employee';
   _id: Scalars['String']['output'];
@@ -356,6 +363,7 @@ export type Mutation = {
   addNewDetailPT: PurchaseTransaction;
   addNewProjectEmployee: Array<Employee>;
   cancelItemRequest: RequestItemHeader;
+  cancelPurchaseOrder: PurchaseOrder;
   closingItemRequest: RequestItemHeader;
   createAttendance: AttendanceModule;
   createCategory: CategoryData;
@@ -433,6 +441,11 @@ export type MutationAddNewProjectEmployeeArgs = {
 
 
 export type MutationCancelItemRequestArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationCancelPurchaseOrderArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -771,6 +784,7 @@ export type ProjectClosing = {
 export type PurchaseOrder = {
   __typename?: 'PurchaseOrder';
   _id: Scalars['String']['output'];
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
   date: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
   purchase_order_detail: Array<PurchaseOrderDetail>;
@@ -778,6 +792,7 @@ export type PurchaseOrder = {
   requested_from: Warehouse;
   status: Scalars['String']['output'];
   title: Scalars['String']['output'];
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
 };
 
 export type PurchaseOrderDetail = {
@@ -829,6 +844,7 @@ export type Query = {
   findAllRequestCosts: Array<RequestCost>;
   findAllRequestItemTransaction: Array<RequestItemHeader>;
   findOneAttendanceModule: AttendanceModule;
+  findOneRequestClosing: RequestProjectClosing;
   findOneRequestCost: RequestCost;
   findOneRequestItemTransaction: CustomOneRequestItem;
   findProjectById: Project;
@@ -856,7 +872,7 @@ export type Query = {
   getHello: Scalars['String']['output'];
   getMaterialById: Material;
   getMerkById: Merk;
-  getPurchaseOrderByID: PurchaseOrder;
+  getPurchaseOrderByID: CustomOneRequestPo;
   getPurchaseOrderByUser: Array<PurchaseOrder>;
   getPurchaseTransactionById: PurchaseTransaction;
   getPurchaseTransactionByUser: Array<PurchaseTransaction>;
@@ -886,6 +902,11 @@ export type QueryFindAllRequestClosingArgs = {
 export type QueryFindOneAttendanceModuleArgs = {
   moduleId: Scalars['String']['input'];
   projectId: Scalars['String']['input'];
+};
+
+
+export type QueryFindOneRequestClosingArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -921,6 +942,11 @@ export type QueryGetAllMaterialsArgs = {
 
 export type QueryGetAllProjectEmployeesArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryGetAllPurchaseOrdersArgs = {
+  filter?: InputMaybe<FilterInput>;
 };
 
 
@@ -1219,7 +1245,6 @@ export type UpdateRequestPurchaseTransactionInput = {
 };
 
 export type UpdateRequestStatusInput = {
-  handled_warehouse: Scalars['String']['input'];
   status: Scalars['String']['input'];
 };
 

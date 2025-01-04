@@ -3,22 +3,48 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Box, Button, Card, CardContent, Chip, Container, Divider, IconButton, InputAdornment, Stack, TextField, Typography } from '@mui/material';
 import ReplyAllIcon from '@mui/icons-material/ReplyAll';
 import { theme } from '../../../theme';
-import { FindOneRequestItemTransactionDocument } from '../../../graphql/request_item.generated';
-import { useQuery } from '@apollo/client';
+import { CancelItemRequestDocument, ClosingItemRequestDocument, FindOneRequestItemTransactionDocument, ProcessingItemRequestDocument, UpdateAvailableStatusItemRequestDocument } from '../../../graphql/request_item.generated';
+import { useMutation, useQuery } from '@apollo/client';
 import { selectUser } from '../../../app/reducers/userSlice';
 import { RootState } from '../../../app/store';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { formatDateToLong, RequestStatusColors } from '../../../utils/service/FormatService';
 import { RequestItem_ItemType, RequestItemType, RequestStatusType } from '../../../types/staticData.types';
+import { openSnackbar } from '../../../app/reducers/snackbarSlice';
+import { GetBadReqMsg } from '../../../utils/helpers/ErrorMessageHelper';
+import ProcessingItemModal from './ProcessingItemModal';
+import ClosingItemModal from './ClosingItemModal';
 
 interface DetailRequestItemProps { }
 
+const getClassByType = (type: String) => {
+  if (type === RequestItemType.PENGEMBALIAN) {
+    return "badge badge-success text-white"
+  } else if (type === RequestItemType.PEMINJAMAN) {
+    return "badge badge-warning text-black"
+  }
+}
+
 const DetailRequestItem: React.FC<DetailRequestItemProps> = ({ }) => {
   const { requestItemId } = useParams();
-  const { data, loading, error } = useQuery(FindOneRequestItemTransactionDocument, { variables: { id: requestItemId }, });
+  const { data, loading, error, refetch } = useQuery(FindOneRequestItemTransactionDocument, { variables: { id: requestItemId }, });
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => selectUser(state));
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const dispatch = useDispatch()
+  const [cancelItemRequest] = useMutation(CancelItemRequestDocument);
+  const [updateAvailableStatusItemRequest] = useMutation(UpdateAvailableStatusItemRequestDocument);
+
+  // UNTUK PROCESSING MODAL HANDLER
+  const [openProsesModal, setOpenProsesModal] = useState(false);
+  const handleOpenProsesModal = () => { setOpenProsesModal(true) }
+  const handleCloseProsesModal = () => { setOpenProsesModal(false) }
+
+  // UNTUK CLOSING MODAL HANDLER
+  const [openCloseModal, setOpenCloseModal] = useState(false);
+  const handleOpenCloseModal = () => { setOpenCloseModal(true) }
+  const handleCloseCloseModal = () => { setOpenCloseModal(false) }
 
   const getDataRequest = () => {
     return data?.findOneRequestItemTransaction.request_item_header
@@ -28,14 +54,39 @@ const DetailRequestItem: React.FC<DetailRequestItemProps> = ({ }) => {
       let material = data?.findOneRequestItemTransaction.materials.find((mat: any) => { return mat._id == item })
       return material ? `${material.name} (${material.conversion} x ${material.minimum_unit_measure.name}) - ${material.merk.name}` : ``
     } else if (item_type == RequestItem_ItemType.TOOL) {
-      let sku = data?.findOneRequestItemTransaction.skus.find((sku: any) => { sku._id == item })
+      let sku = data?.findOneRequestItemTransaction.skus.find((sku: any) => { return sku._id == item })
       return sku ? `${sku.name} - ${sku.merk.name}` : ``
     }
     return ""
   }
 
+  const handleAction = async (value: String) => {
+    setIsSubmitting(true)
+    try {
+      if (value == RequestStatusType.DIBATALKAN || value == RequestStatusType.DISETUJUI || value == RequestStatusType.DITOLAK) {
+        if (value == RequestStatusType.DIBATALKAN) {
+          await cancelItemRequest({ variables: { id: requestItemId, requiresAuth: true } })
+        } else if (value == RequestStatusType.DISETUJUI || value == RequestStatusType.DITOLAK) {
+          await updateAvailableStatusItemRequest({
+            variables: {
+              id: requestItemId, status: value,
+              requiresAuth: true
+            }
+          })
+        }
+        refetch()
+        dispatch(openSnackbar({ severity: "success", message: "Berhasil memperbarui status permintaan" }))
+      }
+    } catch (error: any) {
+      let msg = GetBadReqMsg("Gagal memperbarui status permintaan, silakan coba lagi nanti", error)
+      dispatch(openSnackbar({ severity: "error", message: String(msg) }))
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   const getDisabledCondition = () => {
-    return getDataRequest().status == RequestStatusType.DISETUJUI || isSubmitting
+    return getDataRequest().status == RequestStatusType.SELESAI || isSubmitting
   }
 
   useEffect(() => {
@@ -75,7 +126,7 @@ const DetailRequestItem: React.FC<DetailRequestItemProps> = ({ }) => {
 
                   <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 2 }}>
                     <Typography variant="body1" sx={{ mr: 2 }}><b>Tipe Perpindahan: </b>
-                      <span className='badge badge-neutral' style={{ textTransform: "capitalize" }}>{getDataRequest()?.type || ""}</span>
+                      <span className={`${getClassByType(getDataRequest()?.type || "")}`} style={{ textTransform: "capitalize" }}>{getDataRequest()?.type || ""}</span>
                     </Typography>
                   </Stack>
                   <Stack direction="row" spacing={1} alignItems="center">
@@ -84,24 +135,24 @@ const DetailRequestItem: React.FC<DetailRequestItemProps> = ({ }) => {
                   <Stack direction="row" spacing={1} alignItems="center">
                     <Typography variant="body1" sx={{ mr: 2 }}><b>Warehouse Tujuan:</b> {getDataRequest()?.requested_to.name || ""} - ( {getDataRequest()?.requested_to.address} )</Typography>
                   </Stack>
-                  <Box sx={{ p: 1 }}>
+                  <Box maxHeight={300} overflow={"auto"}>
                     <table className="table table-xs border-2">
                       <thead className="bg-secondary text-white font-normal text-base" style={{ position: "sticky", top: 0 }}>
                         <tr>
-                          <td align="center">Barang</td>
-                          <td align="center">Kuantitas </td>
-                          <td align="center">Tipe Barang</td>
+                          <td align="left">Barang</td>
+                          <td align="right">Kuantitas </td>
+                          <td align="left">Tipe Barang</td>
                           <th></th>
                         </tr>
                       </thead>
                       <tbody>
                         {getDataRequest().request_item_detail.length > 0 ? getDataRequest().request_item_detail.map((item: any, index: number) => (
                           <tr key={index}>
-                            <td className="text-sm" align="center" style={{ whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
+                            <td className="text-sm" align="left" style={{ whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
                               {getItemName(item.item_type, item.item)}
                             </td>
-                            <td className="text-sm" align="center">{item.quantity}</td>
-                            <td className="text-sm" align="center">{item.item_type}</td>
+                            <td className="text-sm" align="right">{item.quantity}</td>
+                            <td className="text-sm" align="left">{item.item_type}</td>
                           </tr>
                         )) : <tr className="p-4"><td colSpan={4} className="p-4 text-sm" style={{ textAlign: "center" }}>Tidak ada data dalam tabel. Silakan tambahkan material sebelum submit.</td></tr>}
                       </tbody>
@@ -125,7 +176,7 @@ const DetailRequestItem: React.FC<DetailRequestItemProps> = ({ }) => {
               {(getDataRequest()?.status == RequestStatusType.PROSES || getDataRequest()?.status == RequestStatusType.SELESAI) &&
                 <Card sx={{ my: 3 }}>
                   <CardContent>
-                    <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>Data Pengirim</Typography>
+                    <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>Data Pengirim & Penerima</Typography>
                     <Box px={2}>
                       <Stack direction="row" spacing={1} alignItems="center">
                         <Typography variant="body1" sx={{ mr: 2 }}><b>Nama Pengirim:</b> {getDataRequest()?.finishing_detail?.sender_name || "-"}</Typography>
@@ -158,50 +209,76 @@ const DetailRequestItem: React.FC<DetailRequestItemProps> = ({ }) => {
                 {user._id == getDataRequest().requested_by._id && getDataRequest()?.status == RequestStatusType.MENUNGGU && <>
                   <div>
                     <Button variant="contained" color="error" disabled={getDisabledCondition()} sx={{ mr: 1 }}
-                      onClick={() => { }}
+                      onClick={() => { handleAction(RequestStatusType.DIBATALKAN) }}
                     >
                       Batalkan
                     </Button>
                   </div>
                 </>}
                 {/* SETUJUI */}
-                {user._id != getDataRequest().requested_by._id 
-                && getDataRequest()?.status == RequestStatusType.MENUNGGU 
-                && getDataRequest()?.type == RequestItemType.PENGEMBALIAN && <>
-                  <div>
-                    <Button variant="contained" color="success" disabled={getDisabledCondition()} sx={{ mr: 1 }}
-                      onClick={() => { }}
-                    >
-                      Menyetujui
-                    </Button>
-                  </div>
-                </>}
+                {user._id != getDataRequest().requested_by._id
+                  && getDataRequest()?.status == RequestStatusType.MENUNGGU
+                  && getDataRequest()?.type == RequestItemType.PENGEMBALIAN && <>
+                    <div>
+                      <Button variant="contained" color="success" disabled={getDisabledCondition()} sx={{ mr: 1 }}
+                        onClick={() => { handleAction(RequestStatusType.DISETUJUI) }}
+                      >
+                        Menyetujui
+                      </Button>
+                    </div>
+                  </>}
+                {/* MENOLAK PERMINTAAN */}
+                {(
+                  (user._id != getDataRequest().requested_by._id && getDataRequest()?.status == RequestStatusType.MENUNGGU)
+                ) && <>
+                    <div>
+                      <Button variant="contained" color="error" disabled={getDisabledCondition()} sx={{ mr: 1 }}
+                        onClick={() => { handleAction(RequestStatusType.DITOLAK) }}
+                      >
+                        Menolak
+                      </Button>
+                    </div>
+                  </>}
                 {/* PROCESSING */}
                 {(
                   (user._id == getDataRequest().requested_by._id && getDataRequest()?.status == RequestStatusType.DISETUJUI && getDataRequest()?.type == RequestItemType.PENGEMBALIAN) ||
-                  (user._id != getDataRequest().requested_by._id && getDataRequest()?.status == RequestStatusType.MENUNGGU && getDataRequest()?.type == RequestItemType.PEMINJAMAN) 
-                )&& <>
-                  <div>
-                    <Button variant="contained" color="warning" disabled={getDisabledCondition()} sx={{ mr: 1 }}
-                      onClick={() => { }}
-                    >
-                      PROSES KIRIM
-                    </Button>
-                  </div>
-                </>}
+                  (user._id != getDataRequest().requested_by._id && getDataRequest()?.status == RequestStatusType.MENUNGGU && getDataRequest()?.type == RequestItemType.PEMINJAMAN)
+                ) && <>
+                    <div>
+                      <Button variant="contained" color="warning" disabled={getDisabledCondition()} sx={{ mr: 1 }}
+                        onClick={() => { handleOpenProsesModal() }}
+                      >
+                        Proses Kirim
+                      </Button>
+                      <ProcessingItemModal
+                        refetchRequest={refetch}
+                        openModal={openProsesModal}
+                        handleOpenModal={handleOpenProsesModal}
+                        handleCloseModal={handleCloseProsesModal} requestItemId={requestItemId || ""}
+                        requestData={getDataRequest()}
+                        requestSkuData={data?.findOneRequestItemTransaction.skus || []}
+                      />
+                    </div>
+                  </>}
                 {/* DITERIMA */}
                 {(
-                  (user._id != getDataRequest().requested_by._id && getDataRequest()?.status == RequestStatusType.PROSES && getDataRequest()?.type == RequestItemType.PENGEMBALIAN) ||
-                  (user._id == getDataRequest().requested_by._id && getDataRequest()?.status == RequestStatusType.PROSES && getDataRequest()?.type == RequestItemType.PEMINJAMAN) 
-                )&& <>
-                  <div>
-                    <Button variant="contained" color="success" disabled={getDisabledCondition()} sx={{ mr: 1 }}
-                      onClick={() => { }}
-                    >
-                      SELESAIKAN
-                    </Button>
-                  </div>
-                </>}
+                  (user._id != getDataRequest().requested_by._id && getDataRequest()?.status == RequestStatusType.PENGIRIMAN && getDataRequest()?.type == RequestItemType.PENGEMBALIAN) ||
+                  (user._id == getDataRequest().requested_by._id && getDataRequest()?.status == RequestStatusType.PENGIRIMAN && getDataRequest()?.type == RequestItemType.PEMINJAMAN)
+                ) && <>
+                    <div>
+                      <Button variant="contained" color="success" disabled={getDisabledCondition()} sx={{ mr: 1 }}
+                        onClick={() => { handleOpenCloseModal() }}
+                      >
+                        Konfirmasi & Selesaikan
+                      </Button>
+                      <ClosingItemModal
+                        refetchRequest={refetch}
+                        openModal={openCloseModal}
+                        handleOpenModal={handleOpenCloseModal}
+                        handleCloseModal={handleCloseCloseModal} requestItemId={requestItemId || ""}
+                      />
+                    </div>
+                  </>}
               </div>
             </Container>
           </Box>
