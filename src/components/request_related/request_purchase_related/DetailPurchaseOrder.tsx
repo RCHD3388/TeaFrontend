@@ -7,9 +7,9 @@ import { useMutation, useQuery } from '@apollo/client';
 import { selectUser } from '../../../app/reducers/userSlice';
 import { RootState } from '../../../app/store';
 import { useDispatch, useSelector } from 'react-redux';
-import { formatDateToLong, RequestStatusColors } from '../../../utils/service/FormatService';
+import { formatCurrency, formatDateToLong, formatISODateToCustom, RequestStatusColors } from '../../../utils/service/FormatService';
 import { EmployeeRoleType, RequestItem_ItemType, RequestItemType, RequestStatusType } from '../../../types/staticData.types';
-import { CancelPurchaseOrderDocument, GetPurchaseOrderByIdDocument, HandleWaitingPoDocument } from '../../../graphql/purchasing.generated';
+import { CancelPurchaseOrderDocument, GetPurchaseOrderByIdDocument, GetRelatedPTfromPoDocument, HandleReceivedPoDetailDocument, HandleWaitingPoDocument } from '../../../graphql/purchasing.generated';
 import { openSnackbar } from '../../../app/reducers/snackbarSlice';
 import { GetBadReqMsg } from '../../../utils/helpers/ErrorMessageHelper';
 import PurchaseOrderReportModal from './PurchaseOrderReport';
@@ -20,11 +20,15 @@ interface DetailPurchaseOrderProps { }
 const DetailPurchaseOrder: React.FC<DetailPurchaseOrderProps> = ({ }) => {
   const { requestPoId } = useParams();
   const { data, loading, error, refetch } = useQuery(GetPurchaseOrderByIdDocument, { variables: { id: requestPoId }, });
+  const { data: relatedPTData, loading: relatedPTLoading, error: relatedPTError, refetch: relatedPTRefetch } = useQuery(GetRelatedPTfromPoDocument, { variables: { id: requestPoId }, });
+
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => selectUser(state));
   const [handleWaitingPO] = useMutation(HandleWaitingPoDocument)
   const [cancelPurchaseOrder] = useMutation(CancelPurchaseOrderDocument)
+  const [handleReceivedPODetail] = useMutation(HandleReceivedPoDetailDocument)
   const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   const [openReportModal, setOpenReportModal] = useState(false);
   const handleOpenReportModal = () => { setOpenReportModal(true) }
@@ -44,6 +48,9 @@ const DetailPurchaseOrder: React.FC<DetailPurchaseOrderProps> = ({ }) => {
 
   const getDataRequest = () => {
     return data?.getPurchaseOrderByID.purchase_order
+  }
+  const getRelatedPT = () => {
+    return relatedPTData?.getRelatedPTfromPO
   }
 
   const handleAction = async (value: String) => {
@@ -71,15 +78,45 @@ const DetailPurchaseOrder: React.FC<DetailPurchaseOrderProps> = ({ }) => {
     }
   }
 
+  const getItemDetail = (id: String, type: String) => {
+    if (type == RequestItem_ItemType.MATERIAL) {
+      let material = getRelatedPT().materials.find((material: any) => { return material._id == id })
+      return `${material.name} (${material.conversion} x ${material.minimum_unit_measure.name}) - ${material.merk.name}`
+    } else if (type == RequestItem_ItemType.TOOL) {
+      let tool = getRelatedPT().tools.find((tool: any) => { return tool._id == id })
+      return `${tool.id} ( ${tool.sku.name} - ${tool.sku.merk.name} )`
+    }
+  }
+
+  const handleReceivePurchasing = async (trans_id: String, detail_id: String) => {
+    
+    setIsSubmitting(true)
+    try {
+      await handleReceivedPODetail({
+        variables: {
+          id: requestPoId,
+          receiveItemInput: {
+            item_transaction: trans_id,
+            item_transaction_detail: detail_id
+          }, requiresAuth: true
+        }
+      })
+      await refetch()
+      await relatedPTRefetch()
+      dispatch(openSnackbar({ severity: "success", message: "Berhasil menerima barang pembelian" }))
+    } catch (error: any) {
+      let msg = GetBadReqMsg("Gagal menerima barang pembelian, silakan coba lagi nanti", error)
+      dispatch(openSnackbar({ severity: "error", message: String(msg) }))
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   useEffect(() => {
     if (error) {
       navigate("/appuser/notfound")
     }
   }, [error]);
-
-  useEffect(() => {
-    console.log(data?.getPurchaseOrderByID.materials)
-  }, [data])
 
   return (
     <div className="p-5" style={{ height: "100%" }}>
@@ -99,7 +136,7 @@ const DetailPurchaseOrder: React.FC<DetailPurchaseOrderProps> = ({ }) => {
             <Container sx={{ mt: 3 }}>
               <Card sx={{ my: 3 }}>
                 <CardContent>
-                  <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>Informasi Permintaan</Typography>
+                  <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>Informasi Permintaan PO{formatISODateToCustom(getDataRequest().date.toString())}</Typography>
                   <Stack direction="row" spacing={1} alignItems="center">
                     <Typography variant="body1" sx={{ mr: 2 }}><b>Diajukan oleh:</b> {getDataRequest()?.requested_by?.person.name} ( {getDataRequest()?.requested_by?.person.email} )</Typography>
                   </Stack>
@@ -114,7 +151,7 @@ const DetailPurchaseOrder: React.FC<DetailPurchaseOrderProps> = ({ }) => {
                   </Stack>
                   <Box maxHeight={250} overflow={"auto"}>
                     <table className="table table-xs border-2">
-                      <thead className="bg-secondary text-white font-normal text-base" style={{ position: "sticky", top: 0 }}>
+                      <thead className="bg-secondary text-white font-normal text-base" style={{ position: "sticky", top: 0, zIndex: 1 }}>
                         <tr>
                           <td align="left">Barang</td>
                           <td align="right">Kuantitas </td>
@@ -125,16 +162,16 @@ const DetailPurchaseOrder: React.FC<DetailPurchaseOrderProps> = ({ }) => {
                       </thead>
                       <tbody>
                         {getDataRequest().purchase_order_detail.length > 0 ? getDataRequest().purchase_order_detail.map((item: any, index: number) => (
-                          <>
-                            <tr key={index}>
-                              <td className="text-sm" align="left" style={{ whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
-                                {getItemName(item.item_type, item.item)}
-                              </td>
-                              <td className="text-sm" align="right">{item.quantity}</td>
-                              <td className="text-sm" align="right">{item.completed_quantity}</td>
-                              <td className="text-sm" align="left">{item.item_type}</td>
-                            </tr>
-                          </>
+
+                          <tr key={index}>
+                            <td className="text-sm" align="left" style={{ whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
+                              {getItemName(item.item_type, item.item)}
+                            </td>
+                            <td className="text-sm" align="right">{item.quantity}</td>
+                            <td className="text-sm" align="right">{item.completed_quantity}</td>
+                            <td className="text-sm" align="left">{item.item_type}</td>
+                          </tr>
+
                         )) : <tr className="p-4"><td colSpan={4} className="p-4 text-sm" style={{ textAlign: "center" }}>Tidak ada data dalam tabel. Silakan tambahkan material sebelum submit.</td></tr>}
                       </tbody>
                     </table>
@@ -203,6 +240,39 @@ const DetailPurchaseOrder: React.FC<DetailPurchaseOrderProps> = ({ }) => {
                     />
                   </div>
                 </>}
+              </div>
+
+              <div>
+                <Typography variant="body1" sx={{ mr: 2 }}><b>Konfirmasi Penerimaan Barang Pembelian :</b>  </Typography>
+                {relatedPTData && getRelatedPT().purchase_transaction.length == 0 &&
+                  <div className="flex justify-center items-center p-5 bg-accent shadow-md">
+                    BELUM MEMILIKI TRANSAKSI PEMBELIAN TERBARU
+                  </div>
+                }
+                <Box sx={{ maxHeight: 500, overflowY: 'auto' }}>
+                  {user._id == getDataRequest().requested_by._id &&
+                    relatedPTData && getRelatedPT().purchase_transaction.map((trans: any, index: number) => {
+                      return trans.purchase_transaction_detail.map((detail: any, index: number) => {
+                        return (
+                          <Card sx={{ mb: 2, p: 2 }}>
+                            <Box>
+                              <Typography variant="body1"><b>TRANSAKSI {trans.transaction_number}</b></Typography>
+                              <div className='p-1'>
+                                <Typography variant="body2"><b>Tipe Item: </b>{detail.item_type}</Typography>
+                                <Typography variant="body2"><b>Detail Item: </b>{getItemDetail(detail.original_item, detail.item_type)}</Typography>
+                                <Typography variant="body2"><b>Jumlah Barang: </b>{detail.quantity}</Typography>
+                                <Typography variant="body2"><b>Harga Satuan: </b>{formatCurrency(detail.price)}</Typography>
+                                <Typography variant="body2"><b>Sub Total: </b>{formatCurrency(detail.price * detail.quantity)}</Typography>
+                              </div>
+                            </Box>
+                            <div className='flex justify-end'>
+                              <Button variant="contained" color="success" size='small' onClick={() => { handleReceivePurchasing(trans._id, detail._id) }}>Konfirmasi Penerimaan</Button>
+                            </div>
+                          </Card>
+                        )
+                      })
+                    })}
+                </Box>
               </div>
             </Container>
           </Box>

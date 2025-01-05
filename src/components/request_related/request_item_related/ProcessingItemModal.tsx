@@ -206,7 +206,7 @@ const ProcessingItemModal: React.FC<ProcessingItemModalProps> = ({
                 <span> <span className="font-bold text-gray-600">Kuantitas: </span>{item.qty}</span>
                 <Box  >
                   <table className="table table-xs border-2">
-                    <thead className="bg-secondary text-white font-normal" style={{ position: "sticky", top: 0 }}>
+                    <thead className="bg-secondary text-white font-normal" style={{ position: "sticky", top: 0, zIndex: 1 }}>
                       <tr>
                         <td align="center">ID Peralatan</td>
                         <td align="center">Batalkan</td>

@@ -137,7 +137,7 @@ const DetailRequestItem: React.FC<DetailRequestItemProps> = ({ }) => {
                   </Stack>
                   <Box maxHeight={300} overflow={"auto"}>
                     <table className="table table-xs border-2">
-                      <thead className="bg-secondary text-white font-normal text-base" style={{ position: "sticky", top: 0 }}>
+                      <thead className="bg-secondary text-white font-normal text-base" style={{ position: "sticky", top: 0, zIndex: 1 }}>
                         <tr>
                           <td align="left">Barang</td>
                           <td align="right">Kuantitas </td>

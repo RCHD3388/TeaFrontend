@@ -384,7 +384,6 @@ const EmployeeDetail: React.FC = () => {
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
             {!loading && !employeeDataError && employeeData.getEmployeeById.project_history.map((history: any, index: number) => {
-              console.log(history)
               return <ProjectHistoryCard
                 key={index}
                 join_at={history.join_at}

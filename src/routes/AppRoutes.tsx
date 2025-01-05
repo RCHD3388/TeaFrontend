@@ -27,6 +27,7 @@ import DetailPurchaseOrder from "../components/request_related/request_purchase_
 import PurchasingPage from "../pages/private_pages/PurchasingRelated/PurchasingPage";
 import DetailPurchasing from "../pages/private_pages/PurchasingRelated/DetailPurchasing";
 import DetailRequestClosing from "../components/request_related/request_closing_related/DetailRequestClosing";
+import CreatePurchasingTransaction from "../pages/private_pages/PurchasingRelated/CreatePurchasingTransaction";
 
 const AppRoutes: React.FC = () => {
   const router = createBrowserRouter([
@@ -62,7 +63,8 @@ const AppRoutes: React.FC = () => {
         {
           path: "purchasing", children: [
             { index: true, element: <PurchasingPage />},
-            { path: ":purchaseingId", element: <DetailPurchasing />}
+            { path: ":purchaseingId", element: <DetailPurchasing />},
+            { path: "add", element: <CreatePurchasingTransaction />}
           ]
         },
         {

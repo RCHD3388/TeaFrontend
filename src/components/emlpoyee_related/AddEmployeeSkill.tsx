@@ -51,7 +51,6 @@ const AddEmployeeSkill: React.FC<AddEmployeeSkillProps> = ({ refetchSkill }) => 
       let errCode = error?.graphQLErrors[0]?.code || "";
       if (errCode == "BAD_REQUEST") {
         let msg = error.original?.message || error.message || "";
-        console.log(msg)
         dispatch(openSnackbar({severity: "error", message: "Gagal Tambah Skill, pastikan nama skill belum pernah digunakan"}))
       }else{
         dispatch(openSnackbar({severity: "error", message: "Gagal Tambah Skill Pegawai"}))

@@ -204,7 +204,7 @@ const DetailRequestCost: React.FC<DetailRequestCostProps> = ({ }) => {
                 render={({ field }) => (<TextField disabled={getData().handled_date}
                   type="number"
                   {...field} color="secondary"
-                  sx={{ width: "100%", mb: 2 }} label="Gaji" size='small' variant="outlined"
+                  sx={{ width: "100%", mb: 2 }} label="Harga" size='small' variant="outlined"
                   error={!!errors.price} helperText={errors.price ? errors.price.message : ''}
                   InputProps={{ startAdornment: (<InputAdornment position="start">Rp.</InputAdornment>), }}
                 />)}

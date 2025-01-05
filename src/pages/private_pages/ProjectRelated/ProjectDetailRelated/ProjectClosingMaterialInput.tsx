@@ -156,7 +156,7 @@ const ProjectClosingMaterialInput: React.FC<ProjectClosingMaterialInputProps> = 
         disablePortal
         options={allWHLoading || !allWHData ? [] : allWHData.getAllWarehouses.map((wh: any) => { return { label: `${wh.name} ( ${wh.address} }`, value: wh._id } })}
         onChange={(event: React.SyntheticEvent, newValue: string | null) => {
-          console.log(newValue)
+          
           setWarehouseTo(newValue);
         }}
         value={warehouseTo}
@@ -173,7 +173,7 @@ const ProjectClosingMaterialInput: React.FC<ProjectClosingMaterialInputProps> = 
       {/* TABLE */}
       <Box overflow={"auto"} maxHeight={300} sx={{ mb: 3 }}>
         <table className="table table-xs border-2">
-          <thead className="bg-secondary text-white font-normal text-base" style={{ position: "sticky", top: 0 }}>
+          <thead className="bg-secondary text-white font-normal text-base" style={{ position: "sticky", top: 0, zIndex: 1 }}>
             <tr>
               <td align="center">Barang</td>
               <td align="center">Kuantitas </td>
@@ -219,7 +219,7 @@ const ProjectClosingMaterialInput: React.FC<ProjectClosingMaterialInputProps> = 
               </span>
               <Typography variant="h6" sx={{ textTransform: "capitalize", mb: 1 }}><b>Warehouse Tujuan: </b>{warehouseTo?.label || ""}</Typography>
               <table className="table table-xs border-2">
-                <thead className="bg-secondary text-white font-normal text-base" style={{ position: "sticky", top: 0 }}>
+                <thead className="bg-secondary text-white font-normal text-base" style={{ position: "sticky", top: 0, zIndex: 1 }}>
                   <tr>
                     <td align="center">Barang</td>
                     <td align="center">Kuantitas </td>

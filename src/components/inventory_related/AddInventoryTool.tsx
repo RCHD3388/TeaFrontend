@@ -147,7 +147,7 @@ const AddInventoryTool: React.FC<AddInventoryToolProps> = ({ warehouseId, refetc
         <Box overflow={"auto"} maxHeight={300} sx={{ mb: 3 }}>
           {isEmpty &&<span className="text-error">Anda perlu memberikan minimal satu peralatan yang akan dimasukan untuk konfirmasi</span>}
           <table className="table table-xs border-2">
-            <thead className="bg-secondary text-white font-normal text-base" style={{ position: "sticky", top: 0 }}>
+            <thead className="bg-secondary text-white font-normal text-base" style={{ position: "sticky", top: 0, zIndex: 1 }}>
               <tr>
                 <td align="center">Sku</td>
                 <td >No. Garansi</td>

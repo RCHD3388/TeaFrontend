@@ -240,6 +240,13 @@ export type CustomOneRequestPo = {
   skus: Array<Sku>;
 };
 
+export type CustomOneRequestPt = {
+  __typename?: 'CustomOneRequestPT';
+  materials: Array<Material>;
+  purchase_transaction: Array<PurchaseTransaction>;
+  tools: Array<Tool>;
+};
+
 export type Employee = {
   __typename?: 'Employee';
   _id: Scalars['String']['output'];
@@ -876,7 +883,7 @@ export type Query = {
   getPurchaseOrderByUser: Array<PurchaseOrder>;
   getPurchaseTransactionById: PurchaseTransaction;
   getPurchaseTransactionByUser: Array<PurchaseTransaction>;
-  getRelatedPTfromPO: Array<PurchaseTransaction>;
+  getRelatedPTfromPO: CustomOneRequestPt;
   getSkuById: Sku;
   getSupplierById: Supplier;
   getToolById: Tool;
@@ -957,6 +964,11 @@ export type QueryGetAllSkusArgs = {
 
 export type QueryGetAllSkusByIdsArgs = {
   ids: Array<Scalars['String']['input']>;
+};
+
+
+export type QueryGetAllSuppliersArgs = {
+  filter?: InputMaybe<FilterInput>;
 };
 
 

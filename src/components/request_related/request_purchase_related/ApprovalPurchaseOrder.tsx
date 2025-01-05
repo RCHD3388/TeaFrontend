@@ -6,20 +6,22 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import { DocumentNode, useQuery } from "@apollo/client";
-import { formatDateToLong, RequestStatusColors } from "../../../utils/service/FormatService";
+import { formatDateToLong, formatISODateToCustom, RequestStatusColors } from "../../../utils/service/FormatService";
 import { GetAllPurchaseOrdersDocument, GetPurchaseOrderByUserDocument } from "../../../graphql/purchasing.generated";
 import { EmployeeRoleType } from "../../../types/staticData.types";
 
 interface ApprovalPurchaseOrderProps {
-  
+
 }
 
 export default function ApprovalPurchaseOrder({ }: ApprovalPurchaseOrderProps) {
   const user = useSelector((state: RootState) => state.user);
-  let { data, loading, error, refetch } = useQuery(GetAllPurchaseOrdersDocument, { variables: { 
-    filter: {status: user.role == EmployeeRoleType.STAFF_PEMBELIAN ? true : false},
-    requiresAuth: true  
-  } })
+  let { data, loading, error, refetch } = useQuery(GetAllPurchaseOrdersDocument, {
+    variables: {
+      filter: { status: user.role == EmployeeRoleType.STAFF_PEMBELIAN ? true : false },
+      requiresAuth: true
+    }
+  })
   const navigate = useNavigate();
   const [nameFilter, setNameFilter] = useState("")
   const getData = () => {
@@ -48,11 +50,14 @@ export default function ApprovalPurchaseOrder({ }: ApprovalPurchaseOrderProps) {
                 <div className="my-4 bg-white shadow-lg rounded-lg border border-gray-200" key={index}>
                   <div className="p-4">
                     <h2 className="text-xl font-semibold text-gray-800 flex items-center">
-                      {requestItem.title}
+                      PO{formatISODateToCustom(requestItem.date.toString())}
                       <span className={` ms-1 badge ${RequestStatusColors[requestItem.status as keyof typeof RequestStatusColors]}`}> {requestItem.status}</span>
                     </h2>
                     <div className="p-1">
                       <p className="mt-1 text-gray-700">
+                        <span className="font-semibold">Judul: </span>{requestItem.title}
+                      </p>
+                      <p className="mt-0 text-gray-700">
                         <span className="font-semibold">Tanggal pengajuan: </span>{formatDateToLong(requestItem.date.toString())}
                       </p>
                       <p className="mt-0 text-gray-700">

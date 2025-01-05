@@ -3,7 +3,9 @@ import * as Types from '../types/graphql_types';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type GetAllSuppliersQueryVariables = Types.Exact<{ [key: string]: never; }>;
+export type GetAllSuppliersQueryVariables = Types.Exact<{
+  filter?: Types.InputMaybe<Types.FilterInput>;
+}>;
 
 
 export type GetAllSuppliersQuery = { __typename?: 'Query', getAllSuppliers: Array<{ __typename?: 'Supplier', _id: string, name: string, status: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string } }> };
@@ -32,8 +34,8 @@ export type GetSupplierByIdQuery = { __typename?: 'Query', getSupplierById: { __
 
 
 export const GetAllSuppliersDocument = gql`
-    query getAllSuppliers {
-  getAllSuppliers {
+    query getAllSuppliers($filter: FilterInput) {
+  getAllSuppliers(filter: $filter) {
     _id
     name
     person {
@@ -59,6 +61,7 @@ export const GetAllSuppliersDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllSuppliersQuery({
  *   variables: {
+ *      filter: // value for 'filter'
  *   },
  * });
  */

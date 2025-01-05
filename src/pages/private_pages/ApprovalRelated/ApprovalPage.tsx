@@ -16,7 +16,6 @@ export default function ApprovalPage() {
   const dispatch = useDispatch()
   const user = useSelector((state: RootState) => selectUser(state));
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    console.log(newValue)
     dispatch(setPageValueByName({ name: "approval_page", value: newValue }))
   };
 

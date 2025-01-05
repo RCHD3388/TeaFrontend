@@ -61,6 +61,28 @@ export type GetPurchaseTransactionByIdQueryVariables = Types.Exact<{
 
 export type GetPurchaseTransactionByIdQuery = { __typename?: 'Query', getPurchaseTransactionById: { __typename?: 'PurchaseTransaction', _id: string, transaction_number: string, description?: string | null, transaction_date: any, total: number, purchasing_staff: { __typename?: 'Employee', _id: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string } }, supplier: { __typename?: 'Supplier', _id: string, name: string, status: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string } }, purchase_transaction_detail: Array<{ __typename?: 'PurchaseTransactionDetail', _id: string, item: string, original_item: string, item_type: string, quantity: number, price: number, subtotal: number, purchase_order: { __typename?: 'PurchaseOrder', _id: string, title: string, description?: string | null, date: any, status: string, createdAt?: any | null, updatedAt?: any | null, requested_by: { __typename?: 'Employee', _id: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string } }, requested_from: { __typename?: 'Warehouse', _id: string, name: string, description?: string | null, type: string, address: string } } }> } };
 
+export type GetRelatedPTfromPoQueryVariables = Types.Exact<{
+  id: Types.Scalars['String']['input'];
+}>;
+
+
+export type GetRelatedPTfromPoQuery = { __typename?: 'Query', getRelatedPTfromPO: { __typename?: 'CustomOneRequestPT', purchase_transaction: Array<{ __typename?: 'PurchaseTransaction', _id: string, transaction_number: string, description?: string | null, transaction_date: any, purchase_transaction_detail: Array<{ __typename?: 'PurchaseTransactionDetail', _id: string, item: string, original_item: string, item_type: string, quantity: number, price: number, subtotal: number }> }>, tools: Array<{ __typename?: 'Tool', _id: string, id: string, description?: string | null, warranty_number?: string | null, warranty_expired_date?: any | null, price: number, sku: { __typename?: 'Sku', _id: string, name: string, merk: { __typename?: 'Merk', _id: string, name: string } } }>, materials: Array<{ __typename?: 'Material', _id: string, id: string, name: string, description?: string | null, conversion: number, minimum_unit_measure: { __typename?: 'UnitMeasure', _id: string, name: string }, unit_measure: { __typename?: 'UnitMeasure', _id: string, name: string }, merk: { __typename?: 'Merk', _id: string, name: string } }> } };
+
+export type CreatePurchaseTransactionMutationVariables = Types.Exact<{
+  createPurchaseTransactionInput: Types.CreateRequestPurchaseTransactionInput;
+}>;
+
+
+export type CreatePurchaseTransactionMutation = { __typename?: 'Mutation', createPurchaseTransaction: { __typename?: 'PurchaseTransaction', _id: string, transaction_number: string, description?: string | null, transaction_date: any, total: number } };
+
+export type HandleReceivedPoDetailMutationVariables = Types.Exact<{
+  id: Types.Scalars['String']['input'];
+  receiveItemInput: Types.ReceiveItemInput;
+}>;
+
+
+export type HandleReceivedPoDetailMutation = { __typename?: 'Mutation', handleReceivedPODetail: { __typename?: 'PurchaseOrder', _id: string } };
+
 
 export const GetAllPurchaseOrdersDocument = gql`
     query GetAllPurchaseOrders($filter: FilterInput) {
@@ -628,3 +650,165 @@ export type GetPurchaseTransactionByIdQueryHookResult = ReturnType<typeof useGet
 export type GetPurchaseTransactionByIdLazyQueryHookResult = ReturnType<typeof useGetPurchaseTransactionByIdLazyQuery>;
 export type GetPurchaseTransactionByIdSuspenseQueryHookResult = ReturnType<typeof useGetPurchaseTransactionByIdSuspenseQuery>;
 export type GetPurchaseTransactionByIdQueryResult = Apollo.QueryResult<GetPurchaseTransactionByIdQuery, GetPurchaseTransactionByIdQueryVariables>;
+export const GetRelatedPTfromPoDocument = gql`
+    query GetRelatedPTfromPO($id: String!) {
+  getRelatedPTfromPO(id: $id) {
+    purchase_transaction {
+      _id
+      transaction_number
+      description
+      transaction_date
+      purchase_transaction_detail {
+        _id
+        item
+        original_item
+        item_type
+        quantity
+        price
+        subtotal
+      }
+    }
+    tools {
+      _id
+      id
+      description
+      warranty_number
+      warranty_expired_date
+      price
+      sku {
+        _id
+        name
+        merk {
+          _id
+          name
+        }
+      }
+    }
+    materials {
+      _id
+      id
+      name
+      description
+      conversion
+      minimum_unit_measure {
+        _id
+        name
+      }
+      unit_measure {
+        _id
+        name
+      }
+      merk {
+        _id
+        name
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetRelatedPTfromPoQuery__
+ *
+ * To run a query within a React component, call `useGetRelatedPTfromPoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRelatedPTfromPoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRelatedPTfromPoQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetRelatedPTfromPoQuery(baseOptions: Apollo.QueryHookOptions<GetRelatedPTfromPoQuery, GetRelatedPTfromPoQueryVariables> & ({ variables: GetRelatedPTfromPoQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetRelatedPTfromPoQuery, GetRelatedPTfromPoQueryVariables>(GetRelatedPTfromPoDocument, options);
+      }
+export function useGetRelatedPTfromPoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRelatedPTfromPoQuery, GetRelatedPTfromPoQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetRelatedPTfromPoQuery, GetRelatedPTfromPoQueryVariables>(GetRelatedPTfromPoDocument, options);
+        }
+export function useGetRelatedPTfromPoSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetRelatedPTfromPoQuery, GetRelatedPTfromPoQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetRelatedPTfromPoQuery, GetRelatedPTfromPoQueryVariables>(GetRelatedPTfromPoDocument, options);
+        }
+export type GetRelatedPTfromPoQueryHookResult = ReturnType<typeof useGetRelatedPTfromPoQuery>;
+export type GetRelatedPTfromPoLazyQueryHookResult = ReturnType<typeof useGetRelatedPTfromPoLazyQuery>;
+export type GetRelatedPTfromPoSuspenseQueryHookResult = ReturnType<typeof useGetRelatedPTfromPoSuspenseQuery>;
+export type GetRelatedPTfromPoQueryResult = Apollo.QueryResult<GetRelatedPTfromPoQuery, GetRelatedPTfromPoQueryVariables>;
+export const CreatePurchaseTransactionDocument = gql`
+    mutation CreatePurchaseTransaction($createPurchaseTransactionInput: CreateRequestPurchaseTransactionInput!) {
+  createPurchaseTransaction(
+    createPurchaseTransactionInput: $createPurchaseTransactionInput
+  ) {
+    _id
+    transaction_number
+    description
+    transaction_date
+    total
+  }
+}
+    `;
+export type CreatePurchaseTransactionMutationFn = Apollo.MutationFunction<CreatePurchaseTransactionMutation, CreatePurchaseTransactionMutationVariables>;
+
+/**
+ * __useCreatePurchaseTransactionMutation__
+ *
+ * To run a mutation, you first call `useCreatePurchaseTransactionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePurchaseTransactionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPurchaseTransactionMutation, { data, loading, error }] = useCreatePurchaseTransactionMutation({
+ *   variables: {
+ *      createPurchaseTransactionInput: // value for 'createPurchaseTransactionInput'
+ *   },
+ * });
+ */
+export function useCreatePurchaseTransactionMutation(baseOptions?: Apollo.MutationHookOptions<CreatePurchaseTransactionMutation, CreatePurchaseTransactionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePurchaseTransactionMutation, CreatePurchaseTransactionMutationVariables>(CreatePurchaseTransactionDocument, options);
+      }
+export type CreatePurchaseTransactionMutationHookResult = ReturnType<typeof useCreatePurchaseTransactionMutation>;
+export type CreatePurchaseTransactionMutationResult = Apollo.MutationResult<CreatePurchaseTransactionMutation>;
+export type CreatePurchaseTransactionMutationOptions = Apollo.BaseMutationOptions<CreatePurchaseTransactionMutation, CreatePurchaseTransactionMutationVariables>;
+export const HandleReceivedPoDetailDocument = gql`
+    mutation HandleReceivedPODetail($id: String!, $receiveItemInput: ReceiveItemInput!) {
+  handleReceivedPODetail(id: $id, receiveItemInput: $receiveItemInput) {
+    _id
+  }
+}
+    `;
+export type HandleReceivedPoDetailMutationFn = Apollo.MutationFunction<HandleReceivedPoDetailMutation, HandleReceivedPoDetailMutationVariables>;
+
+/**
+ * __useHandleReceivedPoDetailMutation__
+ *
+ * To run a mutation, you first call `useHandleReceivedPoDetailMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useHandleReceivedPoDetailMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [handleReceivedPoDetailMutation, { data, loading, error }] = useHandleReceivedPoDetailMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      receiveItemInput: // value for 'receiveItemInput'
+ *   },
+ * });
+ */
+export function useHandleReceivedPoDetailMutation(baseOptions?: Apollo.MutationHookOptions<HandleReceivedPoDetailMutation, HandleReceivedPoDetailMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<HandleReceivedPoDetailMutation, HandleReceivedPoDetailMutationVariables>(HandleReceivedPoDetailDocument, options);
+      }
+export type HandleReceivedPoDetailMutationHookResult = ReturnType<typeof useHandleReceivedPoDetailMutation>;
+export type HandleReceivedPoDetailMutationResult = Apollo.MutationResult<HandleReceivedPoDetailMutation>;
+export type HandleReceivedPoDetailMutationOptions = Apollo.BaseMutationOptions<HandleReceivedPoDetailMutation, HandleReceivedPoDetailMutationVariables>;

@@ -46,7 +46,6 @@ const AddSku: React.FC<AddSkuProps> = ({ refetchSkus }) => {
   });
 
   const handleAddSku: SubmitHandler<CreateSkuValues> = async (data) => {
-    console.log(data)
     setIsSubmitting(true)
     try {
       await createSku({

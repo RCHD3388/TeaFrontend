@@ -56,7 +56,6 @@ const AddMaterial: React.FC<AddMaterialProps> = ({ refetchMaterials }) => {
   });
 
   const handleAddMaterial: SubmitHandler<CreateMaterialValues> = async (data) => {
-    console.log(data)
     setIsSubmitting(true)
     try {
       await createMaterial({

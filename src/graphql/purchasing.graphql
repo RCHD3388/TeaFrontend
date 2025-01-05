@@ -281,3 +281,76 @@ query GetPurchaseTransactionById ($id: String!){
         }
     }
 }
+
+query GetRelatedPTfromPO ($id: String!){
+    getRelatedPTfromPO(id: $id) {
+        purchase_transaction {
+            _id
+            transaction_number
+            description
+            transaction_date
+            purchase_transaction_detail {
+                _id
+                item
+                original_item
+                item_type
+                quantity
+                price
+                subtotal
+            }
+        }
+        tools {
+            _id
+            id
+            description
+            warranty_number
+            warranty_expired_date
+            price
+            sku {
+                _id
+                name
+                merk {
+                    _id
+                    name
+                }
+            }
+        }
+        materials {
+            _id
+            id
+            name
+            description
+            conversion
+            minimum_unit_measure {
+                _id
+                name
+            }
+            unit_measure {
+                _id
+                name
+            }
+            merk {
+                _id
+                name
+            }
+        }
+    }
+}
+
+# PURCHASING
+mutation CreatePurchaseTransaction ($createPurchaseTransactionInput: CreateRequestPurchaseTransactionInput!){
+    createPurchaseTransaction(createPurchaseTransactionInput: $createPurchaseTransactionInput) {
+        _id
+        transaction_number
+        description
+        transaction_date
+        total
+    }
+}
+
+mutation HandleReceivedPODetail ($id: String!, $receiveItemInput: ReceiveItemInput!){
+    handleReceivedPODetail(id: $id, receiveItemInput: $receiveItemInput) {
+        _id
+    }
+}
+

@@ -127,8 +127,8 @@ const RequestItemInput: React.FC<RequestItemInputProps> = ({ itemDetail, setItem
       {/* TABLE */}
       <Box overflow={"auto"} maxHeight={300} sx={{ mb: 3 }}>
         {isEmpty && <span className="text-error">Anda perlu memberikan minimal satu barang yang akan dimasukan untuk submit </span>}
-        <table className="table table-xs border-2">
-          <thead className="bg-secondary text-white font-normal text-base" style={{ position: "sticky", top: 0 }}>
+        <table className="table table-xs">
+          <thead className="bg-secondary text-white font-normal text-base" style={{ position: "sticky", top: 0, zIndex: 1 }}>
             <tr>
               <td align="center">Barang</td>
               <td align="center">Kuantitas </td>
@@ -146,7 +146,7 @@ const RequestItemInput: React.FC<RequestItemInputProps> = ({ itemDetail, setItem
                 ></TextField></td>
                 <td className="text-sm" align="center">{item.item_type}</td>
                 <td className="text-sm text-center">
-                  <Button variant="contained" color="error" size="small" sx={{ textTransform: "none" }}
+                  <Button variant="contained" color="error" size="small" sx={{ textTransform: "none"}}
                     onClick={() => { handleRemoveButton(index) }}
                   >
                     Batalkan

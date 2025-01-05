@@ -131,7 +131,7 @@ const ProjectClosingDetail: React.FC<ProjectClosingDetailProps> = ({ dataProject
                 </> :
                 <Container sx={{ p: 2 }}>
                   <table className="table table-xs border-2">
-                    <thead className="bg-secondary text-white font-normal text-base" style={{ position: "sticky", top: 0 }}>
+                    <thead className="bg-secondary text-white font-normal text-base" style={{ position: "sticky", top: 0, zIndex: 1 }}>
                       <tr>
                         <td align="left">Barang</td>
                         <td align="left">Merk</td>

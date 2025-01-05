@@ -47,6 +47,7 @@ const AddInventoryMaterial: React.FC<AddInventoryMaterialProps> = ({ warehouseId
   const [addInventoryMaterial] = useMutation(AddInventoryMaterialDocument);
   const [materialId, setMaterialId] = useState("")
   const [materialName, setMaterialName] = useState("")
+  const [materialInputError, setMaterialInputError] = useState("")
   const qtyRef = useRef<HTMLInputElement | null>(null)
   const priceRef = useRef<HTMLInputElement | null>(null)
   const [qtyError, setQtyError] = useState("")
@@ -58,7 +59,12 @@ const AddInventoryMaterial: React.FC<AddInventoryMaterialProps> = ({ warehouseId
     const qtyValue = Number(qtyRef.current?.value ?? 0)
     const priceValue = Number(priceRef.current?.value ?? 0)
     setQtyError("")
-    if (priceValue <= 0) {
+    setMaterialInputError("")
+    if(materialId == ""){
+      setMaterialInputError("Material harus diisi")
+      return
+    }
+    if (qtyValue <= 0) {
       setQtyError("Harus lebih dari 0")
       return
     }
@@ -142,7 +148,7 @@ const AddInventoryMaterial: React.FC<AddInventoryMaterialProps> = ({ warehouseId
         <Box overflow={"auto"} maxHeight={300} sx={{ mb: 3 }}>
         {isEmpty &&<span className="text-error">Anda perlu memberikan minimal satu material yang akan dimasukan untuk konfirmasi</span>}
           <table className="table table-xs border-2">
-            <thead className="bg-secondary text-white font-normal text-base" style={{ position: "sticky", top: 0 }}>
+            <thead className="bg-secondary text-white font-normal text-base" style={{ position: "sticky", top: 0 , zIndex: 1}}>
               <tr>
                 <td align="center">Material</td>
                 <td align="right">Kuantitas </td>
@@ -184,6 +190,7 @@ const AddInventoryMaterial: React.FC<AddInventoryMaterialProps> = ({ warehouseId
                 })}
                 sx={{ mb: 1, width: "100%" }}
                 renderInput={(params) => <TextField
+                  error={materialInputError !== ""} helperText={materialInputError}
                   color="secondary" {...params} size="small" label="Material"
                 />}
                 onChange={
