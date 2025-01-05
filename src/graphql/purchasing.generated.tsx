@@ -59,7 +59,7 @@ export type GetPurchaseTransactionByIdQueryVariables = Types.Exact<{
 }>;
 
 
-export type GetPurchaseTransactionByIdQuery = { __typename?: 'Query', getPurchaseTransactionById: { __typename?: 'PurchaseTransaction', _id: string, transaction_number: string, description?: string | null, transaction_date: any, total: number, purchasing_staff: { __typename?: 'Employee', _id: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string } }, supplier: { __typename?: 'Supplier', _id: string, name: string, status: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string } }, purchase_transaction_detail: Array<{ __typename?: 'PurchaseTransactionDetail', _id: string, item: string, original_item: string, item_type: string, quantity: number, price: number, subtotal: number, purchase_order: { __typename?: 'PurchaseOrder', _id: string, title: string, description?: string | null, date: any, status: string, createdAt?: any | null, updatedAt?: any | null, requested_by: { __typename?: 'Employee', _id: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string } }, requested_from: { __typename?: 'Warehouse', _id: string, name: string, description?: string | null, type: string, address: string } } }> } };
+export type GetPurchaseTransactionByIdQuery = { __typename?: 'Query', getPurchaseTransactionById: { __typename?: 'CustomOneRequestPT', purchase_transaction: Array<{ __typename?: 'PurchaseTransaction', _id: string, transaction_number: string, description?: string | null, transaction_date: any, total: number, purchasing_staff: { __typename?: 'Employee', _id: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string } }, supplier: { __typename?: 'Supplier', _id: string, name: string, status: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string } }, purchase_transaction_detail: Array<{ __typename?: 'PurchaseTransactionDetail', _id: string, item: string, original_item: string, item_type: string, quantity: number, price: number, subtotal: number, purchase_order: { __typename?: 'PurchaseOrder', _id: string, title: string, description?: string | null, date: any } }> }>, tools: Array<{ __typename?: 'Tool', _id: string, id: string, description?: string | null, warranty_number?: string | null, warranty_expired_date?: any | null, price: number, sku: { __typename?: 'Sku', _id: string, name: string, merk: { __typename?: 'Merk', _id: string, name: string } } }>, materials: Array<{ __typename?: 'Material', _id: string, id: string, name: string, description?: string | null, conversion: number, minimum_unit_measure: { __typename?: 'UnitMeasure', _id: string, name: string }, unit_measure: { __typename?: 'UnitMeasure', _id: string, name: string }, merk: { __typename?: 'Merk', _id: string, name: string } }> } };
 
 export type GetRelatedPTfromPoQueryVariables = Types.Exact<{
   id: Types.Scalars['String']['input'];
@@ -82,6 +82,14 @@ export type HandleReceivedPoDetailMutationVariables = Types.Exact<{
 
 
 export type HandleReceivedPoDetailMutation = { __typename?: 'Mutation', handleReceivedPODetail: { __typename?: 'PurchaseOrder', _id: string } };
+
+export type UpdatePurchaseTransactionMutationVariables = Types.Exact<{
+  id: Types.Scalars['String']['input'];
+  updatePurchaseTransactionInput: Types.UpdateRequestPurchaseTransactionInput;
+}>;
+
+
+export type UpdatePurchaseTransactionMutation = { __typename?: 'Mutation', updatePurchaseTransaction: { __typename?: 'PurchaseTransaction', _id: string, transaction_number: string, description?: string | null, transaction_date: any, total: number } };
 
 
 export const GetAllPurchaseOrdersDocument = gql`
@@ -555,63 +563,81 @@ export type GetPurchaseTransactionByUserQueryResult = Apollo.QueryResult<GetPurc
 export const GetPurchaseTransactionByIdDocument = gql`
     query GetPurchaseTransactionById($id: String!) {
   getPurchaseTransactionById(id: $id) {
-    _id
-    transaction_number
-    description
-    transaction_date
-    total
-    purchasing_staff {
+    purchase_transaction {
       _id
-      person {
-        name
-        email
-        phone_number
-        address
-      }
-    }
-    supplier {
-      _id
-      name
-      status
-      person {
-        name
-        email
-        phone_number
-        address
-      }
-    }
-    purchase_transaction_detail {
-      _id
-      item
-      original_item
-      item_type
-      quantity
-      price
-      subtotal
-      purchase_order {
+      transaction_number
+      description
+      transaction_date
+      total
+      purchasing_staff {
         _id
-        title
-        description
-        date
-        status
-        createdAt
-        updatedAt
-        requested_by {
-          _id
-          person {
-            name
-            email
-            phone_number
-            address
-          }
-        }
-        requested_from {
-          _id
+        person {
           name
-          description
-          type
+          email
+          phone_number
           address
         }
+      }
+      supplier {
+        _id
+        name
+        status
+        person {
+          name
+          email
+          phone_number
+          address
+        }
+      }
+      purchase_transaction_detail {
+        _id
+        item
+        original_item
+        item_type
+        quantity
+        price
+        subtotal
+        purchase_order {
+          _id
+          title
+          description
+          date
+        }
+      }
+    }
+    tools {
+      _id
+      id
+      description
+      warranty_number
+      warranty_expired_date
+      price
+      sku {
+        _id
+        name
+        merk {
+          _id
+          name
+        }
+      }
+    }
+    materials {
+      _id
+      id
+      name
+      description
+      conversion
+      minimum_unit_measure {
+        _id
+        name
+      }
+      unit_measure {
+        _id
+        name
+      }
+      merk {
+        _id
+        name
       }
     }
   }
@@ -812,3 +838,44 @@ export function useHandleReceivedPoDetailMutation(baseOptions?: Apollo.MutationH
 export type HandleReceivedPoDetailMutationHookResult = ReturnType<typeof useHandleReceivedPoDetailMutation>;
 export type HandleReceivedPoDetailMutationResult = Apollo.MutationResult<HandleReceivedPoDetailMutation>;
 export type HandleReceivedPoDetailMutationOptions = Apollo.BaseMutationOptions<HandleReceivedPoDetailMutation, HandleReceivedPoDetailMutationVariables>;
+export const UpdatePurchaseTransactionDocument = gql`
+    mutation UpdatePurchaseTransaction($id: String!, $updatePurchaseTransactionInput: UpdateRequestPurchaseTransactionInput!) {
+  updatePurchaseTransaction(
+    id: $id
+    updatePurchaseTransactionInput: $updatePurchaseTransactionInput
+  ) {
+    _id
+    transaction_number
+    description
+    transaction_date
+    total
+  }
+}
+    `;
+export type UpdatePurchaseTransactionMutationFn = Apollo.MutationFunction<UpdatePurchaseTransactionMutation, UpdatePurchaseTransactionMutationVariables>;
+
+/**
+ * __useUpdatePurchaseTransactionMutation__
+ *
+ * To run a mutation, you first call `useUpdatePurchaseTransactionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePurchaseTransactionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePurchaseTransactionMutation, { data, loading, error }] = useUpdatePurchaseTransactionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      updatePurchaseTransactionInput: // value for 'updatePurchaseTransactionInput'
+ *   },
+ * });
+ */
+export function useUpdatePurchaseTransactionMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePurchaseTransactionMutation, UpdatePurchaseTransactionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdatePurchaseTransactionMutation, UpdatePurchaseTransactionMutationVariables>(UpdatePurchaseTransactionDocument, options);
+      }
+export type UpdatePurchaseTransactionMutationHookResult = ReturnType<typeof useUpdatePurchaseTransactionMutation>;
+export type UpdatePurchaseTransactionMutationResult = Apollo.MutationResult<UpdatePurchaseTransactionMutation>;
+export type UpdatePurchaseTransactionMutationOptions = Apollo.BaseMutationOptions<UpdatePurchaseTransactionMutation, UpdatePurchaseTransactionMutationVariables>;

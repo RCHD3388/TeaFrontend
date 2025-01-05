@@ -5,10 +5,11 @@ import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
 export type GetCategoriesQueryVariables = Types.Exact<{
   categoryFilter?: Types.InputMaybe<Types.CategoryFilter>;
+  filter?: Types.InputMaybe<Types.FilterInput>;
 }>;
 
 
-export type GetCategoriesQuery = { __typename?: 'Query', getCategories: Array<{ __typename?: 'CategoryData', _id: string, name: string, description?: string | null, type: string }> };
+export type GetCategoriesQuery = { __typename?: 'Query', getCategories: Array<{ __typename?: 'CategoryData', _id: string, name: string, description?: string | null, type: string, status: string }> };
 
 export type CreateCategoryMutationVariables = Types.Exact<{
   input: Types.CreateCategoryInput;
@@ -34,12 +35,13 @@ export type DeleteCategoryMutation = { __typename?: 'Mutation', deleteCategory: 
 
 
 export const GetCategoriesDocument = gql`
-    query GetCategories($categoryFilter: CategoryFilter) {
-  getCategories(categoryFilter: $categoryFilter) {
+    query GetCategories($categoryFilter: CategoryFilter, $filter: FilterInput) {
+  getCategories(categoryFilter: $categoryFilter, filter: $filter) {
     _id
     name
     description
     type
+    status
   }
 }
     `;
@@ -57,6 +59,7 @@ export const GetCategoriesDocument = gql`
  * const { data, loading, error } = useGetCategoriesQuery({
  *   variables: {
  *      categoryFilter: // value for 'categoryFilter'
+ *      filter: // value for 'filter'
  *   },
  * });
  */

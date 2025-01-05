@@ -48,6 +48,7 @@ export type CategoryData = {
   _id: Scalars['ID']['output'];
   description?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
+  status: Scalars['String']['output'];
   type: Scalars['String']['output'];
 };
 
@@ -788,6 +789,19 @@ export type ProjectClosing = {
   request_project_closing: RequestProjectClosing;
 };
 
+export type ProjectCostLog = {
+  __typename?: 'ProjectCostLog';
+  _id: Scalars['String']['output'];
+  category: Scalars['String']['output'];
+  created_by: Employee;
+  date: Scalars['DateTime']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  price: Scalars['Float']['output'];
+  project: Project;
+  request_cost?: Maybe<Scalars['String']['output']>;
+  title: Scalars['String']['output'];
+};
+
 export type PurchaseOrder = {
   __typename?: 'PurchaseOrder';
   _id: Scalars['String']['output'];
@@ -846,6 +860,7 @@ export type PurchaseTransactionDetail = {
 export type Query = {
   __typename?: 'Query';
   findAllAttendanceModules: Array<AttendanceModule>;
+  findAllProjectCostLogs: Array<ProjectCostLog>;
   findAllProjects: Array<Project>;
   findAllRequestClosing: Array<RequestProjectClosing>;
   findAllRequestCosts: Array<RequestCost>;
@@ -881,7 +896,7 @@ export type Query = {
   getMerkById: Merk;
   getPurchaseOrderByID: CustomOneRequestPo;
   getPurchaseOrderByUser: Array<PurchaseOrder>;
-  getPurchaseTransactionById: PurchaseTransaction;
+  getPurchaseTransactionById: CustomOneRequestPt;
   getPurchaseTransactionByUser: Array<PurchaseTransaction>;
   getRelatedPTfromPO: CustomOneRequestPt;
   getSkuById: Sku;
@@ -897,6 +912,11 @@ export type Query = {
 
 
 export type QueryFindAllAttendanceModulesArgs = {
+  projectId: Scalars['String']['input'];
+};
+
+
+export type QueryFindAllProjectCostLogsArgs = {
   projectId: Scalars['String']['input'];
 };
 
@@ -984,6 +1004,7 @@ export type QueryGetAllWarehousesArgs = {
 
 export type QueryGetCategoriesArgs = {
   categoryFilter?: InputMaybe<CategoryFilter>;
+  filter?: InputMaybe<FilterInput>;
 };
 
 
@@ -1198,6 +1219,7 @@ export type UpdateAttendanceModuleInput = {
 export type UpdateCategoryInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateEmployeeInput = {

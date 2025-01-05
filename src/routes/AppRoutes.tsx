@@ -63,7 +63,7 @@ const AppRoutes: React.FC = () => {
         {
           path: "purchasing", children: [
             { index: true, element: <PurchasingPage />},
-            { path: ":purchaseingId", element: <DetailPurchasing />},
+            { path: ":purchasingId", element: <DetailPurchasing />},
             { path: "add", element: <CreatePurchasingTransaction />}
           ]
         },

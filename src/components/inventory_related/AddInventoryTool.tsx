@@ -1,7 +1,7 @@
 import { ApolloQueryResult, useMutation, useQuery } from "@apollo/client";
 import { Box, Button, CircularProgress, InputAdornment, MenuItem, Modal, TextField, Typography } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { modalStyle } from "../../theme";
 import { useDispatch } from "react-redux";
 import { openSnackbar } from "../../app/reducers/snackbarSlice";
@@ -16,6 +16,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { GetCategoriesDocument } from "../../graphql/category.generated";
 import { CategoryType } from "../../types/staticData.types";
+import { use } from "framer-motion/client";
 
 interface RowData {
   description: string,
@@ -84,9 +85,9 @@ const AddInventoryTool: React.FC<AddInventoryToolProps> = ({ warehouseId, refetc
   const handleSubmitButton = async () => {
     setIsEmpty(false)
     if (isConfirmation == false) {
-      if(rows.length <= 0) {
+      if (rows.length <= 0) {
         setIsEmpty(true)
-      }else{
+      } else {
         setIsConfirmation(true)
       }
     } else if (isConfirmation == true) {
@@ -124,6 +125,9 @@ const AddInventoryTool: React.FC<AddInventoryToolProps> = ({ warehouseId, refetc
     }
   }
 
+  useEffect(() => { if (skuData) refetchSku() }, [skuData, refetchSku])
+  useEffect(() => { if (categoryData) refetchCategory() }, [categoryData, refetchCategory])
+
   return (<>
     <Button variant="contained" color='secondary' style={{ marginBottom: "1rem" }}
       onClick={async () => {
@@ -145,7 +149,7 @@ const AddInventoryTool: React.FC<AddInventoryToolProps> = ({ warehouseId, refetc
       }}>
         <Typography id="modal-modal-title" variant="h6" component="h2" mb={2}><b>TAMBAH PERALATAN</b></Typography>
         <Box overflow={"auto"} maxHeight={300} sx={{ mb: 3 }}>
-          {isEmpty &&<span className="text-error">Anda perlu memberikan minimal satu peralatan yang akan dimasukan untuk konfirmasi</span>}
+          {isEmpty && <span className="text-error">Anda perlu memberikan minimal satu peralatan yang akan dimasukan untuk konfirmasi</span>}
           <table className="table table-xs border-2">
             <thead className="bg-secondary text-white font-normal text-base" style={{ position: "sticky", top: 0, zIndex: 1 }}>
               <tr>

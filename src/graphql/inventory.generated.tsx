@@ -163,6 +163,13 @@ export type UpdateSkuMutationVariables = Types.Exact<{
 
 export type UpdateSkuMutation = { __typename?: 'Mutation', updateSku: { __typename?: 'Sku', _id: string, name: string, description?: string | null } };
 
+export type GetAllToolsQueryVariables = Types.Exact<{
+  sku?: Types.InputMaybe<Types.Scalars['String']['input']>;
+}>;
+
+
+export type GetAllToolsQuery = { __typename?: 'Query', getAllTools: Array<{ __typename?: 'Tool', _id: string, id: string, description?: string | null, warranty_number?: string | null, warranty_expired_date?: any | null, price: number, status: { __typename?: 'CategoryData', _id: string, name: string, description?: string | null }, sku: { __typename?: 'Sku', _id: string, name: string } }> };
+
 
 export const GetAllWarehousesDocument = gql`
     query GetAllWarehouses($filter: FilterInput) {
@@ -1129,3 +1136,57 @@ export function useUpdateSkuMutation(baseOptions?: Apollo.MutationHookOptions<Up
 export type UpdateSkuMutationHookResult = ReturnType<typeof useUpdateSkuMutation>;
 export type UpdateSkuMutationResult = Apollo.MutationResult<UpdateSkuMutation>;
 export type UpdateSkuMutationOptions = Apollo.BaseMutationOptions<UpdateSkuMutation, UpdateSkuMutationVariables>;
+export const GetAllToolsDocument = gql`
+    query GetAllTools($sku: String) {
+  getAllTools(sku: $sku) {
+    _id
+    id
+    description
+    warranty_number
+    warranty_expired_date
+    price
+    status {
+      _id
+      name
+      description
+    }
+    sku {
+      _id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllToolsQuery__
+ *
+ * To run a query within a React component, call `useGetAllToolsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllToolsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllToolsQuery({
+ *   variables: {
+ *      sku: // value for 'sku'
+ *   },
+ * });
+ */
+export function useGetAllToolsQuery(baseOptions?: Apollo.QueryHookOptions<GetAllToolsQuery, GetAllToolsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllToolsQuery, GetAllToolsQueryVariables>(GetAllToolsDocument, options);
+      }
+export function useGetAllToolsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllToolsQuery, GetAllToolsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllToolsQuery, GetAllToolsQueryVariables>(GetAllToolsDocument, options);
+        }
+export function useGetAllToolsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetAllToolsQuery, GetAllToolsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAllToolsQuery, GetAllToolsQueryVariables>(GetAllToolsDocument, options);
+        }
+export type GetAllToolsQueryHookResult = ReturnType<typeof useGetAllToolsQuery>;
+export type GetAllToolsLazyQueryHookResult = ReturnType<typeof useGetAllToolsLazyQuery>;
+export type GetAllToolsSuspenseQueryHookResult = ReturnType<typeof useGetAllToolsSuspenseQuery>;
+export type GetAllToolsQueryResult = Apollo.QueryResult<GetAllToolsQuery, GetAllToolsQueryVariables>;

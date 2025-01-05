@@ -1,9 +1,10 @@
-query GetCategories($categoryFilter: CategoryFilter) {
-  getCategories(categoryFilter: $categoryFilter) {
+query GetCategories($categoryFilter: CategoryFilter, $filter: FilterInput) {
+  getCategories(categoryFilter: $categoryFilter, filter: $filter) {
     _id
     name
     description
     type
+    status
   }
 }
 

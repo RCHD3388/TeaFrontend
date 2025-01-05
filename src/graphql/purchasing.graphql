@@ -220,63 +220,81 @@ query GetPurchaseTransactionByUser {
 
 query GetPurchaseTransactionById ($id: String!){
     getPurchaseTransactionById(id: $id) {
-        _id
-        transaction_number
-        description
-        transaction_date
-        total
-        purchasing_staff {
+        purchase_transaction {
             _id
-            person {
-                name
-                email
-                phone_number
-                address
-            }
-        }
-        supplier {
-            _id
-            name
-            status
-            person {
-                name
-                email
-                phone_number
-                address
-            }
-        }
-        purchase_transaction_detail {
-            _id
-            item
-            original_item
-            item_type
-            quantity
-            price
-            subtotal
-            purchase_order {
+            transaction_number
+            description
+            transaction_date
+            total
+            purchasing_staff {
                 _id
-                title
-                description
-                date
-                status
-                createdAt
-                updatedAt
-                requested_by {
-                    _id
-                    person {
-                        name
-                        email
-                        phone_number
-                        address
-                    }
-                }
-                requested_from {
-                    _id
+                person {
                     name
-                    description
-                    type
+                    email
+                    phone_number
                     address
                 }
+            }
+            supplier {
+                _id
+                name
+                status
+                person {
+                    name
+                    email
+                    phone_number
+                    address
+                }
+            }
+            purchase_transaction_detail {
+                _id
+                item
+                original_item
+                item_type
+                quantity
+                price
+                subtotal
+                purchase_order {
+                    _id
+                    title
+                    description
+                    date
+                }
+            }
+        }
+        tools {
+            _id
+            id
+            description
+            warranty_number
+            warranty_expired_date
+            price
+            sku {
+                _id
+                name
+                merk {
+                    _id
+                    name
+                }
+            }
+        }
+        materials {
+            _id
+            id
+            name
+            description
+            conversion
+            minimum_unit_measure {
+                _id
+                name
+            }
+            unit_measure {
+                _id
+                name
+            }
+            merk {
+                _id
+                name
             }
         }
     }
@@ -351,6 +369,16 @@ mutation CreatePurchaseTransaction ($createPurchaseTransactionInput: CreateReque
 mutation HandleReceivedPODetail ($id: String!, $receiveItemInput: ReceiveItemInput!){
     handleReceivedPODetail(id: $id, receiveItemInput: $receiveItemInput) {
         _id
+    }
+}
+
+mutation UpdatePurchaseTransaction ($id: String!, $updatePurchaseTransactionInput: UpdateRequestPurchaseTransactionInput!){
+    updatePurchaseTransaction(id: $id, updatePurchaseTransactionInput: $updatePurchaseTransactionInput) {
+        _id
+        transaction_number
+        description
+        transaction_date
+        total
     }
 }
 

@@ -263,3 +263,23 @@ mutation UpdateSku ($id: String!, $updateSkuInput: UpdateSkuInput!) {
         description
     }
 }
+
+query GetAllTools ($sku: String){
+    getAllTools(sku: $sku) {
+        _id
+        id
+        description
+        warranty_number
+        warranty_expired_date
+        price
+        status {
+            _id
+            name
+            description
+        }
+        sku {
+            _id
+            name
+        }
+    }
+}

@@ -15,20 +15,24 @@ import { GridColDef } from '@mui/x-data-grid';
 interface CreateCategoryValues {
   name: string
   description: string
-  type: string
+  type: string,
 }
 
 interface RowData {
   _id: string;
   name: string;
   description: string;
+  status: string;
   type: string;
 }
 
 const typeDropdownValues: string[] = CategoryTypeValues
 
 export default function CategoryPage() {
-  let { data, loading, refetch } = useQuery(GetCategoriesDocument, { variables: { requiresAuth: true } });
+  let { data, loading, refetch } = useQuery(GetCategoriesDocument, { variables: { 
+    filter: {status: true},
+    requiresAuth: true 
+  }});
   let [createCategory] = useMutation(CreateCategoryDocument)
   let [updateCategory] = useMutation(UpdateCategoryDocument)
   let [deleteCategory] = useMutation(DeleteCategoryDocument)
@@ -44,6 +48,8 @@ export default function CategoryPage() {
   const descriptionRef = React.useRef<HTMLInputElement>(null)
   const [nameErr, setNameErr] = useState("")
   const [descriptionErr, setDescriptionErr] = useState("")
+  const [statusValue, setStatusValue] = useState("")
+  const [statusErr, setStatusErr] = useState("")
   const [deleteErr, setDeleteErr] = useState("")
   const dispatch = useDispatch();
 
@@ -76,6 +82,7 @@ export default function CategoryPage() {
 
   const handleTableAction = (row: RowData) => {
     setSelectedRow(row)
+    setStatusValue(row.status)
     handleOpenEditModal();
   }
 
@@ -83,13 +90,16 @@ export default function CategoryPage() {
     let name = nameRef.current?.value.trim() || ""
     let description = descriptionRef.current?.value.trim() || "";
     setNameErr(""); setDescriptionErr("");
+    setStatusErr("");
     if (!name) setNameErr("Nama tidak boleh kosong")
+    if (!statusValue) setStatusErr("Status tidak boleh kosong")
 
-    if (name != "") {
+    if (name != "" || statusValue != "") {
+      console.log(statusValue)
       updateCategory({
         variables: {
           id: selectedRow?._id || "",
-          updateCategoryInput: { name, description },
+          updateCategoryInput: { name, description, status: statusValue },
           requiresAuth: true
         }
       }).then((response) => {
@@ -102,21 +112,21 @@ export default function CategoryPage() {
     }
   }
 
-  const handleDeleteCategory = () => {
-    setDeleteErr("");
-    if (selectedRow && openEditModal) {
-      deleteCategory({ variables: { id: selectedRow._id, requiresAuth: true } })
-        .then((response) => {
-          dispatch(openSnackbar({ severity: "success", message: "Berhasil Hapus Kategori" }))
-          refetch()
-          handleCloseEditModal()
-        }).catch((err) => {
-          dispatch(openSnackbar({ severity: "error", message: "Gagal hapus Kategori, pastikan kategori belum pernah digunakan" }))
-        })
-    } else {
-      dispatch(openSnackbar({ severity: "error", message: "Gagal hapus Kategori" }))
-    }
-  }
+  // const handleDeleteCategory = () => {
+  //   setDeleteErr("");
+  //   if (selectedRow && openEditModal) {
+  //     deleteCategory({ variables: { id: selectedRow._id, requiresAuth: true } })
+  //       .then((response) => {
+  //         dispatch(openSnackbar({ severity: "success", message: "Berhasil Hapus Kategori" }))
+  //         refetch()
+  //         handleCloseEditModal()
+  //       }).catch((err) => {
+  //         dispatch(openSnackbar({ severity: "error", message: "Gagal hapus Kategori, pastikan kategori belum pernah digunakan" }))
+  //       })
+  //   } else {
+  //     dispatch(openSnackbar({ severity: "error", message: "Gagal hapus Kategori" }))
+  //   }
+  // }
 
   const columns: GridColDef<RowData>[] = [
     { field: 'index', type: 'number', headerName: "No", minWidth: 50 },
@@ -130,6 +140,19 @@ export default function CategoryPage() {
       valueOptions: CategoryTypeValues,
       valueGetter: (value, row) => row.type,
       renderCell: (params) => (<div className="badge whitespace-nowrap badge-neutral p-3 gap-2"> {params.row.type} </div>),
+    },
+    {
+      field: 'status', headerName: 'Status', minWidth: 150, type: "singleSelect", flex: 1,
+      valueOptions: ["Active", "Inactive"],
+      renderCell: (params) => (
+        <>
+          {params.row.status === "Active" ? (
+            <div className="badge whitespace-nowrap badge-success p-3 text-white gap-2"> Active </div>
+          ) : (
+            <div className="badge whitespace-nowrap badge-warning p-3 gap-2"> Inactive </div>
+          )}
+        </>
+      ),
     },
     {
       field: 'action', headerName: 'Action', minWidth: 125, flex: 1, sortable: false,
@@ -262,6 +285,17 @@ export default function CategoryPage() {
             error={descriptionErr != ""}
             helperText={descriptionErr}
           />
+          <TextField
+            color="secondary"
+            select sx={{ width: "100%", mb: 2 }} label="Status" size="small" variant="outlined"
+            error={statusErr != ""}
+            helperText={statusErr}
+            value={statusValue}
+            onChange={(e) => { setStatusValue(e.target.value) }}
+          >
+            <MenuItem value={"Active"}><div className="badge whitespace-nowrap badge-success p-3 text-white gap-2">Active</div></MenuItem>
+            <MenuItem value={"Inactive"}><div className="badge whitespace-nowrap badge-warning p-3 gap-2">Inactive</div></MenuItem>
+          </TextField>
           {/* FIELD END */}
           <span className='text-error'>{deleteErr}</span>
           <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -271,12 +305,6 @@ export default function CategoryPage() {
               Kembali
             </Button>
             <Box display={"flex"}>
-              <Button onClick={() => { handleDeleteCategory() }}
-                variant="contained" color="error" disabled={loading || isSubmitting}
-                sx={{mr: 1}}
-              >
-                Hapus
-              </Button>
               <Button onClick={() => { handleEditCategory() }}
                 variant="contained" color="primary" disabled={isSubmitting}
               >

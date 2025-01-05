@@ -114,8 +114,52 @@ const ProjectClosingMaterialInput: React.FC<ProjectClosingMaterialInputProps> = 
   return (
     <Box sx={{ width: "100%", mt: 1 }}>
       <Typography variant="body1" sx={{ mb: 2, fontWeight: 'bold' }}>BERIKAN DATA BARANG SISA PADA PROYEK ANDA</Typography>
+      <table className="table table-xs border-2">
+        <thead className="bg-secondary text-white font-normal text-base" style={{ position: "sticky", top: 0, zIndex: 1 }}>
+          <tr>
+            <td align="center">Barang</td>
+            <td align="center">Kuantitas </td>
+            <td className="text-center">Action</td>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {itemDetail.length > 0 ? itemDetail.map((item, index) => (
+            <tr key={index}>
+              <td className="text-sm" align="center" style={{ whiteSpace: "nowrap", textOverflow: "ellipsis" }}>{item.item_name}</td>
+              <td className="text-sm" align="center"><TextField type="Number" value={item.quantity} size="small" sx={{ width: 100 }}
+                onChange={(e) => { if (Number(e.target.value) > 0) handleQuantityChange(index, Number(e.target.value)) }}
+              ></TextField></td>
+              <td className="text-sm text-center">
+                <Button variant="contained" color="error" size="small" sx={{ textTransform: "none" }}
+                  onClick={() => { handleRemoveButton(index) }}
+                >
+                  Batalkan
+                </Button>
+              </td>
+            </tr>
+          )) : <tr className="p-4"><td colSpan={4} className="p-4 text-sm" style={{ textAlign: "center" }}>Tidak ada data dalam tabel. Silakan tambahkan material sebelum submit.</td></tr>}
+        </tbody>
+      </table>
       {/* FIELD START */}
+      <Autocomplete
+        disablePortal
+        options={allWHLoading || !allWHData ? [] : allWHData.getAllWarehouses.map((wh: any) => { return { label: `${wh.name} ( ${wh.address} }`, value: wh._id } })}
+        onChange={(event: React.SyntheticEvent, newValue: string | null) => {
+
+          setWarehouseTo(newValue);
+        }}
+        value={warehouseTo}
+        renderInput={(params) => (
+          <TextField
+            {...params} label="Gudang Tujuan" sx={{ width: "100%", mb: 1, mt: 2 }}
+            error={warehouseToError !== ""} helperText={warehouseToError}
+            color="secondary" size="small"
+          />
+        )}
+      />
       <div className="flex">
+
         <Controller
           name="item" control={control} rules={{ required: 'Barang tidak boleh kosong' }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
@@ -152,53 +196,11 @@ const ProjectClosingMaterialInput: React.FC<ProjectClosingMaterialInputProps> = 
       <div className="flex justify-end">
         <Button variant="contained" color="secondary" sx={{ my: 1 }} onClick={handleSubmit(handleAdd)} >Tambah</Button>
       </div>
-      <Autocomplete
-        disablePortal
-        options={allWHLoading || !allWHData ? [] : allWHData.getAllWarehouses.map((wh: any) => { return { label: `${wh.name} ( ${wh.address} }`, value: wh._id } })}
-        onChange={(event: React.SyntheticEvent, newValue: string | null) => {
-          
-          setWarehouseTo(newValue);
-        }}
-        value={warehouseTo}
-        renderInput={(params) => (
-          <TextField
-            {...params} label="Gudang Tujuan" sx={{ width: "100%", mb: 1 }}
-            error={warehouseToError !== ""} helperText={warehouseToError}
-            color="secondary" size="small"
-          />
-        )}
-      />
+
       {/* FIELD END */}
 
       {/* TABLE */}
       <Box overflow={"auto"} maxHeight={300} sx={{ mb: 3 }}>
-        <table className="table table-xs border-2">
-          <thead className="bg-secondary text-white font-normal text-base" style={{ position: "sticky", top: 0, zIndex: 1 }}>
-            <tr>
-              <td align="center">Barang</td>
-              <td align="center">Kuantitas </td>
-              <td className="text-center">Action</td>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {itemDetail.length > 0 ? itemDetail.map((item, index) => (
-              <tr key={index}>
-                <td className="text-sm" align="center" style={{ whiteSpace: "nowrap", textOverflow: "ellipsis" }}>{item.item_name}</td>
-                <td className="text-sm" align="center"><TextField type="Number" value={item.quantity} size="small" sx={{ width: 100 }}
-                  onChange={(e) => { if (Number(e.target.value) > 0) handleQuantityChange(index, Number(e.target.value)) }}
-                ></TextField></td>
-                <td className="text-sm text-center">
-                  <Button variant="contained" color="error" size="small" sx={{ textTransform: "none" }}
-                    onClick={() => { handleRemoveButton(index) }}
-                  >
-                    Batalkan
-                  </Button>
-                </td>
-              </tr>
-            )) : <tr className="p-4"><td colSpan={4} className="p-4 text-sm" style={{ textAlign: "center" }}>Tidak ada data dalam tabel. Silakan tambahkan material sebelum submit.</td></tr>}
-          </tbody>
-        </table>
         <div className="flex justify-end mt-2">
           <Button variant="contained" color="success" onClick={() => {
             handleOpenModal()
@@ -246,8 +248,8 @@ const ProjectClosingMaterialInput: React.FC<ProjectClosingMaterialInputProps> = 
                 </tbody>
               </table>
               <div className="flex justify-between mt-2">
-                <Button variant="contained" color="error" onClick={() => {handleCloseModal()}} >Kembali</Button>
-                <Button variant="contained" color="success" onClick={() => {handleSubmitConfirm()}}>Konfirmasi & Submit</Button>
+                <Button variant="contained" color="error" onClick={() => { handleCloseModal() }} >Kembali</Button>
+                <Button variant="contained" color="success" onClick={() => { handleSubmitConfirm() }}>Konfirmasi & Submit</Button>
               </div>
             </Box>
           </Modal>

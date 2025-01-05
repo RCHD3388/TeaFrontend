@@ -15,6 +15,7 @@ import { CustomGraphQLError } from "../../../types/apollo_client.types";
 import DetailInventoryItem from "../../../components/inventory_related/DetailInventoryItem";
 import AttendanceProjectEmployee from "./ProjectDetailRelated/AttendanceProjectEmployee";
 import { FindAllRequestClosingDocument } from "../../../graphql/project_closing.generated";
+import ProjectCostPage from "./ProjectCostPage";
 
 
 export default function DetailProject() {
@@ -110,7 +111,7 @@ export default function DetailProject() {
                 <DetailInventoryItem warehouseId={data.findProjectById?.warehouse || ""} />
               </CustomTabPanel>
               <CustomTabPanel value={value} index={4}>
-                Pengeluaran
+                <ProjectCostPage projectId={data.findProjectById._id || ""} />
               </CustomTabPanel>
             </div>
           </Box>

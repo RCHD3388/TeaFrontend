@@ -93,6 +93,13 @@ export type DeleteAttendanceModuleMutationVariables = Types.Exact<{
 
 export type DeleteAttendanceModuleMutation = { __typename?: 'Mutation', deleteAttendanceModule: { __typename?: 'AttendanceModule', _id: string } };
 
+export type FindAllProjectCostLogsQueryVariables = Types.Exact<{
+  projectId: Types.Scalars['String']['input'];
+}>;
+
+
+export type FindAllProjectCostLogsQuery = { __typename?: 'Query', findAllProjectCostLogs: Array<{ __typename?: 'ProjectCostLog', _id: string, title: string, description?: string | null, date: any, price: number, category: string, request_cost?: string | null }> };
+
 
 export const FindAllProjectsDocument = gql`
     query FindAllProjects {
@@ -735,3 +742,49 @@ export function useDeleteAttendanceModuleMutation(baseOptions?: Apollo.MutationH
 export type DeleteAttendanceModuleMutationHookResult = ReturnType<typeof useDeleteAttendanceModuleMutation>;
 export type DeleteAttendanceModuleMutationResult = Apollo.MutationResult<DeleteAttendanceModuleMutation>;
 export type DeleteAttendanceModuleMutationOptions = Apollo.BaseMutationOptions<DeleteAttendanceModuleMutation, DeleteAttendanceModuleMutationVariables>;
+export const FindAllProjectCostLogsDocument = gql`
+    query FindAllProjectCostLogs($projectId: String!) {
+  findAllProjectCostLogs(projectId: $projectId) {
+    _id
+    title
+    description
+    date
+    price
+    category
+    request_cost
+  }
+}
+    `;
+
+/**
+ * __useFindAllProjectCostLogsQuery__
+ *
+ * To run a query within a React component, call `useFindAllProjectCostLogsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindAllProjectCostLogsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindAllProjectCostLogsQuery({
+ *   variables: {
+ *      projectId: // value for 'projectId'
+ *   },
+ * });
+ */
+export function useFindAllProjectCostLogsQuery(baseOptions: Apollo.QueryHookOptions<FindAllProjectCostLogsQuery, FindAllProjectCostLogsQueryVariables> & ({ variables: FindAllProjectCostLogsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FindAllProjectCostLogsQuery, FindAllProjectCostLogsQueryVariables>(FindAllProjectCostLogsDocument, options);
+      }
+export function useFindAllProjectCostLogsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindAllProjectCostLogsQuery, FindAllProjectCostLogsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FindAllProjectCostLogsQuery, FindAllProjectCostLogsQueryVariables>(FindAllProjectCostLogsDocument, options);
+        }
+export function useFindAllProjectCostLogsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FindAllProjectCostLogsQuery, FindAllProjectCostLogsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FindAllProjectCostLogsQuery, FindAllProjectCostLogsQueryVariables>(FindAllProjectCostLogsDocument, options);
+        }
+export type FindAllProjectCostLogsQueryHookResult = ReturnType<typeof useFindAllProjectCostLogsQuery>;
+export type FindAllProjectCostLogsLazyQueryHookResult = ReturnType<typeof useFindAllProjectCostLogsLazyQuery>;
+export type FindAllProjectCostLogsSuspenseQueryHookResult = ReturnType<typeof useFindAllProjectCostLogsSuspenseQuery>;
+export type FindAllProjectCostLogsQueryResult = Apollo.QueryResult<FindAllProjectCostLogsQuery, FindAllProjectCostLogsQueryVariables>;

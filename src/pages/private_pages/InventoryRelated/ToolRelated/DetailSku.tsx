@@ -11,6 +11,7 @@ import { openSnackbar } from "../../../../app/reducers/snackbarSlice";
 import { theme } from "../../../../theme";
 import { CategoryType } from "../../../../types/staticData.types";
 import { GetCategoriesDocument } from "../../../../graphql/category.generated";
+import DetailSkuTools from "./DetailSkuTools";
 
 interface UpdateSkuValues {
   name: string
@@ -202,6 +203,8 @@ const DetailSku: React.FC = () => {
             </div>
             {/* BUTTON SUBMIT END */}
           </div>}
+
+          <DetailSkuTools id={skuId || ""} />
         </Container>
       </div>
     </div>

@@ -274,3 +274,16 @@ mutation DeleteAttendanceModule ($projectId: String!, $moduleId: String!){
         _id
     }
 }
+
+# PROJECT COST LOG
+query FindAllProjectCostLogs ($projectId: String!){
+    findAllProjectCostLogs(projectId: $projectId) {
+        _id
+        title
+        description
+        date
+        price
+        category
+        request_cost 
+    }
+}
