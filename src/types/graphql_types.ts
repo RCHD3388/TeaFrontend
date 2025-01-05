@@ -965,6 +965,11 @@ export type QueryGetAllToolsArgs = {
 };
 
 
+export type QueryGetAllWarehousesArgs = {
+  filter?: InputMaybe<FilterInput>;
+};
+
+
 export type QueryGetCategoriesArgs = {
   categoryFilter?: InputMaybe<CategoryFilter>;
 };

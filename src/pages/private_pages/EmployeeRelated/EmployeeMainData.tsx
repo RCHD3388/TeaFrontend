@@ -72,7 +72,7 @@ const EmployeeMainData: React.FC = () => {
       field: 'skill', headerName: 'Skill', minWidth: 150, type: "singleSelect", flex: 1,
       valueOptions: skillsLoading ? [] : skillsData?.getAllSkill.map((sk: any) => sk.name) || [],
       renderCell: (params) => (
-        <div className="flex justify-center items-center" style={{ height: "100%" }}>
+        <div className="flex items-center" style={{ height: "100%" }}>
           <Box sx={{ maxWidth: 200, overflowX: 'auto', display: 'flex', gap: 1 }} >
             {params.row.skill.map((skill: any, index: number) => (
               <div key={index} className="badge whitespace-nowrap badge-neutral p-3 gap-2" > {skill.name} </div>

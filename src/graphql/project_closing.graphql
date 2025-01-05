@@ -4,6 +4,19 @@ query FindAllRequestClosing ($projectId: String){
         title
         description
         requested_at
+        requested_from{
+            name
+            location
+        }
+        requested_by {
+            _id
+            person {
+                name
+                email
+                phone_number
+                address
+            }
+        }
         status
         handled_date
     }
@@ -64,5 +77,18 @@ query FindOneRequestClosing ($id: String!){
             description
             warehouse
         }
+    }
+}
+
+mutation UpdateProjectClosing ($id: String!, $updateProjectClosingInput: UpdateProjectClosingInput!){
+    updateProjectClosing(id: $id, updateProjectClosingInput: $updateProjectClosingInput) {
+        _id
+        name
+        location
+        description
+        createdAt
+        finished_at
+        target_date
+        warehouse
     }
 }

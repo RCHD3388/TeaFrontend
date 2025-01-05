@@ -3,7 +3,9 @@ import * as Types from '../types/graphql_types';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
-export type GetAllWarehousesQueryVariables = Types.Exact<{ [key: string]: never; }>;
+export type GetAllWarehousesQueryVariables = Types.Exact<{
+  filter?: Types.InputMaybe<Types.FilterInput>;
+}>;
 
 
 export type GetAllWarehousesQuery = { __typename?: 'Query', getAllWarehouses: Array<{ __typename?: 'Warehouse', _id: string, name: string, description?: string | null, type: string, address: string, status: string }> };
@@ -163,8 +165,8 @@ export type UpdateSkuMutation = { __typename?: 'Mutation', updateSku: { __typena
 
 
 export const GetAllWarehousesDocument = gql`
-    query GetAllWarehouses {
-  getAllWarehouses {
+    query GetAllWarehouses($filter: FilterInput) {
+  getAllWarehouses(filter: $filter) {
     _id
     name
     description
@@ -187,6 +189,7 @@ export const GetAllWarehousesDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllWarehousesQuery({
  *   variables: {
+ *      filter: // value for 'filter'
  *   },
  * });
  */

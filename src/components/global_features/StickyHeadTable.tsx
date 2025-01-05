@@ -33,20 +33,20 @@ export default function StickyHeadTable<T extends object>({
   } : {}
 
   return (
-    <div>
-      <Paper sx={{ ...tableSx, width: '100%', overflow: 'auto' }}>
-        <DataGrid
-          rows={rows ? 
-            withIndex ? rows.map((row, index) => ({ ...row, index: index + 1 })) : rows 
-            : []}
-          sx={{ zIndex: 0 }}
-          columns={columns}
-          slots={toolbarOption}
-          initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 } } }}
-          pageSizeOptions={[10, 25, 50, 100]}
-          getRowId={(row) => row._id}
-        />
-      </Paper>
+    <div style={{ ...tableSx, width: '100%'}}>
+      <DataGrid
+        rows={rows ?
+          withIndex ? rows.map((row, index) => ({ ...row, index: index + 1 })) : rows
+          : []}
+        sx={{
+          zIndex: 0,
+        }}
+        columns={columns}
+        slots={toolbarOption}
+        initialState={{ pagination: { paginationModel: { page: 0, pageSize: 10 } } }}
+        pageSizeOptions={[10, 25, 50, 100]}
+        getRowId={(row) => row._id}
+      />
     </div>
   );
 }

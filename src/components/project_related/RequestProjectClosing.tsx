@@ -25,10 +25,9 @@ interface RequestProjectClosingProps {
   refetchProjectClosing: (variables?: FindAllRequestClosingQueryVariables) => Promise<ApolloQueryResult<FindAllRequestClosingQuery>>,
   disabledCondition: boolean
   project_id: string,
-  closing_id: string | null
 }
 
-const RequestProjectClosing: React.FC<RequestProjectClosingProps> = ({ refetchProjectClosing, disabledCondition, project_id, closing_id }) => {
+const RequestProjectClosing: React.FC<RequestProjectClosingProps> = ({ refetchProjectClosing, disabledCondition, project_id }) => {
   const [createRequestClosing] = useMutation(CreateRequestClosingDocument);
   const [openModal, setOpenModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -69,27 +68,16 @@ const RequestProjectClosing: React.FC<RequestProjectClosingProps> = ({ refetchPr
   }
 
   return (<>
-    {!disabledCondition ?
-      <Button
-        onClick={async () => {
-          handleOpenModal()
-        }}
-        variant="contained"
-        color="error"
-      >
-        Pengajuan Penutupan Proyek
-      </Button>
-      :
-      <Button
-        onClick={async () => {
-          navigate(`/appuser/request/closing/${closing_id}`)
-        }}
-        variant="contained"
-        color="info"
-      >
-        Melihat Detail Permintaan Penutupan
-      </Button>
-    }
+    <Button
+      onClick={async () => {
+        handleOpenModal()
+      }}
+      disabled={disabledCondition}
+      variant="contained"
+      color="error"
+    >
+      Pengajuan Penutupan Proyek
+    </Button>
 
     <Modal
       open={openModal}

@@ -1,7 +1,7 @@
 import { ApolloError, ApolloQueryResult, useMutation, useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, CircularProgress, Container, MenuItem, TextField } from "@mui/material";
+import { Box, Button, CircularProgress, Container, MenuItem, TextField, Typography } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { FindAllProjectsQuery, FindProjectByIdQueryVariables, UpdateProjectDocument } from "../../../../graphql/project.generated";
@@ -16,9 +16,12 @@ import { GetCategoriesDocument } from "../../../../graphql/category.generated";
 import { formatDateToLong } from "../../../../utils/service/FormatService";
 import { RootState } from "../../../../app/store";
 import { selectUser } from "../../../../app/reducers/userSlice";
-import { CategoryType, EmployeeRoleType } from "../../../../types/staticData.types";
+import { CategoryType, EmployeeRoleType, RequestStatusType } from "../../../../types/staticData.types";
 import { FindAllRequestClosingQuery, FindAllRequestClosingQueryVariables } from "../../../../graphql/project_closing.generated";
 import RequestProjectClosing from "../../../../components/project_related/RequestProjectClosing";
+import ClosingTable from "./ClosingTable";
+import ProjectClosingDetail from "./ProjectClosingDetail";
+import { setPageValueByName } from "../../../../app/reducers/pageTabSlice";
 
 interface updateProjectValues {
   name: string;
@@ -63,6 +66,8 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({
   const [updateProject] = useMutation(UpdateProjectDocument)
   const navigate = useNavigate()
   const dispatch = useDispatch()
+
+  const page = useSelector((state: RootState) => state.pageTab.page.find(p => p.name === "project_main_page")?.value || 0);
 
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -114,11 +119,10 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({
     }
   }
 
-  const getClosingId = () => {
-    let data = dataProjectClosing.findAllRequestClosing.find((req: any) => {
-      return req.handled_date == null
-    })
-    return data?._id ?? null
+  const canRequestClosing = () => {
+    let queueRequest = dataProjectClosing && dataProjectClosing.findAllRequestClosing.findIndex((req: any) => { return req.status === RequestStatusType.MENUNGGU })
+    let haveClosing = dataProject && dataProject.findProjectById.project_closing
+    return (queueRequest == -1 && !haveClosing)
   }
 
   useEffect(() => {
@@ -147,13 +151,13 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({
       <div className="flex flex-col" style={{ maxHeight: "100%" }}>
 
 
-        <Container sx={{ paddingTop: 4 }}>
+        {page == 0 && <Container sx={{ paddingTop: 2 }}>
           {!loadingProject && <div>
             <Box sx={{ mb: 3 }} display={"flex"} flexDirection={"column"}>
               <span><span className="font-bold mb-5">Tanggal Inisialisasi</span> : {formatDateToLong(dataProject.findProjectById.createdAt)}</span>
               <span>
                 <span className="font-bold">Tanggal Selesai</span> :
-                {dataProject.findProjectById.finishedAt ? formatDateToLong(dataProject.findProjectById.finishedAt) : <span className="text-error"> Project Belum Selesai</span>}
+                {dataProject.findProjectById.finished_at ? formatDateToLong(dataProject.findProjectById.finished_at) : <span className="text-error"> Project Belum Selesai</span>}
               </span>
             </Box>
 
@@ -279,17 +283,23 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({
 
             {/* BUTTON SUBMIT */}
             <div className="flex justify-between">
-              <RequestProjectClosing
-                disabledCondition={isSubmitting ||
-                  (!loadingProjectClosing &&
-                    !errorProjectClosing &&
-                    dataProjectClosing.findAllRequestClosing.findIndex((req: any) => {
-                      return req.handled_date == null
-                    })) != -1}
-                closing_id={loadingProjectClosing ? null : getClosingId()}
-                refetchProjectClosing={refetchProjectClosing}
-                project_id={dataProject.findProjectById._id || ""}
-              />
+              <div className="flex">
+                {dataProject && dataProjectClosing && <RequestProjectClosing
+                  disabledCondition={isSubmitting || !canRequestClosing()}
+                  refetchProjectClosing={refetchProjectClosing}
+                  project_id={dataProject.findProjectById._id || ""}
+                />}
+                {dataProject && dataProject.findProjectById.project_closing &&
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    sx={{ ml: 2 }}
+                    onClick={() => {dispatch(setPageValueByName({ name: "project_main_page", value: 1 }))}}
+                  >
+                    Lihat Detail Penutupan
+                  </Button>
+                }
+              </div>
               <Button
                 onClick={handleSubmit(handleEditProject)}
                 variant="contained"
@@ -300,8 +310,13 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({
               </Button>
             </div>
             {/* BUTTON SUBMIT END */}
+            <ClosingTable data={dataProjectClosing} refetch={refetchProjectClosing} />
           </div>}
-        </Container>
+        </Container>}
+
+
+
+        {page == 1 &&!loadingProject && <ProjectClosingDetail dataProject={dataProject} refetchProject={refetchDetailProject}/>}
       </div>
     </div>
   )

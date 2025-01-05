@@ -50,28 +50,47 @@ query FindProjectById($id: String!){
       note
       document
       closed_by {
-        _id
-        hire_date
-        salary
-        status
+          _id
+          person {
+              name
+              email
+              phone_number
+              address
+          }
       }
       material_used {
-        _id
-        in
-        out
-        remain
-        price
-        warehouse
-        transaction_code
-        date
+          _id
+          remain
+          price
+          date
+          warehouse
+          out
+          material {
+              _id
+              id
+              name
+              description
+              status
+              conversion
+              merk {
+                  _id
+                  name
+              }
+              unit_measure {
+                  _id
+                  name
+              }
+              minimum_unit_measure {
+                  _id
+                  name
+              }
+          }
       }
       request_project_closing {
-        _id
-        title
-        description
-        requested_at
-        status
-        handled_date
+          _id
+          requested_at
+          status
+          handled_date
       }
     }
   }

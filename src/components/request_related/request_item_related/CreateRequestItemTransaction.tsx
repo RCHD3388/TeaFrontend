@@ -25,7 +25,10 @@ interface CreateRequestItemTransactionProps { }
 
 const CreateRequestItemTransaction: React.FC<CreateRequestItemTransactionProps> = ({ }) => {
   const navigate = useNavigate()
-  let { data: allWHData, loading: allWHLoading, error: allWHError, refetch: allWHRefetch } = useQuery(GetAllWarehousesDocument, { variables: { requiresAuth: true } })
+  let { data: allWHData, loading: allWHLoading, error: allWHError, refetch: allWHRefetch } = useQuery(GetAllWarehousesDocument, { variables: { 
+    filter: {status: true},
+    requiresAuth: true 
+  } })
   let { data: userWHData, loading: userWHLoading, error: userWHError, refetch: userWHRefetch } = useQuery(GetAllWarehousesByUserDocument, { variables: { requiresAuth: true } })
   const [createRequestItemTransaction] = useMutation(CreateRequestItemTransactionDocument)
   const [isSubmitting, setIsSubmitting] = useState(false);

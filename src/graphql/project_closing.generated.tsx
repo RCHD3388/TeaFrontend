@@ -8,7 +8,7 @@ export type FindAllRequestClosingQueryVariables = Types.Exact<{
 }>;
 
 
-export type FindAllRequestClosingQuery = { __typename?: 'Query', findAllRequestClosing: Array<{ __typename?: 'RequestProjectClosing', _id: string, title: string, description?: string | null, requested_at: any, status: string, handled_date?: any | null }> };
+export type FindAllRequestClosingQuery = { __typename?: 'Query', findAllRequestClosing: Array<{ __typename?: 'RequestProjectClosing', _id: string, title: string, description?: string | null, requested_at: any, status: string, handled_date?: any | null, requested_from: { __typename?: 'Project', name: string, location: string }, requested_by: { __typename?: 'Employee', _id: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string } } }> };
 
 export type CreateRequestClosingMutationVariables = Types.Exact<{
   createRequestClosingInput: Types.CreateRequestClosingInput;
@@ -32,6 +32,14 @@ export type FindOneRequestClosingQueryVariables = Types.Exact<{
 
 export type FindOneRequestClosingQuery = { __typename?: 'Query', findOneRequestClosing: { __typename?: 'RequestProjectClosing', _id: string, title: string, description?: string | null, requested_at: any, status: string, handled_date?: any | null, handled_by?: { __typename?: 'Employee', _id: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string } } | null, requested_by: { __typename?: 'Employee', _id: string, person: { __typename?: 'Person', name: string, email: string, phone_number: string, address: string } }, requested_from: { __typename?: 'Project', _id: string, name: string, location: string, description: string, warehouse: string } } };
 
+export type UpdateProjectClosingMutationVariables = Types.Exact<{
+  id: Types.Scalars['String']['input'];
+  updateProjectClosingInput: Types.UpdateProjectClosingInput;
+}>;
+
+
+export type UpdateProjectClosingMutation = { __typename?: 'Mutation', updateProjectClosing: { __typename?: 'Project', _id: string, name: string, location: string, description: string, createdAt: any, finished_at?: any | null, target_date?: any | null, warehouse: string } };
+
 
 export const FindAllRequestClosingDocument = gql`
     query FindAllRequestClosing($projectId: String) {
@@ -40,6 +48,19 @@ export const FindAllRequestClosingDocument = gql`
     title
     description
     requested_at
+    requested_from {
+      name
+      location
+    }
+    requested_by {
+      _id
+      person {
+        name
+        email
+        phone_number
+        address
+      }
+    }
     status
     handled_date
   }
@@ -228,3 +249,47 @@ export type FindOneRequestClosingQueryHookResult = ReturnType<typeof useFindOneR
 export type FindOneRequestClosingLazyQueryHookResult = ReturnType<typeof useFindOneRequestClosingLazyQuery>;
 export type FindOneRequestClosingSuspenseQueryHookResult = ReturnType<typeof useFindOneRequestClosingSuspenseQuery>;
 export type FindOneRequestClosingQueryResult = Apollo.QueryResult<FindOneRequestClosingQuery, FindOneRequestClosingQueryVariables>;
+export const UpdateProjectClosingDocument = gql`
+    mutation UpdateProjectClosing($id: String!, $updateProjectClosingInput: UpdateProjectClosingInput!) {
+  updateProjectClosing(
+    id: $id
+    updateProjectClosingInput: $updateProjectClosingInput
+  ) {
+    _id
+    name
+    location
+    description
+    createdAt
+    finished_at
+    target_date
+    warehouse
+  }
+}
+    `;
+export type UpdateProjectClosingMutationFn = Apollo.MutationFunction<UpdateProjectClosingMutation, UpdateProjectClosingMutationVariables>;
+
+/**
+ * __useUpdateProjectClosingMutation__
+ *
+ * To run a mutation, you first call `useUpdateProjectClosingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateProjectClosingMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateProjectClosingMutation, { data, loading, error }] = useUpdateProjectClosingMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      updateProjectClosingInput: // value for 'updateProjectClosingInput'
+ *   },
+ * });
+ */
+export function useUpdateProjectClosingMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProjectClosingMutation, UpdateProjectClosingMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateProjectClosingMutation, UpdateProjectClosingMutationVariables>(UpdateProjectClosingDocument, options);
+      }
+export type UpdateProjectClosingMutationHookResult = ReturnType<typeof useUpdateProjectClosingMutation>;
+export type UpdateProjectClosingMutationResult = Apollo.MutationResult<UpdateProjectClosingMutation>;
+export type UpdateProjectClosingMutationOptions = Apollo.BaseMutationOptions<UpdateProjectClosingMutation, UpdateProjectClosingMutationVariables>;

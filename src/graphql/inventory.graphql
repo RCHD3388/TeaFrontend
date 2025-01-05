@@ -1,5 +1,5 @@
-query GetAllWarehouses {
-    getAllWarehouses {
+query GetAllWarehouses ($filter: FilterInput){
+    getAllWarehouses (filter: $filter){
         _id
         name
         description
