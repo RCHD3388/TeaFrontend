@@ -217,7 +217,7 @@ const ProjectClosingMaterialInput: React.FC<ProjectClosingMaterialInputProps> = 
               <span className="alert bg-warning p-2 text-base my-3">
                 <p>Konfirmasi dan pastikan data sisa material untuk proyek <b>{projectName}</b> telah sesuai</p>
               </span>
-              <Typography variant="h6" sx={{ textTransform: "capitalize", mb: 1 }}><b>Warehouse Tujuan: </b>{warehouseTo.label}</Typography>
+              <Typography variant="h6" sx={{ textTransform: "capitalize", mb: 1 }}><b>Warehouse Tujuan: </b>{warehouseTo?.label || ""}</Typography>
               <table className="table table-xs border-2">
                 <thead className="bg-secondary text-white font-normal text-base" style={{ position: "sticky", top: 0 }}>
                   <tr>

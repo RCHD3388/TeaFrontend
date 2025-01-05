@@ -316,7 +316,7 @@ const MainDetailProject: React.FC<MainDetailProjectProps> = ({
 
 
 
-        {page == 1 &&!loadingProject && <ProjectClosingDetail dataProject={dataProject} refetchProject={refetchDetailProject}/>}
+        {page == 1 &&!loadingProject && !loadingProjectClosing && <ProjectClosingDetail dataProject={dataProject} refetchProject={refetchDetailProject}/>}
       </div>
     </div>
   )
