@@ -203,7 +203,7 @@ const DetailSku: React.FC = () => {
             </div>
             {/* BUTTON SUBMIT END */}
           </div>}
-
+              
           <DetailSkuTools id={skuId || ""} />
         </Container>
       </div>
