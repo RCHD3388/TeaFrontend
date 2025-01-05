@@ -1,7 +1,7 @@
 import { ApolloQueryResult, useMutation } from "@apollo/client"
 import { FindAllProjectsQuery, FindProjectByIdQueryVariables } from "../../../../graphql/project.generated"
 import { Box, Button, Card, CardContent, Container, Stack, TextField, Typography } from "@mui/material"
-import { formatDateToLong } from "../../../../utils/service/FormatService"
+import { formatCurrency, formatDateToLong } from "../../../../utils/service/FormatService"
 import { useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import { setPageValueByName } from "../../../../app/reducers/pageTabSlice"
@@ -29,7 +29,7 @@ const ProjectClosingDetail: React.FC<ProjectClosingDetailProps> = ({ dataProject
 
   const handleUpdateNote = async () => {
     try {
-      if(currentNote == getData()?.note) return
+      if (currentNote == getData()?.note) return
       await updateProjectClosing({
         variables: {
           updateProjectClosingInput: {
@@ -39,7 +39,7 @@ const ProjectClosingDetail: React.FC<ProjectClosingDetailProps> = ({ dataProject
           requiresAuth: true
         },
       })
-      
+
       await refetchProject()
       dispatch(openSnackbar({ severity: "success", message: "Berhasil memperbarui data" }))
     } catch (err: any) {
@@ -136,7 +136,9 @@ const ProjectClosingDetail: React.FC<ProjectClosingDetailProps> = ({ dataProject
                         <td align="left">Barang</td>
                         <td align="left">Merk</td>
                         <td align="left">Satuan</td>
-                        <td align="right">Terpakai </td>
+                        <td align="right">Terpakai</td>
+                        <td align="right">Harga</td>
+                        <td align="right">Sub Total</td>
                         <th></th>
                       </tr>
                     </thead>
@@ -147,10 +149,17 @@ const ProjectClosingDetail: React.FC<ProjectClosingDetailProps> = ({ dataProject
                           <td className="text-sm" align="left">{item.material.merk.name}</td>
                           <td className="text-sm" align="left">{item.material.unit_measure.name} ( {item.material.conversion} x {item.material.minimum_unit_measure.name} )</td>
                           <td className="text-sm" align="right">{item.remain}</td>
+                          <td className="text-sm" align="right">{formatCurrency(item.price)}</td>
+                          <td className="text-sm" align="right">{formatCurrency(item.price * item.remain)}</td>
                         </tr>
                       )) : <tr className="p-4"><td colSpan={4} className="p-4 text-sm" style={{ textAlign: "center" }}>Tidak terdapat material sisa.</td></tr>}
                     </tbody>
                   </table>
+                  <div className="flex justify-end">
+                    <Typography variant="body1" sx={{ mr: 2 }}>
+                      <b>Total:</b> {formatCurrency(getData().material_used.reduce((acc: number, item: any) => acc + (item.price * item.remain), 0))}
+                    </Typography>
+                  </div>
                 </Container>}
             </Box>
           </Box>
