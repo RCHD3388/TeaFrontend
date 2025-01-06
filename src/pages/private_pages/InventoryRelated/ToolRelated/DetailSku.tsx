@@ -204,7 +204,7 @@ const DetailSku: React.FC = () => {
             {/* BUTTON SUBMIT END */}
           </div>}
               
-          <DetailSkuTools id={skuId || ""} />
+          <DetailSkuTools id={skuId || ""} name_sku={skuData?.getSkuById.name || ""} />
         </Container>
       </div>
     </div>

@@ -8,7 +8,8 @@ import { Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 interface DetailSkuToolsProps {
-  id: string
+  id: string,
+  name_sku: string
 }
 
 interface RowData {
@@ -29,7 +30,7 @@ interface RowData {
   }
 }
 
-const DetailSkuTools: React.FC<DetailSkuToolsProps> = ({ id }) => {
+const DetailSkuTools: React.FC<DetailSkuToolsProps> = ({ id, name_sku }) => {
   const { data, loading, error } = useQuery(GetAllToolsDocument, {
     variables: { sku: id, requiresAuth: true },
   });
@@ -79,7 +80,7 @@ const DetailSkuTools: React.FC<DetailSkuToolsProps> = ({ id }) => {
 
   return (
     <div className="mt-3">
-      <Typography variant="h6"><b>Daftar Alat dengan SKU {data?.getAllTools[0].sku.name}</b></Typography>
+      <Typography variant="h6"><b>Daftar Alat dengan SKU {name_sku}</b></Typography>
       <StickyHeadTable
         columns={columns}
         rows={getData() ?? []}
