@@ -28,6 +28,7 @@ import PurchasingPage from "../pages/private_pages/PurchasingRelated/PurchasingP
 import DetailPurchasing from "../pages/private_pages/PurchasingRelated/DetailPurchasing";
 import DetailRequestClosing from "../components/request_related/request_closing_related/DetailRequestClosing";
 import CreatePurchasingTransaction from "../pages/private_pages/PurchasingRelated/CreatePurchasingTransaction";
+import DetailTool from "../pages/private_pages/InventoryRelated/ToolRelated/DetailTool";
 
 const AppRoutes: React.FC = () => {
   const router = createBrowserRouter([
@@ -57,7 +58,8 @@ const AppRoutes: React.FC = () => {
           path: "inventory", children: [
             { index: true, element: <InventoryPage /> },
             { path: ":warehouseId", element: <InventoryDetail /> },
-            { path: "sku/:skuId", element: <DetailSku /> }
+            { path: "sku/:skuId", element: <DetailSku /> },
+            { path: "tool/:toolId", element: <DetailTool /> }
           ]
         },
         {

@@ -73,3 +73,29 @@ export interface itemDetail {
   quantity: number
   item_type: String
 }
+
+export enum TransactionCategoryId {
+  PUR = "PUR",
+  TRF = "TRF",
+  ADD = "ADD",
+  USE = "USE",
+  SND = "SND",
+  REC = "REC"
+}
+
+export class TransactionCategory {
+  private static descriptions: { [key in TransactionCategoryId]: string } = {
+    [TransactionCategoryId.PUR]: "Pembelian",
+    [TransactionCategoryId.TRF]: "Perpindahan",
+    [TransactionCategoryId.ADD]: "Admin Entry",
+    [TransactionCategoryId.USE]: "Penggunaan",
+    [TransactionCategoryId.SND]: "Pengiriman",
+    [TransactionCategoryId.REC]: "Penerimaan"
+  };
+
+  public static getDescription(id: TransactionCategoryId): string {
+    return this.descriptions[id];
+  }
+}
+
+export const TransactionCategoryTypeValues = ["Pembelian", "Perpindahan", "Admin Entry", "Penggunaan", "Pengiriman", "Penerimaan"]

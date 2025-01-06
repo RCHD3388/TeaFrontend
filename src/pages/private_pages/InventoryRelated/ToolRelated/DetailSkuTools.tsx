@@ -5,6 +5,7 @@ import StickyHeadTable from "../../../../components/global_features/StickyHeadTa
 import { GridColDef } from "@mui/x-data-grid";
 import { formatCurrency, formatDateToLong } from "../../../../utils/service/FormatService";
 import { Button, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 interface DetailSkuToolsProps {
   id: string
@@ -32,6 +33,7 @@ const DetailSkuTools: React.FC<DetailSkuToolsProps> = ({ id }) => {
   const { data, loading, error } = useQuery(GetAllToolsDocument, {
     variables: { sku: id, requiresAuth: true },
   });
+  const navigate = useNavigate();
 
   const getData = () => {
     return data?.getAllTools
@@ -68,7 +70,7 @@ const DetailSkuTools: React.FC<DetailSkuToolsProps> = ({ id }) => {
       field: 'action', headerName: 'Hapus', minWidth: 100, flex: 1, sortable: false, filterable: false, align: 'center', headerAlign: 'center',
       renderCell: (params) => (
         <Button variant="contained" color="secondary"
-          onClick={() => {  }}>
+          onClick={() => { navigate(`/appuser/inventory/tool/${params.row._id}`) }}>
           Detail
         </Button>
       ),

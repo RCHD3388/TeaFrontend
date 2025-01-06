@@ -22,7 +22,7 @@ export type AddInventoryMaterialMutationVariables = Types.Exact<{
 }>;
 
 
-export type AddInventoryMaterialMutation = { __typename?: 'Mutation', addInventoryMaterial: Array<{ __typename?: 'MaterialTransaction', _id: string, in: number, out: number, remain: number, price: number, warehouse: string, transaction_code: string, date: any }> };
+export type AddInventoryMaterialMutation = { __typename?: 'Mutation', addInventoryMaterial: Array<{ __typename?: 'MaterialTransaction', _id: string, in: number, out: number, remain: number, price: number, transaction_code: string, date: any }> };
 
 export type AddInventoryToolMutationVariables = Types.Exact<{
   addOnlyToolTransactionInput: Types.AddOnlyToolTransactionInput;
@@ -171,7 +171,6 @@ export const AddInventoryMaterialDocument = gql`
     out
     remain
     price
-    warehouse
     transaction_code
     date
   }

@@ -91,6 +91,22 @@ export type UpdatePurchaseTransactionMutationVariables = Types.Exact<{
 
 export type UpdatePurchaseTransactionMutation = { __typename?: 'Mutation', updatePurchaseTransaction: { __typename?: 'PurchaseTransaction', _id: string, transaction_number: string, description?: string | null, transaction_date: any, total: number } };
 
+export type RemovePurchaseTransactionDetailMutationVariables = Types.Exact<{
+  id: Types.Scalars['String']['input'];
+  id_detail: Types.Scalars['String']['input'];
+}>;
+
+
+export type RemovePurchaseTransactionDetailMutation = { __typename?: 'Mutation', removePurchaseTransactionDetail: { __typename?: 'PurchaseTransaction', _id: string } };
+
+export type AddNewDetailPtMutationVariables = Types.Exact<{
+  id: Types.Scalars['String']['input'];
+  createPurchaseTransactionDetailInput: Types.CreateNewPurchaseTransactionDetailInput;
+}>;
+
+
+export type AddNewDetailPtMutation = { __typename?: 'Mutation', addNewDetailPT: { __typename?: 'PurchaseTransaction', _id: string } };
+
 
 export const GetAllPurchaseOrdersDocument = gql`
     query GetAllPurchaseOrders($filter: FilterInput) {
@@ -879,3 +895,74 @@ export function useUpdatePurchaseTransactionMutation(baseOptions?: Apollo.Mutati
 export type UpdatePurchaseTransactionMutationHookResult = ReturnType<typeof useUpdatePurchaseTransactionMutation>;
 export type UpdatePurchaseTransactionMutationResult = Apollo.MutationResult<UpdatePurchaseTransactionMutation>;
 export type UpdatePurchaseTransactionMutationOptions = Apollo.BaseMutationOptions<UpdatePurchaseTransactionMutation, UpdatePurchaseTransactionMutationVariables>;
+export const RemovePurchaseTransactionDetailDocument = gql`
+    mutation RemovePurchaseTransactionDetail($id: String!, $id_detail: String!) {
+  removePurchaseTransactionDetail(id: $id, id_detail: $id_detail) {
+    _id
+  }
+}
+    `;
+export type RemovePurchaseTransactionDetailMutationFn = Apollo.MutationFunction<RemovePurchaseTransactionDetailMutation, RemovePurchaseTransactionDetailMutationVariables>;
+
+/**
+ * __useRemovePurchaseTransactionDetailMutation__
+ *
+ * To run a mutation, you first call `useRemovePurchaseTransactionDetailMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemovePurchaseTransactionDetailMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removePurchaseTransactionDetailMutation, { data, loading, error }] = useRemovePurchaseTransactionDetailMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      id_detail: // value for 'id_detail'
+ *   },
+ * });
+ */
+export function useRemovePurchaseTransactionDetailMutation(baseOptions?: Apollo.MutationHookOptions<RemovePurchaseTransactionDetailMutation, RemovePurchaseTransactionDetailMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemovePurchaseTransactionDetailMutation, RemovePurchaseTransactionDetailMutationVariables>(RemovePurchaseTransactionDetailDocument, options);
+      }
+export type RemovePurchaseTransactionDetailMutationHookResult = ReturnType<typeof useRemovePurchaseTransactionDetailMutation>;
+export type RemovePurchaseTransactionDetailMutationResult = Apollo.MutationResult<RemovePurchaseTransactionDetailMutation>;
+export type RemovePurchaseTransactionDetailMutationOptions = Apollo.BaseMutationOptions<RemovePurchaseTransactionDetailMutation, RemovePurchaseTransactionDetailMutationVariables>;
+export const AddNewDetailPtDocument = gql`
+    mutation AddNewDetailPT($id: String!, $createPurchaseTransactionDetailInput: CreateNewPurchaseTransactionDetailInput!) {
+  addNewDetailPT(
+    id: $id
+    createPurchaseTransactionDetailInput: $createPurchaseTransactionDetailInput
+  ) {
+    _id
+  }
+}
+    `;
+export type AddNewDetailPtMutationFn = Apollo.MutationFunction<AddNewDetailPtMutation, AddNewDetailPtMutationVariables>;
+
+/**
+ * __useAddNewDetailPtMutation__
+ *
+ * To run a mutation, you first call `useAddNewDetailPtMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddNewDetailPtMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addNewDetailPtMutation, { data, loading, error }] = useAddNewDetailPtMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      createPurchaseTransactionDetailInput: // value for 'createPurchaseTransactionDetailInput'
+ *   },
+ * });
+ */
+export function useAddNewDetailPtMutation(baseOptions?: Apollo.MutationHookOptions<AddNewDetailPtMutation, AddNewDetailPtMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddNewDetailPtMutation, AddNewDetailPtMutationVariables>(AddNewDetailPtDocument, options);
+      }
+export type AddNewDetailPtMutationHookResult = ReturnType<typeof useAddNewDetailPtMutation>;
+export type AddNewDetailPtMutationResult = Apollo.MutationResult<AddNewDetailPtMutation>;
+export type AddNewDetailPtMutationOptions = Apollo.BaseMutationOptions<AddNewDetailPtMutation, AddNewDetailPtMutationVariables>;

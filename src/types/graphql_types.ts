@@ -902,6 +902,7 @@ export type Query = {
   getSkuById: Sku;
   getSupplierById: Supplier;
   getToolById: Tool;
+  getToolTransactions: Array<ToolTransaction>;
   getToolsByIds: Array<Tool>;
   getUnitMeasureById: UnitMeasure;
   getUserById: User;
@@ -1053,6 +1054,11 @@ export type QueryGetToolByIdArgs = {
 };
 
 
+export type QueryGetToolTransactionsArgs = {
+  tool_id: Scalars['String']['input'];
+};
+
+
 export type QueryGetToolsByIdsArgs = {
   ids: Array<Scalars['String']['input']>;
 };
@@ -1181,7 +1187,7 @@ export type ToolTransaction = {
   tool: Tool;
   transaction_category: TransactionCategory;
   transaction_code: Scalars['String']['output'];
-  warehouse: Scalars['String']['output'];
+  warehouse: Warehouse;
 };
 
 export type TransactionCategory = {

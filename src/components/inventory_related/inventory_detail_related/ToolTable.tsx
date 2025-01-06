@@ -19,6 +19,11 @@ import { formatDateToLong } from '../../../utils/service/FormatService';
 import styled from '@emotion/styled';
 import { theme } from '../../../theme';
 import SearchIcon from '@mui/icons-material/Search';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../app/store';
+import { selectUser } from '../../../app/reducers/userSlice';
+import { EmployeeRoleType } from '../../../types/staticData.types';
+import { useNavigate } from 'react-router-dom';
 
 const StyledTableRow = styled(TableRow)(({ }) => ({
   backgroundColor: theme.palette.action.hover,
@@ -46,6 +51,8 @@ interface RowData {
 function Row(props: { row: RowData, indexNumber: number }) {
   const { row, indexNumber } = props;
   const [open, setOpen] = React.useState(false);
+  const user = useSelector((state: RootState) => selectUser(state));
+  const navigate = useNavigate();
 
   return (
     <React.Fragment>
@@ -83,7 +90,9 @@ function Row(props: { row: RowData, indexNumber: number }) {
                     <TableCell sx={{ fontWeight: 'bold' }}>ID Unik</TableCell>
                     <TableCell sx={{ fontWeight: 'bold' }}>Status</TableCell>
                     <TableCell align='center' sx={{ fontWeight: 'bold' }}>Tanggal masuk</TableCell>
-                    <TableCell align='center' sx={{ fontWeight: 'bold' }}>Lihat Detail</TableCell>
+                    {(user.role == EmployeeRoleType.ADMIN || user.role == EmployeeRoleType.OWNER || user.role == EmployeeRoleType.STAFF_PEMBELIAN) &&
+                      <TableCell align='center' sx={{ fontWeight: 'bold' }}>Lihat Detail</TableCell>
+                    }
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -94,9 +103,11 @@ function Row(props: { row: RowData, indexNumber: number }) {
                       </TableCell>
                       <TableCell>{detail.status}</TableCell>
                       <TableCell align="center">{formatDateToLong(detail.date.toString())}</TableCell>
-                      <TableCell align="center">
-                        <Button variant='contained' color='secondary' size='small'> Detail </Button>
-                      </TableCell>
+                      {(user.role == EmployeeRoleType.ADMIN || user.role == EmployeeRoleType.OWNER || user.role == EmployeeRoleType.STAFF_PEMBELIAN) &&
+                        <TableCell align="center">
+                          <Button variant='contained' color='secondary' size='small' onClick={() => {navigate(`/appuser/inventory/tool/${detail._id}`)}}> Detail </Button>
+                        </TableCell>
+                      }
                     </StyledTableRow>
                   ))}
                 </TableBody>

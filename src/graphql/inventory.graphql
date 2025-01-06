@@ -283,3 +283,65 @@ query GetAllTools ($sku: String){
         }
     }
 }
+
+query GetToolById ($id: String!){
+    getToolById(id: $id) {
+        _id
+        id
+        description
+        warranty_number
+        warranty_expired_date
+        price
+        status {
+            _id
+            name
+            description
+        }
+        sku {
+            _id
+            name
+            description
+            status
+            merk {
+                _id
+                name
+                description
+            }
+        }
+    }
+}
+
+mutation UpdateTool ($id: String!, $updateToolInput: UpdateToolInput!){
+    updateTool(id: $id, updateToolInput: $updateToolInput) {
+        _id
+        id
+        description
+        warranty_number
+        warranty_expired_date
+        price
+    }
+}
+
+query GetToolTransactions ($tool_id: String!){
+    getToolTransactions(tool_id: $tool_id) {
+        _id
+        date
+        in
+        out
+        warehouse {
+            _id
+            name
+            address
+        }
+        transaction_code
+        transaction_category {
+            _id
+            id
+            description
+        }
+        tool {
+            _id
+            id
+        }
+    }
+}

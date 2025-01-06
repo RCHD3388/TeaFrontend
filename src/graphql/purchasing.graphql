@@ -382,3 +382,14 @@ mutation UpdatePurchaseTransaction ($id: String!, $updatePurchaseTransactionInpu
     }
 }
 
+mutation RemovePurchaseTransactionDetail ($id: String!, $id_detail: String!){
+    removePurchaseTransactionDetail(id: $id, id_detail: $id_detail) {
+        _id
+    }
+}
+
+mutation AddNewDetailPT ($id: String!, $createPurchaseTransactionDetailInput: CreateNewPurchaseTransactionDetailInput!){
+    addNewDetailPT(id: $id, createPurchaseTransactionDetailInput: $createPurchaseTransactionDetailInput) {
+        _id
+    }
+}

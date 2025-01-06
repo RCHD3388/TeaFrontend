@@ -8,7 +8,7 @@ import { selectUser } from '../../../app/reducers/userSlice';
 import { RootState } from '../../../app/store';
 import { useDispatch, useSelector } from 'react-redux';
 import { EmployeeRoleType, RequestItem_ItemType, RequestItemType, RequestStatusType } from '../../../types/staticData.types';
-import { GetPurchaseTransactionByIdDocument, HandleWaitingPoDocument, UpdatePurchaseTransactionDocument } from '../../../graphql/purchasing.generated';
+import { AddNewDetailPtDocument, GetAllPurchaseOrdersDocument, GetPurchaseTransactionByIdDocument, HandleWaitingPoDocument, RemovePurchaseTransactionDetailDocument, UpdatePurchaseTransactionDocument } from '../../../graphql/purchasing.generated';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -18,6 +18,9 @@ import { openSnackbar } from '../../../app/reducers/snackbarSlice';
 import { GetBadReqMsg } from '../../../utils/helpers/ErrorMessageHelper';
 import { GetAllSuppliersDocument } from '../../../graphql/supplier.generated';
 import { formatCurrency, formatISODateToCustom } from '../../../utils/service/FormatService';
+import PurchasingMaterialInput from './PurchasingMaterialInput';
+import PurchasingToolInput, { ToolDetailPurchasingInput } from './PurchaseToolInput';
+import { GetAllMaterialsDocument, GetAllSkusDocument } from '../../../graphql/inventory.generated';
 
 interface DetailPurchasingProps { }
 
@@ -37,17 +40,41 @@ const DetailPurchasing: React.FC<DetailPurchasingProps> = ({ }) => {
       requiresAuth: true
     }
   })
+  let { data: poData, loading: poLoading, error: poError, refetch: poRefetch } = useQuery(GetAllPurchaseOrdersDocument, {
+    variables: {
+      filter: { status: true },
+      requiresAuth: true
+    }
+  })
+  let { data: materialData, loading: materialLoading, error: materialError, refetch: refetchMaterial } = useQuery(GetAllMaterialsDocument, {
+    variables: {
+      filter: { status: true },
+      requiresAuth: true
+    }
+  })
+  let { data: skuData, loading: skuLoading, error: skuError, refetch: refetchSku } = useQuery(GetAllSkusDocument, {
+    variables: {
+      filter: { status: true },
+      requiresAuth: true
+    }
+  })
+  const [poInput, setPoInput] = useState<any>("")
+  const [poInputError, setPoInputError] = useState("")
+  const [itemtypeInput, setItemTypeInput] = useState(RequestItem_ItemType.MATERIAL)
+  const [itemtypeInputError, setItemTypeInputError] = useState("")
+
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => selectUser(state));
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [updatePurchaseTransaction] = useMutation(UpdatePurchaseTransactionDocument)
+  const [removePurchaseTransactionDetail] = useMutation(RemovePurchaseTransactionDetailDocument)
+  const [addNewDetailPT] = useMutation(AddNewDetailPtDocument)
 
   const dispatch = useDispatch()
   const getData = () => {
     return data?.getPurchaseTransactionById.purchase_transaction[0]
   }
-
   const getRawData = () => {
     return data?.getPurchaseTransactionById
   }
@@ -100,7 +127,79 @@ const DetailPurchasing: React.FC<DetailPurchasingProps> = ({ }) => {
   }
 
   const handleRemoveButton = async (id: String) => {
+    setIsSubmitting(true)
+    try {
+      await removePurchaseTransactionDetail({
+        variables: {
+          id: purchasingId,
+          id_detail: id, requiresAuth: true
+        }
+      })
+      refetch()
+      dispatch(openSnackbar({ severity: "success", message: "Berhasil menghapus data detail transaksi" }))
+    } catch (error: any) {
+      let msg = GetBadReqMsg("Gagal menghapus data detail transaksi, silakan coba lagi nanti", error)
+      dispatch(openSnackbar({ severity: "error", message: String(msg) }))
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+  const checkItemList = (): boolean => {
+    setPoInputError("")
+    setItemTypeInputError("")
+    if (!poInput?.value) {
+      setPoInputError("PO tidak boleh kosong")
+      return true
+    }
+    if (!itemtypeInput) {
+      setItemTypeInputError("Item Type tidak boleh kosong")
+      return true
+    }
+    return false
+  }
+  // ADD NEW PRUCHAS DETAL
+  const handleAddPurchasingMaterial = async (material: any, quantity: number, price: number) => {
+    if (checkItemList()) return
 
+    let input = { purchase_order: poInput.value, item: material.value, quantity: Number(quantity), item_type: itemtypeInput, price: Number(price) }
+    handleAddNewPTDetail(input)
+  }
+  // HANDLE ADD TOOL
+  const handleAddPurchasingTool = async (data: ToolDetailPurchasingInput) => {
+    if (checkItemList()) return
+
+    let input = {
+      tool: {
+        description: data.description || "",
+        warranty_number: data.warranty_number || "",
+        warranty_expired_date: data.warranty_expired_date,
+        status: data.status,
+        price: Number(data.price),
+        sku: data.sku
+      }, item_type: RequestItem_ItemType.TOOL, item: data.sku, quantity: 1, price: Number(data.price), purchase_order: poInput.value
+    }
+    handleAddNewPTDetail(input)
+  }
+  // HANDLE SUBMIT NEW PURCHASE DETAIL
+  const handleAddNewPTDetail = async (input: any) => {
+    setIsSubmitting(true)
+    try {
+      await addNewDetailPT({
+        variables: {
+          id: purchasingId,
+          createPurchaseTransactionDetailInput: {
+            input: input
+          }, requiresAuth: true
+        }
+      })
+      refetch()
+      dispatch(openSnackbar({ severity: "success", message: "Berhasil manambahkan data detail transaksi" }))
+    } catch (error: any) {
+      let msg = GetBadReqMsg("Gagal manambahkan data detail transaksi, silakan coba lagi nanti", error)
+      dispatch(openSnackbar({ severity: "error", message: String(msg) }))
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   useEffect(() => {
@@ -209,6 +308,9 @@ const DetailPurchasing: React.FC<DetailPurchasingProps> = ({ }) => {
                   </div>
                 </CardContent>
               </Card>
+              <div className='flex justify-end'>
+                <Button variant="contained" color="warning" onClick={() => { }} >Cetak Laporan</Button>
+              </div>
 
               {/* DETAIL BARANG */}
               <Box pt={2}>
@@ -222,11 +324,11 @@ const DetailPurchasing: React.FC<DetailPurchasingProps> = ({ }) => {
                         <td align="right">Kuantitas</td>
                         <td align="right">Harga</td>
                         <td align="right">PO Tujuan</td>
-                        {/* <td className="text-center">Action</td> */}
+                        <td className="text-center">Action</td>
                       </tr>
                     </thead>
                     <tbody>
-                      {data ? getData().purchase_transaction_detail.map((item: any, index: number) => (
+                      {data && getData().purchase_transaction_detail.length > 0 ? getData().purchase_transaction_detail.map((item: any, index: number) => (
                         <tr key={index}>
                           <td className="text-sm" align="left" style={{ whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
                             {getItemDetail(item.original_item, item.item_type)}
@@ -235,22 +337,62 @@ const DetailPurchasing: React.FC<DetailPurchasingProps> = ({ }) => {
                           <td className="text-sm" align="right">{item.quantity}</td>
                           <td className="text-sm" align="right">{formatCurrency(item.price)}</td>
                           <td className="text-sm" align="right">PO{formatISODateToCustom(item.purchase_order.date)}</td>
-                          {/* <td className="text-sm text-center">
+                          <td className="text-sm text-center">
                             <Button variant="contained" color="error" size="small" sx={{ textTransform: "none" }}
                               onClick={() => { handleRemoveButton(item._id) }} disabled={isSubmitting || !canEdit()}
                             >
                               Batalkan
                             </Button>
-                          </td> */}
+                          </td>
                         </tr>
                       )) : <tr className="p-4"><td colSpan={4} className="p-4 text-sm" style={{ textAlign: "center" }}>Tidak ada data dalam tabel. Silakan tambahkan material sebelum submit.</td></tr>}
                     </tbody>
                   </table>
                 </Box>
+                <Box py={2} px={3}>
+                  <Autocomplete
+                    disablePortal
+                    options={poLoading || !poData ? [] : poData.getAllPurchaseOrders.map((po: any) => {
+                      return {
+                        label: `PO${formatISODateToCustom(po.date)}`,
+                        value: po._id
+                      }
+                    })}
+                    onChange={(_, data) => setPoInput(data)}
+                    value={poInput}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params} label="Order Pembelian" sx={{ width: "100%", mb: 1 }}
+                        error={poInputError.length != 0} helperText={poInputError}
+                        color="secondary" size="small"
+                      />
+                    )}
+                  />
+                  <TextField
+                    color="secondary" select sx={{ width: "100%" }} label="Tipe Barang" size="small" variant="outlined"
+                    onChange={(e) => setItemTypeInput(e.target.value as RequestItem_ItemType)} value={itemtypeInput}
+                    error={itemtypeInputError.length != 0} helperText={itemtypeInputError}
+                  >
+                    <MenuItem value={RequestItem_ItemType.MATERIAL}><div className="badge whitespace-nowrap p-3 gap-2">{RequestItem_ItemType.MATERIAL}</div></MenuItem>
+                    <MenuItem value={RequestItem_ItemType.TOOL}><div className="badge whitespace-nowrap p-3 gap-2">{RequestItem_ItemType.TOOL}</div></MenuItem>
+                  </TextField>
+
+                  <Typography variant="body1" component="h2" sx={{ mt: 2 }}><b>Detail Barang</b></Typography>
+
+
+                  {/* INPUT MATERIAL */}
+                  {itemtypeInput == RequestItem_ItemType.MATERIAL &&
+                    <>
+                      <PurchasingMaterialInput materialData={materialData} materialLoading={materialLoading} handleAddPurchasingMaterial={handleAddPurchasingMaterial} />
+                    </>
+                  }
+                  {itemtypeInput == RequestItem_ItemType.TOOL &&
+                    <>
+                      <PurchasingToolInput skuData={skuData} skuLoading={skuLoading} skuError={skuError} handleAddPurchasingTool={handleAddPurchasingTool} />
+                    </>
+                  }
+                </Box>
               </Box>
-              <div className='flex justify-end'>
-                <Button variant="contained" color="warning" onClick={() => {  }} >Cetak Laporan</Button>
-              </div>
             </Container>
           </Box>
         }

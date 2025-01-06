@@ -170,6 +170,28 @@ export type GetAllToolsQueryVariables = Types.Exact<{
 
 export type GetAllToolsQuery = { __typename?: 'Query', getAllTools: Array<{ __typename?: 'Tool', _id: string, id: string, description?: string | null, warranty_number?: string | null, warranty_expired_date?: any | null, price: number, status: { __typename?: 'CategoryData', _id: string, name: string, description?: string | null }, sku: { __typename?: 'Sku', _id: string, name: string } }> };
 
+export type GetToolByIdQueryVariables = Types.Exact<{
+  id: Types.Scalars['String']['input'];
+}>;
+
+
+export type GetToolByIdQuery = { __typename?: 'Query', getToolById: { __typename?: 'Tool', _id: string, id: string, description?: string | null, warranty_number?: string | null, warranty_expired_date?: any | null, price: number, status: { __typename?: 'CategoryData', _id: string, name: string, description?: string | null }, sku: { __typename?: 'Sku', _id: string, name: string, description?: string | null, status: string, merk: { __typename?: 'Merk', _id: string, name: string, description?: string | null } } } };
+
+export type UpdateToolMutationVariables = Types.Exact<{
+  id: Types.Scalars['String']['input'];
+  updateToolInput: Types.UpdateToolInput;
+}>;
+
+
+export type UpdateToolMutation = { __typename?: 'Mutation', updateTool: { __typename?: 'Tool', _id: string, id: string, description?: string | null, warranty_number?: string | null, warranty_expired_date?: any | null, price: number } };
+
+export type GetToolTransactionsQueryVariables = Types.Exact<{
+  tool_id: Types.Scalars['String']['input'];
+}>;
+
+
+export type GetToolTransactionsQuery = { __typename?: 'Query', getToolTransactions: Array<{ __typename?: 'ToolTransaction', _id: string, date: any, in: number, out: number, transaction_code: string, warehouse: { __typename?: 'Warehouse', _id: string, name: string, address: string }, transaction_category: { __typename?: 'TransactionCategory', _id: string, id: string, description?: string | null }, tool: { __typename?: 'Tool', _id: string, id: string } }> };
+
 
 export const GetAllWarehousesDocument = gql`
     query GetAllWarehouses($filter: FilterInput) {
@@ -1190,3 +1212,161 @@ export type GetAllToolsQueryHookResult = ReturnType<typeof useGetAllToolsQuery>;
 export type GetAllToolsLazyQueryHookResult = ReturnType<typeof useGetAllToolsLazyQuery>;
 export type GetAllToolsSuspenseQueryHookResult = ReturnType<typeof useGetAllToolsSuspenseQuery>;
 export type GetAllToolsQueryResult = Apollo.QueryResult<GetAllToolsQuery, GetAllToolsQueryVariables>;
+export const GetToolByIdDocument = gql`
+    query GetToolById($id: String!) {
+  getToolById(id: $id) {
+    _id
+    id
+    description
+    warranty_number
+    warranty_expired_date
+    price
+    status {
+      _id
+      name
+      description
+    }
+    sku {
+      _id
+      name
+      description
+      status
+      merk {
+        _id
+        name
+        description
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetToolByIdQuery__
+ *
+ * To run a query within a React component, call `useGetToolByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetToolByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetToolByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetToolByIdQuery(baseOptions: Apollo.QueryHookOptions<GetToolByIdQuery, GetToolByIdQueryVariables> & ({ variables: GetToolByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetToolByIdQuery, GetToolByIdQueryVariables>(GetToolByIdDocument, options);
+      }
+export function useGetToolByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetToolByIdQuery, GetToolByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetToolByIdQuery, GetToolByIdQueryVariables>(GetToolByIdDocument, options);
+        }
+export function useGetToolByIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetToolByIdQuery, GetToolByIdQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetToolByIdQuery, GetToolByIdQueryVariables>(GetToolByIdDocument, options);
+        }
+export type GetToolByIdQueryHookResult = ReturnType<typeof useGetToolByIdQuery>;
+export type GetToolByIdLazyQueryHookResult = ReturnType<typeof useGetToolByIdLazyQuery>;
+export type GetToolByIdSuspenseQueryHookResult = ReturnType<typeof useGetToolByIdSuspenseQuery>;
+export type GetToolByIdQueryResult = Apollo.QueryResult<GetToolByIdQuery, GetToolByIdQueryVariables>;
+export const UpdateToolDocument = gql`
+    mutation UpdateTool($id: String!, $updateToolInput: UpdateToolInput!) {
+  updateTool(id: $id, updateToolInput: $updateToolInput) {
+    _id
+    id
+    description
+    warranty_number
+    warranty_expired_date
+    price
+  }
+}
+    `;
+export type UpdateToolMutationFn = Apollo.MutationFunction<UpdateToolMutation, UpdateToolMutationVariables>;
+
+/**
+ * __useUpdateToolMutation__
+ *
+ * To run a mutation, you first call `useUpdateToolMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateToolMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateToolMutation, { data, loading, error }] = useUpdateToolMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      updateToolInput: // value for 'updateToolInput'
+ *   },
+ * });
+ */
+export function useUpdateToolMutation(baseOptions?: Apollo.MutationHookOptions<UpdateToolMutation, UpdateToolMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateToolMutation, UpdateToolMutationVariables>(UpdateToolDocument, options);
+      }
+export type UpdateToolMutationHookResult = ReturnType<typeof useUpdateToolMutation>;
+export type UpdateToolMutationResult = Apollo.MutationResult<UpdateToolMutation>;
+export type UpdateToolMutationOptions = Apollo.BaseMutationOptions<UpdateToolMutation, UpdateToolMutationVariables>;
+export const GetToolTransactionsDocument = gql`
+    query GetToolTransactions($tool_id: String!) {
+  getToolTransactions(tool_id: $tool_id) {
+    _id
+    date
+    in
+    out
+    warehouse {
+      _id
+      name
+      address
+    }
+    transaction_code
+    transaction_category {
+      _id
+      id
+      description
+    }
+    tool {
+      _id
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetToolTransactionsQuery__
+ *
+ * To run a query within a React component, call `useGetToolTransactionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetToolTransactionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetToolTransactionsQuery({
+ *   variables: {
+ *      tool_id: // value for 'tool_id'
+ *   },
+ * });
+ */
+export function useGetToolTransactionsQuery(baseOptions: Apollo.QueryHookOptions<GetToolTransactionsQuery, GetToolTransactionsQueryVariables> & ({ variables: GetToolTransactionsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetToolTransactionsQuery, GetToolTransactionsQueryVariables>(GetToolTransactionsDocument, options);
+      }
+export function useGetToolTransactionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetToolTransactionsQuery, GetToolTransactionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetToolTransactionsQuery, GetToolTransactionsQueryVariables>(GetToolTransactionsDocument, options);
+        }
+export function useGetToolTransactionsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetToolTransactionsQuery, GetToolTransactionsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetToolTransactionsQuery, GetToolTransactionsQueryVariables>(GetToolTransactionsDocument, options);
+        }
+export type GetToolTransactionsQueryHookResult = ReturnType<typeof useGetToolTransactionsQuery>;
+export type GetToolTransactionsLazyQueryHookResult = ReturnType<typeof useGetToolTransactionsLazyQuery>;
+export type GetToolTransactionsSuspenseQueryHookResult = ReturnType<typeof useGetToolTransactionsSuspenseQuery>;
+export type GetToolTransactionsQueryResult = Apollo.QueryResult<GetToolTransactionsQuery, GetToolTransactionsQueryVariables>;

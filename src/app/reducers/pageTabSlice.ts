@@ -11,6 +11,7 @@ const initialState: PageTabState = {
     { name: 'approval_page', value: 0 },
     { name: 'purchasing_page', value: 0 },
     { name: 'project_main_page', value: 0 },
+    { name: 'inventory_page', value: 0 },
   ]
 };
 
