@@ -4,6 +4,7 @@ query FindAllProjects {
     name
     location
     createdAt
+    finished_at
     status {
       _id
       name

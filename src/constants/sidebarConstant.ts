@@ -19,7 +19,7 @@ interface ISidebarItem {
 }
 
 export const SIDEBAR_ITEMS: ISidebarItem[] = [
-  {id: 1, link_to: "/appuser/dashboard", link_name: "Dashboard", icon: dashboard_svg, role: ["owner", "admin", "mandor", "staff_purchasing"]},
+  {id: 1, link_to: "/appuser/dashboard", link_name: "Dashboard", icon: dashboard_svg, role: ["owner", "admin", "mandor", "staff_pembelian"]},
   {id: 2, link_to: "/appuser/project", link_name: "Proyek", icon: project_svg, role: ["owner", "admin", "mandor"]},
   {id: 3, link_to: "/appuser/inventory", link_name: "Inventori", icon: inventory_svg, role: ["owner", "admin", "staff_pembelian"]},
   {id: 4, link_to: "/appuser/purchasing", link_name: "Pembelian", icon: purchasing_svg, role: ["owner", "admin", "staff_pembelian"]},

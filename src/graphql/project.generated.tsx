@@ -6,7 +6,7 @@ const defaultOptions = {} as const;
 export type FindAllProjectsQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
-export type FindAllProjectsQuery = { __typename?: 'Query', findAllProjects: Array<{ __typename?: 'Project', _id: string, name: string, location: string, createdAt: any, status: { __typename?: 'CategoryData', _id: string, name: string }, priority: { __typename?: 'CategoryData', _id: string, name: string }, project_leader: { __typename?: 'Employee', _id: string, person: { __typename?: 'Person', name: string } } }> };
+export type FindAllProjectsQuery = { __typename?: 'Query', findAllProjects: Array<{ __typename?: 'Project', _id: string, name: string, location: string, createdAt: any, finished_at?: any | null, status: { __typename?: 'CategoryData', _id: string, name: string }, priority: { __typename?: 'CategoryData', _id: string, name: string }, project_leader: { __typename?: 'Employee', _id: string, person: { __typename?: 'Person', name: string } } }> };
 
 export type FindProjectByIdQueryVariables = Types.Exact<{
   id: Types.Scalars['String']['input'];
@@ -108,6 +108,7 @@ export const FindAllProjectsDocument = gql`
     name
     location
     createdAt
+    finished_at
     status {
       _id
       name
