@@ -29,6 +29,7 @@ import DetailPurchasing from "../pages/private_pages/PurchasingRelated/DetailPur
 import DetailRequestClosing from "../components/request_related/request_closing_related/DetailRequestClosing";
 import CreatePurchasingTransaction from "../pages/private_pages/PurchasingRelated/CreatePurchasingTransaction";
 import DetailTool from "../pages/private_pages/InventoryRelated/ToolRelated/DetailTool";
+import UserProfilePage from "../pages/private_pages/UserRelated/UserProfilePage";
 
 const AppRoutes: React.FC = () => {
   const router = createBrowserRouter([
@@ -48,6 +49,7 @@ const AppRoutes: React.FC = () => {
       children: [
         { index: true, element: <Navigate to={"/appuser/dashboard"} /> },
         { path: "dashboard", element: <DashboardPage /> },
+        { path: "profile/:userId", element: <UserProfilePage /> },
         {
           path: "project", children: [
             { index: true, element: <ProjectPage /> },
@@ -64,9 +66,9 @@ const AppRoutes: React.FC = () => {
         },
         {
           path: "purchasing", children: [
-            { index: true, element: <PurchasingPage />},
-            { path: ":purchasingId", element: <DetailPurchasing />},
-            { path: "add", element: <CreatePurchasingTransaction />}
+            { index: true, element: <PurchasingPage /> },
+            { path: ":purchasingId", element: <DetailPurchasing /> },
+            { path: "add", element: <CreatePurchasingTransaction /> }
           ]
         },
         {
@@ -81,7 +83,9 @@ const AppRoutes: React.FC = () => {
             { path: ":employeeId", element: <EmployeeDetail /> }
           ]
         },
-        { path: "user", element: <UserPage /> },
+        {
+          path: "user", element: <UserPage />
+        },
         {
           path: "request", children: [
             { index: true, element: <RequestPage /> },

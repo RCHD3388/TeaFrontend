@@ -60,8 +60,8 @@ const Navbar: React.FC<NavbarProps> = ({ sidebarID }) => {
               <div className="flex gap-2">
                 <span className="font-bold text-base" style={{ textTransform: "capitalize" }}>{user.username} </span>
                 <span className="badge badge-warning">{user.role}</span>
-              </div>  
-              <li className="btn my-2 bg-success text-white btn-sm" onClick={() => { logoutHandling() }}>Profile</li>
+              </div>
+              <li className="btn my-2 bg-success text-white btn-sm" onClick={() => { navigate(`/appuser/profile/${user._id}`) }}>Profile</li>
               <hr className="mb-2 border-t-2 border-gray-300" />
               <li className="btn bg-important btn-sm" onClick={() => { logoutHandling() }}>Logout</li>
             </ul>

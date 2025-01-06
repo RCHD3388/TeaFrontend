@@ -402,6 +402,7 @@ export type Mutation = {
   processingItemRequest: RequestItemHeader;
   removeProjectEmployee: Employee;
   removePurchaseTransactionDetail: PurchaseTransaction;
+  resetPassword: Scalars['Boolean']['output'];
   submitAttendanceModule: AttendanceModule;
   updateAttendanceModule: AttendanceModule;
   updateAvailableStatusItemRequest: RequestItemHeader;
@@ -613,6 +614,12 @@ export type MutationRemoveProjectEmployeeArgs = {
 export type MutationRemovePurchaseTransactionDetailArgs = {
   id: Scalars['String']['input'];
   id_detail: Scalars['String']['input'];
+};
+
+
+export type MutationResetPasswordArgs = {
+  currentPassword: Scalars['String']['input'];
+  newPassword: Scalars['String']['input'];
 };
 
 
@@ -894,6 +901,7 @@ export type Query = {
   getHello: Scalars['String']['output'];
   getMaterialById: Material;
   getMerkById: Merk;
+  getProfile: User;
   getPurchaseOrderByID: CustomOneRequestPo;
   getPurchaseOrderByUser: Array<PurchaseOrder>;
   getPurchaseTransactionById: CustomOneRequestPt;

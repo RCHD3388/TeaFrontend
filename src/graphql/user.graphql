@@ -85,3 +85,35 @@ mutation DeleteUser($id: String!) {
   }
 }
 
+mutation ResetPassword ($currentPassword: String!, $newPassword: String!){
+  resetPassword(currentPassword: $currentPassword, newPassword: $newPassword)
+}
+
+query GetProfile{
+    getProfile{
+        _id
+        username
+        status
+        employee {
+            _id
+            hire_date
+            salary
+            status
+            person {
+                name
+                email
+                phone_number
+                address
+            }
+            role {
+                _id
+                name
+            }
+            skill {
+                _id
+                name
+                description
+            }
+        }
+    }
+}
