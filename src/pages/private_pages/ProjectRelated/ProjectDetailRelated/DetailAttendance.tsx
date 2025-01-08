@@ -253,9 +253,9 @@ const DetailAttendance: React.FC<DetailAttendanceProps> = ({ projectId, moduleId
             Submit & Selesaikan
           </Button>
         }
-        <Button onClick={handleSubmit(handleUpdate)} variant="contained" color="secondary" sx={{ mr: 1 }} disabled={isSubmitting || data.findOneAttendanceModule.submit_status == true} >
+        {data && <Button onClick={handleSubmit(handleUpdate)} variant="contained" color="secondary" sx={{ mr: 1 }} disabled={isSubmitting || data.findOneAttendanceModule.submit_status == true} >
           {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : ("Perbarui")}
-        </Button>
+        </Button>}
         <AttendanceReportModal />
       </Box>
 
