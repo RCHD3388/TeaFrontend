@@ -242,7 +242,7 @@ const DetailPurchaseOrder: React.FC<DetailPurchaseOrderProps> = ({ }) => {
                 </>}
               </div>
 
-              <div>
+              {user._id == getDataRequest().requested_by._id && <div>
                 <Typography variant="body1" sx={{ mr: 2 }}><b>Konfirmasi Penerimaan Barang Pembelian :</b>  </Typography>
                 {relatedPTData && getRelatedPT().purchase_transaction.length == 0 &&
                   <div className="flex justify-center items-center p-5 bg-accent shadow-md">
@@ -273,7 +273,7 @@ const DetailPurchaseOrder: React.FC<DetailPurchaseOrderProps> = ({ }) => {
                       })
                     })}
                 </Box>
-              </div>
+              </div>}
             </Container>
           </Box>
         }
