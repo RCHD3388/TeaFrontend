@@ -268,7 +268,8 @@ const DetailTool = () => {
             <Box mt={1} maxHeight={400} sx={{ overflow: "auto" }}>
               <Box p={2}>
                 <Typography variant="h6" component="h2">Daftar Transaksi Perpindagan Tool<b> {getData().id}</b></Typography>
-                <Typography variant="body1" component="h2">Lokasi Penyimpanan Terbaru: <b> {getTransaction()[0].warehouse.name} ( {getTransaction()[0].warehouse.address} )</b></Typography>
+                {dataTransaction &&
+                  <Typography variant="body1" component="h2">Lokasi Penyimpanan Terbaru: <b> {getTransaction()[0].warehouse.name} ( {getTransaction()[0].warehouse.address} )</b></Typography>}
               </Box>
               {dataTransaction && <StickyHeadTable
                 tableSx={{ height: 300 }}

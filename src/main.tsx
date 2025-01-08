@@ -16,13 +16,13 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
     for (let err of graphQLErrors as CustomGraphQLError[]) {
 
       const code = err?.code || err.extensions?.code;
-      // if (code === 'UNAUTHENTICATED' || code === "FORBIDDEN") {
-      //   localStorage.removeItem('persist:user');
-      //   window.location.href = '/';
-      // } else {
-      //   console.log(err)
-      //   console.error(`GraphQL error [${code}]:`, err.message);
-      // }
+      if (code === 'UNAUTHENTICATED' || code === "FORBIDDEN") {
+        localStorage.removeItem('persist:user');
+        window.location.href = '/';
+      } else {
+        console.log(err)
+        console.error(`GraphQL error [${code}]:`, err.message);
+      }
       console.log(err)
       console.error(`GraphQL error [${code}]:`, err.message);
     }
