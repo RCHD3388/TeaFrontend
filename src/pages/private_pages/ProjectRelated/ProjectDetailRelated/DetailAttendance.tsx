@@ -1,11 +1,11 @@
-import { Box, Button, Checkbox, CircularProgress, Container, TextField, Typography } from "@mui/material";
+import { Box, Button, Checkbox, CircularProgress, Container, Modal, TextField, Typography } from "@mui/material";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useMutation, useQuery } from "@apollo/client";
-import { DeleteAttendanceModuleDocument, FindOneAttendanceModuleDocument, UpdateAttendanceModuleDocument } from "../../../../graphql/project.generated";
+import { DeleteAttendanceModuleDocument, FindOneAttendanceModuleDocument, SubmitAttendanceModuleDocument, UpdateAttendanceModuleDocument } from "../../../../graphql/project.generated";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { openSnackbar } from "../../../../app/reducers/snackbarSlice";
@@ -13,6 +13,7 @@ import { GetBadReqMsg } from "../../../../utils/helpers/ErrorMessageHelper";
 import { current } from "@reduxjs/toolkit";
 import { formatDateToLong } from "../../../../utils/service/FormatService";
 import AttendanceReportModal from "../../../../components/project_related/attendance_related/AttendanceReportModal";
+import { modalStyle } from "../../../../theme";
 
 interface UpdateValue {
   description: string
@@ -38,8 +39,12 @@ const DetailAttendance: React.FC<DetailAttendanceProps> = ({ projectId, moduleId
   })
   const [currentAttendance, setCurrentAttendance] = useState<any[]>([])
   const [updateAttendanceModule] = useMutation(UpdateAttendanceModuleDocument);
+  const [submitAttendanceModule] = useMutation(SubmitAttendanceModuleDocument);
   const dispatch = useDispatch();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpenModal = () => { setOpenModal(true) }
+  const handleCloseModal = () => { setOpenModal(false) }
   const { handleSubmit, control, formState: { errors }, reset } = useForm<UpdateValue>({ defaultValues: { description: "" } });
 
   const handleUpdate: SubmitHandler<UpdateValue> = async (data) => {
@@ -95,6 +100,27 @@ const DetailAttendance: React.FC<DetailAttendanceProps> = ({ projectId, moduleId
       }
       return att
     }))
+  }
+
+  const handleSubmitAttendanceModule = async () => {
+    setIsSubmitting(true)
+    try {
+      await submitAttendanceModule({
+        variables: {
+          projectId: projectId, moduleId: moduleId,
+          requiresAuth: true
+        }
+      })
+      dispatch(openSnackbar({ severity: "success", message: "Berhasil submit dan selesaikan modul absensi" }))
+      refetch()
+      handleCloseModal()
+      reset()
+    } catch (err: any) {
+      let msg = GetBadReqMsg("Gagal subbmit dan selesaikan modul absen, silakan coba lagi nanti", err)
+      dispatch(openSnackbar({ severity: "error", message: String(msg) }))
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   useEffect(() => {
@@ -220,12 +246,42 @@ const DetailAttendance: React.FC<DetailAttendanceProps> = ({ projectId, moduleId
         </div>}
       </Box>
       <Box display={"flex"} justifyContent={"end"}>
-        <Button onClick={handleSubmit(handleUpdate)} variant="contained" color="secondary" sx={{ mr: 1 }} disabled={isSubmitting} >
+        {data && data.findOneAttendanceModule.submit_status == false &&
+          <Button variant="contained" color="success" sx={{ mr: 1 }} onClick={() => {
+            handleOpenModal()
+          }} >
+            Submit & Selesaikan
+          </Button>
+        }
+        <Button onClick={handleSubmit(handleUpdate)} variant="contained" color="secondary" sx={{ mr: 1 }} disabled={isSubmitting || data.findOneAttendanceModule.submit_status == true} >
           {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : ("Perbarui")}
         </Button>
-        <AttendanceReportModal/>
+        <AttendanceReportModal />
       </Box>
-    </div>
+
+      {/* MODAL CONFIRMATION */}
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={() => {
+          modalStyle.width = 700
+          modalStyle.p = 2
+          return modalStyle
+        }}>
+          <Typography id="modal-modal-title" variant="h6" component="h2" mb={2}><b>KONFIRMASI SUBMIT & PENYELESAIAN MODUL</b></Typography>
+          <span className="alert bg-warning p-2">
+            Konfirmasi dan pastikan data pada module absensi tersebut telah sesuai dan ingin anda submit sebagai penyelesaian absensi
+          </span>
+          <div className="flex justify-between" style={{ width: "100%" }}>
+            <Button variant="contained" color="info" sx={{ mt: 2 }} onClick={handleCloseModal}>Kembali</Button>
+            <Button variant="contained" color="success" sx={{ mt: 2 }} onClick={() => handleSubmitAttendanceModule()}>Submit & Selesaikan</Button>
+          </div>
+        </Box>
+      </Modal>
+    </div >
   );
 };
 

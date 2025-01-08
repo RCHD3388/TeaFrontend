@@ -93,6 +93,14 @@ export type DeleteAttendanceModuleMutationVariables = Types.Exact<{
 
 export type DeleteAttendanceModuleMutation = { __typename?: 'Mutation', deleteAttendanceModule: { __typename?: 'AttendanceModule', _id: string } };
 
+export type SubmitAttendanceModuleMutationVariables = Types.Exact<{
+  projectId: Types.Scalars['String']['input'];
+  moduleId: Types.Scalars['String']['input'];
+}>;
+
+
+export type SubmitAttendanceModuleMutation = { __typename?: 'Mutation', submitAttendanceModule: { __typename?: 'AttendanceModule', _id: string, start_date: any, end_date: any, submit_status: boolean, description: string } };
+
 export type FindAllProjectCostLogsQueryVariables = Types.Exact<{
   projectId: Types.Scalars['String']['input'];
 }>;
@@ -743,6 +751,44 @@ export function useDeleteAttendanceModuleMutation(baseOptions?: Apollo.MutationH
 export type DeleteAttendanceModuleMutationHookResult = ReturnType<typeof useDeleteAttendanceModuleMutation>;
 export type DeleteAttendanceModuleMutationResult = Apollo.MutationResult<DeleteAttendanceModuleMutation>;
 export type DeleteAttendanceModuleMutationOptions = Apollo.BaseMutationOptions<DeleteAttendanceModuleMutation, DeleteAttendanceModuleMutationVariables>;
+export const SubmitAttendanceModuleDocument = gql`
+    mutation SubmitAttendanceModule($projectId: String!, $moduleId: String!) {
+  submitAttendanceModule(projectId: $projectId, moduleId: $moduleId) {
+    _id
+    start_date
+    end_date
+    submit_status
+    description
+  }
+}
+    `;
+export type SubmitAttendanceModuleMutationFn = Apollo.MutationFunction<SubmitAttendanceModuleMutation, SubmitAttendanceModuleMutationVariables>;
+
+/**
+ * __useSubmitAttendanceModuleMutation__
+ *
+ * To run a mutation, you first call `useSubmitAttendanceModuleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSubmitAttendanceModuleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [submitAttendanceModuleMutation, { data, loading, error }] = useSubmitAttendanceModuleMutation({
+ *   variables: {
+ *      projectId: // value for 'projectId'
+ *      moduleId: // value for 'moduleId'
+ *   },
+ * });
+ */
+export function useSubmitAttendanceModuleMutation(baseOptions?: Apollo.MutationHookOptions<SubmitAttendanceModuleMutation, SubmitAttendanceModuleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SubmitAttendanceModuleMutation, SubmitAttendanceModuleMutationVariables>(SubmitAttendanceModuleDocument, options);
+      }
+export type SubmitAttendanceModuleMutationHookResult = ReturnType<typeof useSubmitAttendanceModuleMutation>;
+export type SubmitAttendanceModuleMutationResult = Apollo.MutationResult<SubmitAttendanceModuleMutation>;
+export type SubmitAttendanceModuleMutationOptions = Apollo.BaseMutationOptions<SubmitAttendanceModuleMutation, SubmitAttendanceModuleMutationVariables>;
 export const FindAllProjectCostLogsDocument = gql`
     query FindAllProjectCostLogs($projectId: String!) {
   findAllProjectCostLogs(projectId: $projectId) {

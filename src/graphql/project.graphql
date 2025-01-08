@@ -276,6 +276,16 @@ mutation DeleteAttendanceModule ($projectId: String!, $moduleId: String!){
     }
 }
 
+mutation SubmitAttendanceModule ($projectId: String!, $moduleId: String!){
+    submitAttendanceModule(projectId: $projectId, moduleId: $moduleId) {
+        _id
+        start_date
+        end_date
+        submit_status
+        description
+    }
+}
+
 # PROJECT COST LOG
 query FindAllProjectCostLogs ($projectId: String!){
     findAllProjectCostLogs(projectId: $projectId) {

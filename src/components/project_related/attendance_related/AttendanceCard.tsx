@@ -27,7 +27,7 @@ const AttendanceCard: React.FC<AttendanceCardProps> = ({
 
   const getSubmitStatusBadge = (status: boolean) => {
     if (status) {
-      return <div className="badge whitespace-nowrap badge-success">Telah disubmit</div>
+      return <div className="badge whitespace-nowrap badge-success text-white">Telah disubmit</div>
     } else {
       return <div className="badge whitespace-nowrap badge-info text-white">Belum submit</div>
     }
