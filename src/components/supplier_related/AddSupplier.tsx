@@ -98,7 +98,7 @@ const AddSupplier: React.FC<AddSupplierProps> = ({ refetchSupplier }) => {
           name="company_name" control={control} rules={{ required: 'Nama perusahaan tidak boleh kosong' }}
           render={({ field }) => (<TextField
             {...field} color="secondary"
-            sx={{ width: "100%", mb: 1 }} label="Company name" size='small' variant="outlined"
+            sx={{ width: "100%", mb: 1 }} label="Nama perusahaan" size='small' variant="outlined"
             error={!!errors.company_name} helperText={errors.company_name ? errors.company_name.message : ''}
           />)}
         />
@@ -107,7 +107,7 @@ const AddSupplier: React.FC<AddSupplierProps> = ({ refetchSupplier }) => {
           name="name" control={control} rules={{ required: 'Name tidak boleh kosong' }}
           render={({ field }) => (<TextField
             {...field} color="secondary"
-            sx={{ width: "100%", mb: 1 }} label="Name" size='small' variant="outlined"
+            sx={{ width: "100%", mb: 1 }} label="Kontak person" size='small' variant="outlined"
             error={!!errors.name} helperText={errors.name ? errors.name.message : ''}
           />)}
         />
@@ -133,7 +133,7 @@ const AddSupplier: React.FC<AddSupplierProps> = ({ refetchSupplier }) => {
           }}
           render={({ field }) => (<TextField
             {...field} color="secondary"
-            sx={{ width: "100%", mb: 1 }} label="Phone" size='small' variant="outlined"
+            sx={{ width: "100%", mb: 1 }} label="Nomer telepon" size='small' variant="outlined"
             error={!!errors.phone_number} helperText={errors.phone_number ? errors.phone_number.message : ''}
           />)}
         />
@@ -141,7 +141,7 @@ const AddSupplier: React.FC<AddSupplierProps> = ({ refetchSupplier }) => {
           name="address" control={control} rules={{ required: 'Alamat tidak boleh kosong' }}
           render={({ field }) => (<TextField
             {...field} color="secondary"
-            sx={{ width: "100%", mb: 1 }} label="Address" size='small' variant="outlined"
+            sx={{ width: "100%", mb: 1 }} label="Alamat " size='small' variant="outlined"
             error={!!errors.address} helperText={errors.address ? errors.address.message : ''}
           />)}
         />
