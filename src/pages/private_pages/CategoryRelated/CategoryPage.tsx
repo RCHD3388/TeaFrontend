@@ -271,14 +271,14 @@ export default function CategoryPage() {
           </Typography>
 
           {/* FIELD START */}
-          <TextField sx={{ width: "100%", mb: 1 }} label="Name" size='small'
+          <TextField sx={{ width: "100%", mb: 1 }} label="Nama" size='small'
             color="secondary"
             variant="outlined" inputRef={nameRef}
             defaultValue={selectedRow?.name ?? ""}
             error={nameErr != ""}
             helperText={nameErr}
           />
-          <TextField sx={{ width: "100%", mb: 1 }} label="Description" size='small'
+          <TextField sx={{ width: "100%", mb: 1 }} label="Deskripsi" size='small'
             color="secondary"
             variant="outlined" inputRef={descriptionRef}
             defaultValue={selectedRow?.description ?? ""}

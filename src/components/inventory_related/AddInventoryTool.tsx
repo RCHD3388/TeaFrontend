@@ -203,7 +203,7 @@ const AddInventoryTool: React.FC<AddInventoryToolProps> = ({ warehouseId, refetc
             />
             <div className="flex">
               <Controller
-                name="sku" control={control} rules={{ required: 'Skill tidak boleh kosong' }}
+                name="sku" control={control} rules={{ required: 'Sku tidak boleh kosong' }}
                 render={({ field }) => (
                   <TextField
                     {...field} color="secondary"
