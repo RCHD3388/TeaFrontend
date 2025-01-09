@@ -29,7 +29,6 @@ const DetailPurchaseOrder: React.FC<DetailPurchaseOrderProps> = ({ }) => {
   const [handleReceivedPODetail] = useMutation(HandleReceivedPoDetailDocument)
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-
   const [openReportModal, setOpenReportModal] = useState(false);
   const handleOpenReportModal = () => { setOpenReportModal(true) }
   const handleCloseReportModal = () => { setOpenReportModal(false) }
@@ -117,6 +116,14 @@ const DetailPurchaseOrder: React.FC<DetailPurchaseOrderProps> = ({ }) => {
       navigate("/appuser/notfound")
     }
   }, [error]);
+
+  useEffect(() => {
+    if(data) refetch()
+  }, [data, refetch])
+
+  useEffect(() => {
+    if(relatedPTData) relatedPTRefetch()
+  }, [relatedPTData, relatedPTRefetch])
 
   return (
     <div className="p-5" style={{ height: "100%" }}>
@@ -242,7 +249,7 @@ const DetailPurchaseOrder: React.FC<DetailPurchaseOrderProps> = ({ }) => {
                 </>}
               </div>
 
-              {user._id == getDataRequest().requested_by._id && <div>
+              {relatedPTData && user._id == getDataRequest().requested_by._id && <div>
                 <Typography variant="body1" sx={{ mr: 2 }}><b>Konfirmasi Penerimaan Barang Pembelian :</b>  </Typography>
                 {relatedPTData && getRelatedPT().purchase_transaction.length == 0 &&
                   <div className="flex justify-center items-center p-5 bg-accent shadow-md">
