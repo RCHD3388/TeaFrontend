@@ -213,8 +213,8 @@ const AddProject: React.FC<AddProjectProps> = ({ refetchProject }) => {
             <TextField
               {...field} color="secondary"
               select sx={{ width: "100%", mb: 1 }} label="Mandor" size="small" variant="outlined"
-              error={!!errors.status}
-              helperText={errors.status ? errors.status.message : ''}
+              error={!!errors.project_leader}
+              helperText={errors.project_leader ? errors.project_leader.message : ''}
             >
               {!empLoading && !empError && empData.getAllEmployees.map((data: any, index: number) => {
                 return <MenuItem key={index} value={data._id}><div className="badge p-3 gap-2">{data.person.name} ({data.person.email})</div></MenuItem>
