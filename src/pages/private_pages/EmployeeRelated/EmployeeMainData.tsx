@@ -11,6 +11,7 @@ import { selectUser } from "../../../app/reducers/userSlice";
 import { useNavigate } from "react-router-dom";
 import { EmployeeRoleType, EmployeeRoleTypeValues } from "../../../types/staticData.types";
 import { GridColDef } from "@mui/x-data-grid";
+import { GridFilterInputSingleSelect } from '@mui/x-data-grid';
 
 interface RowData {
   _id: string,
@@ -80,7 +81,25 @@ const EmployeeMainData: React.FC = () => {
           </Box>
         </div>
       ),
-      valueGetter: (value, row) => row.skill.map((sk: any) => sk.name).join(", ")
+      valueGetter: (value, row) => row.skill.map((sk: any) => sk.name).join(", "),
+      filterOperators: [
+        {
+          label: 'Contains',
+          value: 'contains',
+          getApplyFilterFn: (filterItem) => {
+            if (!filterItem.value || typeof filterItem.value !== 'string') {
+              return null;
+            }
+            return (params) => {
+              return params.includes(filterItem.value);
+            };
+          },
+          InputComponent: GridFilterInputSingleSelect, // Menggunakan dropdown default singleSelect
+          InputComponentProps: {
+            type: 'text',
+          },
+        },
+      ],
     },
     {
       field: 'action', headerName: 'Action', minWidth: 150, sortable: false,

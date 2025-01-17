@@ -199,7 +199,7 @@ export default function CategoryPage() {
             render={({ field }) => (
               <TextField
                 {...field} color="secondary"
-                sx={{ width: "100%", mb: 1 }} label="Name" size='small' variant="outlined"
+                sx={{ width: "100%", mb: 1 }} label="Nama" size='small' variant="outlined"
                 error={!!errors.name}
                 helperText={errors.name ? errors.name.message : ''}
               />
@@ -210,9 +210,9 @@ export default function CategoryPage() {
             render={({ field }) => (
               <TextField
                 {...field} color="secondary"
-                sx={{ width: "100%", mb: 1 }} label="Description" size='small' variant="outlined"
-                error={!!errors.name}
-                helperText={errors.name ? errors.name.message : ''}
+                sx={{ width: "100%", mb: 1 }} label="Deskripsi" size='small' variant="outlined"
+                error={!!errors.description}
+                helperText={errors.description ? errors.description.message : ''}
               />
             )}
           />
