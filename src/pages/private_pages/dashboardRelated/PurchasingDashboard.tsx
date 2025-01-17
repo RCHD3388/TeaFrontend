@@ -83,48 +83,49 @@ export default function PurchasingDashboard({ }) {
               </div>
             </>}
           </>}
-
-          <Typography variant="h5" sx={{ mt: 1 }}><b>Order Pembelian Terbaru</b></Typography>
-          <Box maxHeight={300} overflow={"auto"}>
-            {!loading && data && getData().filter((requestItem: any) => requestItem.status != RequestStatusType.SELESAI).length == 0 && <>
-              <div className="flex justify-center items-center p-5 bg-accent shadow-md">
-                BELUM TERDAPAT ORDER PEMBELIAN TERBARU
-              </div></>}
-            {!loading && data && getData().filter((requestItem: any) => requestItem.status != RequestStatusType.SELESAI)
-              .map((requestItem: any, index: number) => {
-                return (
-                  <div className="mb-2 bg-white shadow-lg rounded-lg border border-gray-200" key={index}>
-                    <div className="p-4">
-                      <h2 className="text-xl font-semibold text-gray-800 flex items-center">
-                        PO{formatISODateToCustom(requestItem.date.toString())}
-                        <span className={` ms-1 badge ${RequestStatusColors[requestItem.status as keyof typeof RequestStatusColors]}`}> {requestItem.status}</span>
-                      </h2>
-                      <div className="p-1">
-                        <p className="mt-1 text-gray-700">
-                          <span className="font-semibold">Judul: </span>{requestItem.title}
-                        </p>
-                        <p className="mt-0 text-gray-700">
-                          <span className="font-semibold">Tanggal pengajuan: </span>{formatDateToLong(requestItem.date.toString())}
-                        </p>
-                        <p className="mt-0 text-gray-700">
-                          <span className="font-semibold">Gudang Asal: </span>
-                          <span style={{ textTransform: "capitalize" }}>{requestItem.requested_from.name} ( {requestItem.requested_from.address} )</span>
-                        </p>
-                        <p className="mt-0 text-gray-700">
-                          <span className="font-semibold">Deskripsi: </span>
-                          <span style={{ textTransform: "capitalize" }}>{requestItem.description || "-"}</span>
-                        </p>
+          <div className="container mx-auto p-4">
+            <Typography variant="h5" sx={{ mt: 1 }}><b>Order Pembelian Terbaru</b></Typography>
+            <Box maxHeight={300} overflow={"auto"}>
+              {!loading && data && getData().filter((requestItem: any) => requestItem.status != RequestStatusType.SELESAI).length == 0 && <>
+                <div className="flex justify-center items-center p-5 bg-accent shadow-md">
+                  BELUM TERDAPAT ORDER PEMBELIAN TERBARU
+                </div></>}
+              {!loading && data && getData().filter((requestItem: any) => requestItem.status != RequestStatusType.SELESAI)
+                .map((requestItem: any, index: number) => {
+                  return (
+                    <div className="mb-2 bg-white shadow-lg rounded-lg border border-gray-200" key={index}>
+                      <div className="p-4">
+                        <h2 className="text-xl font-semibold text-gray-800 flex items-center">
+                          PO{formatISODateToCustom(requestItem.date.toString())}
+                          <span className={` ms-1 badge ${RequestStatusColors[requestItem.status as keyof typeof RequestStatusColors]}`}> {requestItem.status}</span>
+                        </h2>
+                        <div className="p-1">
+                          <p className="mt-1 text-gray-700">
+                            <span className="font-semibold">Judul: </span>{requestItem.title}
+                          </p>
+                          <p className="mt-0 text-gray-700">
+                            <span className="font-semibold">Tanggal pengajuan: </span>{formatDateToLong(requestItem.date.toString())}
+                          </p>
+                          <p className="mt-0 text-gray-700">
+                            <span className="font-semibold">Gudang Asal: </span>
+                            <span style={{ textTransform: "capitalize" }}>{requestItem.requested_from.name} ( {requestItem.requested_from.address} )</span>
+                          </p>
+                          <p className="mt-0 text-gray-700">
+                            <span className="font-semibold">Deskripsi: </span>
+                            <span style={{ textTransform: "capitalize" }}>{requestItem.description || "-"}</span>
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex justify-end p-2 bg-gray-100 rounded-b-lg">
+                        <Button variant="contained" color="info" onClick={() => {
+                          navigate(`/appuser/request/po/${requestItem._id}`)
+                        }}>Detail</Button>
                       </div>
                     </div>
-                    <div className="flex justify-end p-2 bg-gray-100 rounded-b-lg">
-                      <Button variant="contained" color="info" onClick={() => {
-                        navigate(`/appuser/request/po/${requestItem._id}`)
-                      }}>Detail</Button>
-                    </div>
-                  </div>
-                )
-              })}
-          </Box>
+                  )
+                })}
+            </Box>
+          </div>
         </>
       </div>
     </div>

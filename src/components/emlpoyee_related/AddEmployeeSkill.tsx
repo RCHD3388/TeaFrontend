@@ -80,10 +80,10 @@ const AddEmployeeSkill: React.FC<AddEmployeeSkillProps> = ({ refetchSkill }) => 
           <Typography id="modal-modal-title" variant="h6" component="h2"><b>TAMBAH DATA SKILL PEGAWAI BARU</b></Typography>
           {/* FIELD START */}
           <Controller
-            name="name" control={control} rules={{ required: 'Name is required' }}
+            name="name" control={control} rules={{ required: 'Nama tidak boleh kosong' }}
             render={({ field }) => (<TextField
               {...field} color="secondary"
-              sx={{ width: "100%", mb: 1 }} label="Name" size='small' variant="outlined"
+              sx={{ width: "100%", mb: 1 }} label="Nama" size='small' variant="outlined"
               error={!!errors.name} helperText={errors.name ? errors.name.message : ''}
             />)}
           />
@@ -91,7 +91,7 @@ const AddEmployeeSkill: React.FC<AddEmployeeSkillProps> = ({ refetchSkill }) => 
             name="description" control={control}
             render={({ field }) => (<TextField
               {...field} color="secondary"
-              sx={{ width: "100%", mb: 1 }} label="Description" size='small' variant="outlined"
+              sx={{ width: "100%", mb: 1 }} label="Deskripsi" size='small' variant="outlined"
               error={!!errors.description} helperText={errors.description ? errors.description.message : ''}
             />)}
           />
