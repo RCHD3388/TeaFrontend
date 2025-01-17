@@ -125,7 +125,7 @@ const EditMaterialModal: React.FC<EditMaterialModalProps> = ({
       aria-describedby="modal-modal-description"
     >
       <Box sx={modalStyle}>
-        <Typography id="modal-modal-title" variant="h6" component="h2"><b>TAMBAH MATERIAL</b></Typography>
+        <Typography id="modal-modal-title" variant="h6" component="h2"><b>PERBARUI DATA MATERIAL</b></Typography>
         <Typography id="modal-modal-description" mb={2} sx={{ fontWeight: "bold" }}>
           Material ID : {row.id}
         </Typography>
@@ -270,7 +270,7 @@ const EditMaterialModal: React.FC<EditMaterialModalProps> = ({
             color="primary"
             disabled={isSubmitting}
           >
-            {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : ("Edit")}
+            {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : ("Ubah")}
           </Button>
         </Box>
       </Box>
