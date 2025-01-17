@@ -27,7 +27,8 @@ import ProjectClosingMaterialInput from "./ProjectClosingMaterialInput";
 import { UpdateProjectClosingDocument } from "../../../../graphql/project_closing.generated";
 import { GetBadReqMsg } from "../../../../utils/helpers/ErrorMessageHelper";
 import { openSnackbar } from "../../../../app/reducers/snackbarSlice";
-import ButtonUpload from "./buttonUpload";
+import ButtonUpload from "./ButtonUpload";
+
 interface ProjectClosingDetailProps {
   dataProject: any;
   refetchProject: (
