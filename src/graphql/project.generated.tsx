@@ -108,6 +108,29 @@ export type FindAllProjectCostLogsQueryVariables = Types.Exact<{
 
 export type FindAllProjectCostLogsQuery = { __typename?: 'Query', findAllProjectCostLogs: Array<{ __typename?: 'ProjectCostLog', _id: string, title: string, description?: string | null, date: any, price: number, category: string, request_cost?: string | null }> };
 
+export type GenerateReportMutationVariables = Types.Exact<{
+  attendanceModuleData: Types.Scalars['String']['input'];
+}>;
+
+
+export type GenerateReportMutation = { __typename?: 'Mutation', generateReport: string };
+
+export type PreviewReportQueryVariables = Types.Exact<{
+  attendanceModuleData: Types.Scalars['String']['input'];
+}>;
+
+
+export type PreviewReportQuery = { __typename?: 'Query', previewReport: string };
+
+export type PreviewProjectCostLogReportQueryVariables = Types.Exact<{
+  projectId: Types.Scalars['String']['input'];
+  startDate: Types.Scalars['String']['input'];
+  endDate: Types.Scalars['String']['input'];
+}>;
+
+
+export type PreviewProjectCostLogReportQuery = { __typename?: 'Query', previewProjectCostLogReport: string };
+
 
 export const FindAllProjectsDocument = gql`
     query FindAllProjects {
@@ -835,3 +858,116 @@ export type FindAllProjectCostLogsQueryHookResult = ReturnType<typeof useFindAll
 export type FindAllProjectCostLogsLazyQueryHookResult = ReturnType<typeof useFindAllProjectCostLogsLazyQuery>;
 export type FindAllProjectCostLogsSuspenseQueryHookResult = ReturnType<typeof useFindAllProjectCostLogsSuspenseQuery>;
 export type FindAllProjectCostLogsQueryResult = Apollo.QueryResult<FindAllProjectCostLogsQuery, FindAllProjectCostLogsQueryVariables>;
+export const GenerateReportDocument = gql`
+    mutation GenerateReport($attendanceModuleData: String!) {
+  generateReport(attendanceModuleData: $attendanceModuleData)
+}
+    `;
+export type GenerateReportMutationFn = Apollo.MutationFunction<GenerateReportMutation, GenerateReportMutationVariables>;
+
+/**
+ * __useGenerateReportMutation__
+ *
+ * To run a mutation, you first call `useGenerateReportMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useGenerateReportMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [generateReportMutation, { data, loading, error }] = useGenerateReportMutation({
+ *   variables: {
+ *      attendanceModuleData: // value for 'attendanceModuleData'
+ *   },
+ * });
+ */
+export function useGenerateReportMutation(baseOptions?: Apollo.MutationHookOptions<GenerateReportMutation, GenerateReportMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<GenerateReportMutation, GenerateReportMutationVariables>(GenerateReportDocument, options);
+      }
+export type GenerateReportMutationHookResult = ReturnType<typeof useGenerateReportMutation>;
+export type GenerateReportMutationResult = Apollo.MutationResult<GenerateReportMutation>;
+export type GenerateReportMutationOptions = Apollo.BaseMutationOptions<GenerateReportMutation, GenerateReportMutationVariables>;
+export const PreviewReportDocument = gql`
+    query PreviewReport($attendanceModuleData: String!) {
+  previewReport(attendanceModuleData: $attendanceModuleData)
+}
+    `;
+
+/**
+ * __usePreviewReportQuery__
+ *
+ * To run a query within a React component, call `usePreviewReportQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePreviewReportQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePreviewReportQuery({
+ *   variables: {
+ *      attendanceModuleData: // value for 'attendanceModuleData'
+ *   },
+ * });
+ */
+export function usePreviewReportQuery(baseOptions: Apollo.QueryHookOptions<PreviewReportQuery, PreviewReportQueryVariables> & ({ variables: PreviewReportQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PreviewReportQuery, PreviewReportQueryVariables>(PreviewReportDocument, options);
+      }
+export function usePreviewReportLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PreviewReportQuery, PreviewReportQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PreviewReportQuery, PreviewReportQueryVariables>(PreviewReportDocument, options);
+        }
+export function usePreviewReportSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<PreviewReportQuery, PreviewReportQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<PreviewReportQuery, PreviewReportQueryVariables>(PreviewReportDocument, options);
+        }
+export type PreviewReportQueryHookResult = ReturnType<typeof usePreviewReportQuery>;
+export type PreviewReportLazyQueryHookResult = ReturnType<typeof usePreviewReportLazyQuery>;
+export type PreviewReportSuspenseQueryHookResult = ReturnType<typeof usePreviewReportSuspenseQuery>;
+export type PreviewReportQueryResult = Apollo.QueryResult<PreviewReportQuery, PreviewReportQueryVariables>;
+export const PreviewProjectCostLogReportDocument = gql`
+    query previewProjectCostLogReport($projectId: String!, $startDate: String!, $endDate: String!) {
+  previewProjectCostLogReport(
+    projectId: $projectId
+    startDate: $startDate
+    endDate: $endDate
+  )
+}
+    `;
+
+/**
+ * __usePreviewProjectCostLogReportQuery__
+ *
+ * To run a query within a React component, call `usePreviewProjectCostLogReportQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePreviewProjectCostLogReportQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePreviewProjectCostLogReportQuery({
+ *   variables: {
+ *      projectId: // value for 'projectId'
+ *      startDate: // value for 'startDate'
+ *      endDate: // value for 'endDate'
+ *   },
+ * });
+ */
+export function usePreviewProjectCostLogReportQuery(baseOptions: Apollo.QueryHookOptions<PreviewProjectCostLogReportQuery, PreviewProjectCostLogReportQueryVariables> & ({ variables: PreviewProjectCostLogReportQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PreviewProjectCostLogReportQuery, PreviewProjectCostLogReportQueryVariables>(PreviewProjectCostLogReportDocument, options);
+      }
+export function usePreviewProjectCostLogReportLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PreviewProjectCostLogReportQuery, PreviewProjectCostLogReportQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PreviewProjectCostLogReportQuery, PreviewProjectCostLogReportQueryVariables>(PreviewProjectCostLogReportDocument, options);
+        }
+export function usePreviewProjectCostLogReportSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<PreviewProjectCostLogReportQuery, PreviewProjectCostLogReportQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<PreviewProjectCostLogReportQuery, PreviewProjectCostLogReportQueryVariables>(PreviewProjectCostLogReportDocument, options);
+        }
+export type PreviewProjectCostLogReportQueryHookResult = ReturnType<typeof usePreviewProjectCostLogReportQuery>;
+export type PreviewProjectCostLogReportLazyQueryHookResult = ReturnType<typeof usePreviewProjectCostLogReportLazyQuery>;
+export type PreviewProjectCostLogReportSuspenseQueryHookResult = ReturnType<typeof usePreviewProjectCostLogReportSuspenseQuery>;
+export type PreviewProjectCostLogReportQueryResult = Apollo.QueryResult<PreviewProjectCostLogReportQuery, PreviewProjectCostLogReportQueryVariables>;

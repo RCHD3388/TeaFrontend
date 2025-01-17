@@ -107,6 +107,27 @@ export type AddNewDetailPtMutationVariables = Types.Exact<{
 
 export type AddNewDetailPtMutation = { __typename?: 'Mutation', addNewDetailPT: { __typename?: 'PurchaseTransaction', _id: string } };
 
+export type GeneratePurchaseOrderMutationVariables = Types.Exact<{
+  purchaseOrderData: Types.Scalars['String']['input'];
+}>;
+
+
+export type GeneratePurchaseOrderMutation = { __typename?: 'Mutation', generatePurchaseOrder: string };
+
+export type PreviewPurchaseOrderQueryVariables = Types.Exact<{
+  purchaseOrderData: Types.Scalars['String']['input'];
+}>;
+
+
+export type PreviewPurchaseOrderQuery = { __typename?: 'Query', previewPurchaseOrder: string };
+
+export type GenerateReportPurchasingQueryVariables = Types.Exact<{
+  transactionId: Types.Scalars['String']['input'];
+}>;
+
+
+export type GenerateReportPurchasingQuery = { __typename?: 'Query', generateReportPurchasing: string };
+
 
 export const GetAllPurchaseOrdersDocument = gql`
     query GetAllPurchaseOrders($filter: FilterInput) {
@@ -966,3 +987,110 @@ export function useAddNewDetailPtMutation(baseOptions?: Apollo.MutationHookOptio
 export type AddNewDetailPtMutationHookResult = ReturnType<typeof useAddNewDetailPtMutation>;
 export type AddNewDetailPtMutationResult = Apollo.MutationResult<AddNewDetailPtMutation>;
 export type AddNewDetailPtMutationOptions = Apollo.BaseMutationOptions<AddNewDetailPtMutation, AddNewDetailPtMutationVariables>;
+export const GeneratePurchaseOrderDocument = gql`
+    mutation GeneratePurchaseOrder($purchaseOrderData: String!) {
+  generatePurchaseOrder(purchaseOrderData: $purchaseOrderData)
+}
+    `;
+export type GeneratePurchaseOrderMutationFn = Apollo.MutationFunction<GeneratePurchaseOrderMutation, GeneratePurchaseOrderMutationVariables>;
+
+/**
+ * __useGeneratePurchaseOrderMutation__
+ *
+ * To run a mutation, you first call `useGeneratePurchaseOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useGeneratePurchaseOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [generatePurchaseOrderMutation, { data, loading, error }] = useGeneratePurchaseOrderMutation({
+ *   variables: {
+ *      purchaseOrderData: // value for 'purchaseOrderData'
+ *   },
+ * });
+ */
+export function useGeneratePurchaseOrderMutation(baseOptions?: Apollo.MutationHookOptions<GeneratePurchaseOrderMutation, GeneratePurchaseOrderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<GeneratePurchaseOrderMutation, GeneratePurchaseOrderMutationVariables>(GeneratePurchaseOrderDocument, options);
+      }
+export type GeneratePurchaseOrderMutationHookResult = ReturnType<typeof useGeneratePurchaseOrderMutation>;
+export type GeneratePurchaseOrderMutationResult = Apollo.MutationResult<GeneratePurchaseOrderMutation>;
+export type GeneratePurchaseOrderMutationOptions = Apollo.BaseMutationOptions<GeneratePurchaseOrderMutation, GeneratePurchaseOrderMutationVariables>;
+export const PreviewPurchaseOrderDocument = gql`
+    query PreviewPurchaseOrder($purchaseOrderData: String!) {
+  previewPurchaseOrder(purchaseOrderData: $purchaseOrderData)
+}
+    `;
+
+/**
+ * __usePreviewPurchaseOrderQuery__
+ *
+ * To run a query within a React component, call `usePreviewPurchaseOrderQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePreviewPurchaseOrderQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePreviewPurchaseOrderQuery({
+ *   variables: {
+ *      purchaseOrderData: // value for 'purchaseOrderData'
+ *   },
+ * });
+ */
+export function usePreviewPurchaseOrderQuery(baseOptions: Apollo.QueryHookOptions<PreviewPurchaseOrderQuery, PreviewPurchaseOrderQueryVariables> & ({ variables: PreviewPurchaseOrderQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PreviewPurchaseOrderQuery, PreviewPurchaseOrderQueryVariables>(PreviewPurchaseOrderDocument, options);
+      }
+export function usePreviewPurchaseOrderLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PreviewPurchaseOrderQuery, PreviewPurchaseOrderQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PreviewPurchaseOrderQuery, PreviewPurchaseOrderQueryVariables>(PreviewPurchaseOrderDocument, options);
+        }
+export function usePreviewPurchaseOrderSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<PreviewPurchaseOrderQuery, PreviewPurchaseOrderQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<PreviewPurchaseOrderQuery, PreviewPurchaseOrderQueryVariables>(PreviewPurchaseOrderDocument, options);
+        }
+export type PreviewPurchaseOrderQueryHookResult = ReturnType<typeof usePreviewPurchaseOrderQuery>;
+export type PreviewPurchaseOrderLazyQueryHookResult = ReturnType<typeof usePreviewPurchaseOrderLazyQuery>;
+export type PreviewPurchaseOrderSuspenseQueryHookResult = ReturnType<typeof usePreviewPurchaseOrderSuspenseQuery>;
+export type PreviewPurchaseOrderQueryResult = Apollo.QueryResult<PreviewPurchaseOrderQuery, PreviewPurchaseOrderQueryVariables>;
+export const GenerateReportPurchasingDocument = gql`
+    query GenerateReportPurchasing($transactionId: String!) {
+  generateReportPurchasing(transactionId: $transactionId)
+}
+    `;
+
+/**
+ * __useGenerateReportPurchasingQuery__
+ *
+ * To run a query within a React component, call `useGenerateReportPurchasingQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGenerateReportPurchasingQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGenerateReportPurchasingQuery({
+ *   variables: {
+ *      transactionId: // value for 'transactionId'
+ *   },
+ * });
+ */
+export function useGenerateReportPurchasingQuery(baseOptions: Apollo.QueryHookOptions<GenerateReportPurchasingQuery, GenerateReportPurchasingQueryVariables> & ({ variables: GenerateReportPurchasingQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GenerateReportPurchasingQuery, GenerateReportPurchasingQueryVariables>(GenerateReportPurchasingDocument, options);
+      }
+export function useGenerateReportPurchasingLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GenerateReportPurchasingQuery, GenerateReportPurchasingQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GenerateReportPurchasingQuery, GenerateReportPurchasingQueryVariables>(GenerateReportPurchasingDocument, options);
+        }
+export function useGenerateReportPurchasingSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GenerateReportPurchasingQuery, GenerateReportPurchasingQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GenerateReportPurchasingQuery, GenerateReportPurchasingQueryVariables>(GenerateReportPurchasingDocument, options);
+        }
+export type GenerateReportPurchasingQueryHookResult = ReturnType<typeof useGenerateReportPurchasingQuery>;
+export type GenerateReportPurchasingLazyQueryHookResult = ReturnType<typeof useGenerateReportPurchasingLazyQuery>;
+export type GenerateReportPurchasingSuspenseQueryHookResult = ReturnType<typeof useGenerateReportPurchasingSuspenseQuery>;
+export type GenerateReportPurchasingQueryResult = Apollo.QueryResult<GenerateReportPurchasingQuery, GenerateReportPurchasingQueryVariables>;

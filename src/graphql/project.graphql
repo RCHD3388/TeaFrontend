@@ -13,16 +13,16 @@ query FindAllProjects {
       _id
       name
     }
-    project_leader{
+    project_leader {
       _id
-      person{
+      person {
         name
-      }  
+      }
     }
   }
 }
 
-query FindProjectById($id: String!){
+query FindProjectById($id: String!) {
   findProjectById(id: $id) {
     _id
     name
@@ -37,12 +37,12 @@ query FindProjectById($id: String!){
       _id
       name
     }
-    project_leader{
+    project_leader {
       _id
-      person{
+      person {
         name
         email
-      }  
+      }
     }
     warehouse
     createdAt
@@ -51,53 +51,53 @@ query FindProjectById($id: String!){
       note
       document
       closed_by {
-          _id
-          person {
-              name
-              email
-              phone_number
-              address
-          }
+        _id
+        person {
+          name
+          email
+          phone_number
+          address
+        }
       }
       material_used {
+        _id
+        remain
+        price
+        date
+        warehouse
+        out
+        material {
           _id
-          remain
-          price
-          date
-          warehouse
-          out
-          material {
-              _id
-              id
-              name
-              description
-              status
-              conversion
-              merk {
-                  _id
-                  name
-              }
-              unit_measure {
-                  _id
-                  name
-              }
-              minimum_unit_measure {
-                  _id
-                  name
-              }
+          id
+          name
+          description
+          status
+          conversion
+          merk {
+            _id
+            name
           }
+          unit_measure {
+            _id
+            name
+          }
+          minimum_unit_measure {
+            _id
+            name
+          }
+        }
       }
       request_project_closing {
-          _id
-          requested_at
-          status
-          handled_date
+        _id
+        requested_at
+        status
+        handled_date
       }
     }
   }
 }
 
-mutation CreateProject($createProjectInput: CreateProjectInput!){
+mutation CreateProject($createProjectInput: CreateProjectInput!) {
   createProject(createProjectInput: $createProjectInput) {
     _id
     name
@@ -131,170 +131,203 @@ mutation UpdateProject($id: String!, $updateProjectInput: UpdateProjectInput!) {
 
 # PROJECT EMPLOYEE HANDLER
 
-query GetAllProjectEmployees ($id: String!){
-    getAllProjectEmployees(id: $id) {
-        registered {
-            _id
-            person {
-                name
-                email
-                phone_number
-                address
-            }
-            skill {
-                _id
-                name
-            }
-            role {
-                _id
-                name
-            }
-            status
-        }
-        unregistered {
-            _id
-            person {
-                name
-                email
-                phone_number
-                address
-            }
-            role {
-                _id
-                name
-            }
-            skill {
-                _id
-                name
-            }
-        }
+query GetAllProjectEmployees($id: String!) {
+  getAllProjectEmployees(id: $id) {
+    registered {
+      _id
+      person {
+        name
+        email
+        phone_number
+        address
+      }
+      skill {
+        _id
+        name
+      }
+      role {
+        _id
+        name
+      }
+      status
     }
+    unregistered {
+      _id
+      person {
+        name
+        email
+        phone_number
+        address
+      }
+      role {
+        _id
+        name
+      }
+      skill {
+        _id
+        name
+      }
+    }
+  }
 }
 
-mutation AddNewProjectEmployee ($id: String!, $employees: [String!]!){
-    addNewProjectEmployee(id: $id, employees: $employees) {
-        _id
-        person {
+mutation AddNewProjectEmployee($id: String!, $employees: [String!]!) {
+  addNewProjectEmployee(id: $id, employees: $employees) {
+    _id
+    person {
+      name
+      email
+      phone_number
+      address
+    }
+    role {
+      _id
+      name
+    }
+    skill {
+      _id
+      name
+    }
+  }
+}
+
+mutation RemoveProjectEmployee(
+  $id: String!
+  $employee: String!
+  $description: String!
+) {
+  removeProjectEmployee(
+    id: $id
+    employee: $employee
+    description: $description
+  ) {
+    _id
+    person {
+      name
+      email
+      phone_number
+      address
+    }
+    role {
+      _id
+      name
+    }
+    skill {
+      _id
+      name
+    }
+  }
+}
+
+mutation CreateAttendance(
+  $createAttendanceInput: CreateAttendanceModuleInput!
+) {
+  createAttendance(createAttendanceInput: $createAttendanceInput) {
+    _id
+    start_date
+    end_date
+    submit_status
+    description
+  }
+}
+
+query FindAllAttendanceModules($projectId: String!) {
+  findAllAttendanceModules(projectId: $projectId) {
+    _id
+    start_date
+    end_date
+    submit_status
+    description
+  }
+}
+
+query FindOneAttendanceModule($projectId: String!, $moduleId: String!) {
+  findOneAttendanceModule(projectId: $projectId, moduleId: $moduleId) {
+    _id
+    start_date
+    end_date
+    submit_status
+    description
+    attendance {
+      date
+      attendance_detail {
+        check_in
+        check_out
+        employee {
+          _id
+          hire_date
+          salary
+          status
+          person {
             name
             email
             phone_number
             address
+          }
         }
-        role {
-            _id
-            name
-        }
-        skill {
-            _id
-            name
-        }
+      }
     }
+  }
 }
 
-mutation RemoveProjectEmployee ($id: String!, $employee: String!, $description: String!){
-    removeProjectEmployee(id: $id, employee: $employee, description: $description) {
-        _id
-        person {
-            name
-            email
-            phone_number
-            address
-        }
-        role {
-            _id
-            name
-        }
-        skill {
-            _id
-            name
-        }
-    }
+mutation UpdateAttendanceModule(
+  $projectId: String!
+  $moduleId: String!
+  $updateAttendanceModuleInput: UpdateAttendanceModuleInput!
+) {
+  updateAttendanceModule(
+    projectId: $projectId
+    moduleId: $moduleId
+    updateAttendanceModuleInput: $updateAttendanceModuleInput
+  ) {
+    _id
+  }
 }
 
-mutation CreateAttendance ($createAttendanceInput: CreateAttendanceModuleInput!) {
-    createAttendance(createAttendanceInput: $createAttendanceInput) {
-        _id
-        start_date
-        end_date
-        submit_status
-        description
-    }
+mutation DeleteAttendanceModule($projectId: String!, $moduleId: String!) {
+  deleteAttendanceModule(projectId: $projectId, moduleId: $moduleId) {
+    _id
+  }
 }
 
-query FindAllAttendanceModules ($projectId: String!){
-    findAllAttendanceModules(projectId: $projectId) {
-        _id
-        start_date
-        end_date
-        submit_status
-        description
-    }
-}
-
-query FindOneAttendanceModule ($projectId: String!, $moduleId: String!){
-    findOneAttendanceModule(projectId: $projectId, moduleId: $moduleId) {
-        _id
-        start_date
-        end_date
-        submit_status
-        description
-        attendance {
-            date
-            attendance_detail {
-                check_in
-                check_out
-                employee {
-                    _id
-                    hire_date
-                    salary
-                    status
-                    person {
-                        name
-                        email
-                        phone_number
-                        address
-                    }
-                }
-            }
-        }
-    }
-}
-
-mutation UpdateAttendanceModule ($projectId: String!, $moduleId: String! $updateAttendanceModuleInput: UpdateAttendanceModuleInput!){
-    updateAttendanceModule(
-        projectId: $projectId
-        moduleId: $moduleId
-        updateAttendanceModuleInput: $updateAttendanceModuleInput
-    ) {
-        _id
-    }
-}
-
-mutation DeleteAttendanceModule ($projectId: String!, $moduleId: String!){
-    deleteAttendanceModule(projectId: $projectId, moduleId: $moduleId) {
-        _id
-    }
-}
-
-mutation SubmitAttendanceModule ($projectId: String!, $moduleId: String!){
-    submitAttendanceModule(projectId: $projectId, moduleId: $moduleId) {
-        _id
-        start_date
-        end_date
-        submit_status
-        description
-    }
+mutation SubmitAttendanceModule($projectId: String!, $moduleId: String!) {
+  submitAttendanceModule(projectId: $projectId, moduleId: $moduleId) {
+    _id
+    start_date
+    end_date
+    submit_status
+    description
+  }
 }
 
 # PROJECT COST LOG
-query FindAllProjectCostLogs ($projectId: String!){
-    findAllProjectCostLogs(projectId: $projectId) {
-        _id
-        title
-        description
-        date
-        price
-        category
-        request_cost 
-    }
+query FindAllProjectCostLogs($projectId: String!) {
+  findAllProjectCostLogs(projectId: $projectId) {
+    _id
+    title
+    description
+    date
+    price
+    category
+    request_cost
+  }
+}
+
+mutation GenerateReport($attendanceModuleData: String!) {
+  generateReport(attendanceModuleData: $attendanceModuleData)
+}
+query PreviewReport($attendanceModuleData: String!) {
+  previewReport(attendanceModuleData: $attendanceModuleData)
+}
+
+query previewProjectCostLogReport(
+  $projectId: String!
+  $startDate: String!
+  $endDate: String!
+) {
+  previewProjectCostLogReport(
+    projectId: $projectId
+    startDate: $startDate
+    endDate: $endDate
+  )
 }

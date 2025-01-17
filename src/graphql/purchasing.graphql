@@ -1,395 +1,425 @@
-query GetAllPurchaseOrders ($filter: FilterInput){
-    getAllPurchaseOrders(filter: $filter) {
-        _id
-        title
-        description
-        date
-        status
-        createdAt
-        updatedAt
-        requested_from {
-            _id
-            name
-            description
-            type
-            address
-            status
-        }
-        requested_by {
-            _id
-            person {
-                name
-                email
-                phone_number
-                address
-            }
-        }
+query GetAllPurchaseOrders($filter: FilterInput) {
+  getAllPurchaseOrders(filter: $filter) {
+    _id
+    title
+    description
+    date
+    status
+    createdAt
+    updatedAt
+    requested_from {
+      _id
+      name
+      description
+      type
+      address
+      status
     }
+    requested_by {
+      _id
+      person {
+        name
+        email
+        phone_number
+        address
+      }
+    }
+  }
 }
 
 query GetPurchaseOrderByUser {
-    getPurchaseOrderByUser {
-        _id
-        title
-        description
-        date
-        status
-        requested_by {
-            _id
-            person {
-                name
-                email
-                phone_number
-                address
-            }
-        }
-        requested_from {
-            _id
-            name
-            description
-            type
-            address
-        }
-        createdAt
-        updatedAt
+  getPurchaseOrderByUser {
+    _id
+    title
+    description
+    date
+    status
+    requested_by {
+      _id
+      person {
+        name
+        email
+        phone_number
+        address
+      }
     }
+    requested_from {
+      _id
+      name
+      description
+      type
+      address
+    }
+    createdAt
+    updatedAt
+  }
 }
 
-mutation CreatePurchaseOrder ($createPurchaseOrderInput: CreateRequestPOInput!){
-    createPurchaseOrder(createPurchaseOrderInput: $createPurchaseOrderInput) {
-        _id
-        title
-        description
-        date
-        status
-    }
+mutation CreatePurchaseOrder($createPurchaseOrderInput: CreateRequestPOInput!) {
+  createPurchaseOrder(createPurchaseOrderInput: $createPurchaseOrderInput) {
+    _id
+    title
+    description
+    date
+    status
+  }
 }
 
-query GetPurchaseOrderByID ($id: String!){
-    getPurchaseOrderByID(id: $id) {
-        purchase_order {
-            _id
-            title
-            description
-            date
-            status
-            requested_from {
-                _id
-                name
-                description
-                type
-                address
-            }
-            requested_by {
-                _id
-                person {
-                    name
-                    email
-                    phone_number
-                    address
-                }
-            }
-            purchase_order_detail {
-                _id
-                item
-                item_type
-                quantity
-                completed_quantity
-                sub_detail {
-                    purchase_transaction
-                    purchase_transaction_detail
-                    quantity
-                }
-            }
+query GetPurchaseOrderByID($id: String!) {
+  getPurchaseOrderByID(id: $id) {
+    purchase_order {
+      _id
+      title
+      description
+      date
+      status
+      requested_from {
+        _id
+        name
+        description
+        type
+        address
+      }
+      requested_by {
+        _id
+        person {
+          name
+          email
+          phone_number
+          address
         }
-        skus {
-            _id
-            name
-            description
-            status
-            merk {
-                _id
-                name
-            }
+      }
+      purchase_order_detail {
+        _id
+        item
+        item_type
+        quantity
+        completed_quantity
+        sub_detail {
+          purchase_transaction
+          purchase_transaction_detail
+          quantity
         }
-        materials {
-            _id
-            id
-            name
-            description
-            status
-            conversion
-            minimum_unit_measure {
-                _id
-                name
-            }
-            unit_measure {
-                _id
-                name
-            }
-            merk {
-                _id
-                name
-            }
-        }
+      }
     }
+    skus {
+      _id
+      name
+      description
+      status
+      merk {
+        _id
+        name
+      }
+    }
+    materials {
+      _id
+      id
+      name
+      description
+      status
+      conversion
+      minimum_unit_measure {
+        _id
+        name
+      }
+      unit_measure {
+        _id
+        name
+      }
+      merk {
+        _id
+        name
+      }
+    }
+  }
 }
 
-mutation HandleWaitingPO ($id: String!, $status: String!){
-    handleWaitingPO(id: $id, status: $status) {
-        _id
-        title
-        description
-        date
-        status
-        createdAt
-        updatedAt
-    }
+mutation HandleWaitingPO($id: String!, $status: String!) {
+  handleWaitingPO(id: $id, status: $status) {
+    _id
+    title
+    description
+    date
+    status
+    createdAt
+    updatedAt
+  }
 }
 
-
-mutation CancelPurchaseOrder ($id: String!){
-    cancelPurchaseOrder(id: $id) {
-        _id
-        title
-        description
-        date
-        status
-    }
+mutation CancelPurchaseOrder($id: String!) {
+  cancelPurchaseOrder(id: $id) {
+    _id
+    title
+    description
+    date
+    status
+  }
 }
 
 query GetAllPurchaseTransactions {
-    getAllPurchaseTransactions {
-        _id
-        transaction_number
-        description
-        transaction_date
-        total
-        supplier {
-            _id
-            name
-            status
-            person {
-                name
-                email
-                phone_number
-                address
-            }
-        }
-        purchasing_staff {
-            _id
-            person {
-                name
-                email
-                phone_number
-                address
-            }
-        }
+  getAllPurchaseTransactions {
+    _id
+    transaction_number
+    description
+    transaction_date
+    total
+    supplier {
+      _id
+      name
+      status
+      person {
+        name
+        email
+        phone_number
+        address
+      }
     }
+    purchasing_staff {
+      _id
+      person {
+        name
+        email
+        phone_number
+        address
+      }
+    }
+  }
 }
 
 query GetPurchaseTransactionByUser {
-    getPurchaseTransactionByUser {
+  getPurchaseTransactionByUser {
+    _id
+    transaction_number
+    description
+    transaction_date
+    total
+    supplier {
+      _id
+      name
+      status
+      person {
+        name
+        email
+        phone_number
+        address
+      }
+    }
+    purchasing_staff {
+      _id
+      person {
+        name
+        email
+        phone_number
+        address
+      }
+    }
+  }
+}
+
+query GetPurchaseTransactionById($id: String!) {
+  getPurchaseTransactionById(id: $id) {
+    purchase_transaction {
+      _id
+      transaction_number
+      description
+      transaction_date
+      total
+      purchasing_staff {
         _id
-        transaction_number
-        description
-        transaction_date
-        total
-        supplier {
-            _id
-            name
-            status
-            person {
-                name
-                email
-                phone_number
-                address
-            }
+        person {
+          name
+          email
+          phone_number
+          address
         }
-        purchasing_staff {
-            _id
-            person {
-                name
-                email
-                phone_number
-                address
-            }
+      }
+      supplier {
+        _id
+        name
+        status
+        person {
+          name
+          email
+          phone_number
+          address
         }
+      }
+      purchase_transaction_detail {
+        _id
+        item
+        original_item
+        item_type
+        quantity
+        price
+        subtotal
+        purchase_order {
+          _id
+          title
+          description
+          date
+        }
+      }
     }
+    tools {
+      _id
+      id
+      description
+      warranty_number
+      warranty_expired_date
+      price
+      sku {
+        _id
+        name
+        merk {
+          _id
+          name
+        }
+      }
+    }
+    materials {
+      _id
+      id
+      name
+      description
+      conversion
+      minimum_unit_measure {
+        _id
+        name
+      }
+      unit_measure {
+        _id
+        name
+      }
+      merk {
+        _id
+        name
+      }
+    }
+  }
 }
 
-query GetPurchaseTransactionById ($id: String!){
-    getPurchaseTransactionById(id: $id) {
-        purchase_transaction {
-            _id
-            transaction_number
-            description
-            transaction_date
-            total
-            purchasing_staff {
-                _id
-                person {
-                    name
-                    email
-                    phone_number
-                    address
-                }
-            }
-            supplier {
-                _id
-                name
-                status
-                person {
-                    name
-                    email
-                    phone_number
-                    address
-                }
-            }
-            purchase_transaction_detail {
-                _id
-                item
-                original_item
-                item_type
-                quantity
-                price
-                subtotal
-                purchase_order {
-                    _id
-                    title
-                    description
-                    date
-                }
-            }
-        }
-        tools {
-            _id
-            id
-            description
-            warranty_number
-            warranty_expired_date
-            price
-            sku {
-                _id
-                name
-                merk {
-                    _id
-                    name
-                }
-            }
-        }
-        materials {
-            _id
-            id
-            name
-            description
-            conversion
-            minimum_unit_measure {
-                _id
-                name
-            }
-            unit_measure {
-                _id
-                name
-            }
-            merk {
-                _id
-                name
-            }
-        }
+query GetRelatedPTfromPO($id: String!) {
+  getRelatedPTfromPO(id: $id) {
+    purchase_transaction {
+      _id
+      transaction_number
+      description
+      transaction_date
+      purchase_transaction_detail {
+        _id
+        item
+        original_item
+        item_type
+        quantity
+        price
+        subtotal
+      }
     }
-}
-
-query GetRelatedPTfromPO ($id: String!){
-    getRelatedPTfromPO(id: $id) {
-        purchase_transaction {
-            _id
-            transaction_number
-            description
-            transaction_date
-            purchase_transaction_detail {
-                _id
-                item
-                original_item
-                item_type
-                quantity
-                price
-                subtotal
-            }
+    tools {
+      _id
+      id
+      description
+      warranty_number
+      warranty_expired_date
+      price
+      sku {
+        _id
+        name
+        merk {
+          _id
+          name
         }
-        tools {
-            _id
-            id
-            description
-            warranty_number
-            warranty_expired_date
-            price
-            sku {
-                _id
-                name
-                merk {
-                    _id
-                    name
-                }
-            }
-        }
-        materials {
-            _id
-            id
-            name
-            description
-            conversion
-            minimum_unit_measure {
-                _id
-                name
-            }
-            unit_measure {
-                _id
-                name
-            }
-            merk {
-                _id
-                name
-            }
-        }
+      }
     }
+    materials {
+      _id
+      id
+      name
+      description
+      conversion
+      minimum_unit_measure {
+        _id
+        name
+      }
+      unit_measure {
+        _id
+        name
+      }
+      merk {
+        _id
+        name
+      }
+    }
+  }
 }
 
 # PURCHASING
-mutation CreatePurchaseTransaction ($createPurchaseTransactionInput: CreateRequestPurchaseTransactionInput!){
-    createPurchaseTransaction(createPurchaseTransactionInput: $createPurchaseTransactionInput) {
-        _id
-        transaction_number
-        description
-        transaction_date
-        total
-    }
+mutation CreatePurchaseTransaction(
+  $createPurchaseTransactionInput: CreateRequestPurchaseTransactionInput!
+) {
+  createPurchaseTransaction(
+    createPurchaseTransactionInput: $createPurchaseTransactionInput
+  ) {
+    _id
+    transaction_number
+    description
+    transaction_date
+    total
+  }
 }
 
-mutation HandleReceivedPODetail ($id: String!, $receiveItemInput: ReceiveItemInput!){
-    handleReceivedPODetail(id: $id, receiveItemInput: $receiveItemInput) {
-        _id
-    }
+mutation HandleReceivedPODetail(
+  $id: String!
+  $receiveItemInput: ReceiveItemInput!
+) {
+  handleReceivedPODetail(id: $id, receiveItemInput: $receiveItemInput) {
+    _id
+  }
 }
 
-mutation UpdatePurchaseTransaction ($id: String!, $updatePurchaseTransactionInput: UpdateRequestPurchaseTransactionInput!){
-    updatePurchaseTransaction(id: $id, updatePurchaseTransactionInput: $updatePurchaseTransactionInput) {
-        _id
-        transaction_number
-        description
-        transaction_date
-        total
-    }
+mutation UpdatePurchaseTransaction(
+  $id: String!
+  $updatePurchaseTransactionInput: UpdateRequestPurchaseTransactionInput!
+) {
+  updatePurchaseTransaction(
+    id: $id
+    updatePurchaseTransactionInput: $updatePurchaseTransactionInput
+  ) {
+    _id
+    transaction_number
+    description
+    transaction_date
+    total
+  }
 }
 
-mutation RemovePurchaseTransactionDetail ($id: String!, $id_detail: String!){
-    removePurchaseTransactionDetail(id: $id, id_detail: $id_detail) {
-        _id
-    }
+mutation RemovePurchaseTransactionDetail($id: String!, $id_detail: String!) {
+  removePurchaseTransactionDetail(id: $id, id_detail: $id_detail) {
+    _id
+  }
 }
 
-mutation AddNewDetailPT ($id: String!, $createPurchaseTransactionDetailInput: CreateNewPurchaseTransactionDetailInput!){
-    addNewDetailPT(id: $id, createPurchaseTransactionDetailInput: $createPurchaseTransactionDetailInput) {
-        _id
-    }
+mutation AddNewDetailPT(
+  $id: String!
+  $createPurchaseTransactionDetailInput: CreateNewPurchaseTransactionDetailInput!
+) {
+  addNewDetailPT(
+    id: $id
+    createPurchaseTransactionDetailInput: $createPurchaseTransactionDetailInput
+  ) {
+    _id
+  }
+}
+
+mutation GeneratePurchaseOrder($purchaseOrderData: String!) {
+  generatePurchaseOrder(purchaseOrderData: $purchaseOrderData)
+}
+
+query PreviewPurchaseOrder($purchaseOrderData: String!) {
+  previewPurchaseOrder(purchaseOrderData: $purchaseOrderData)
+}
+
+query GenerateReportPurchasing($transactionId: String!) {
+  generateReportPurchasing(transactionId: $transactionId)
 }

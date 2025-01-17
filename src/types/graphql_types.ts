@@ -396,6 +396,9 @@ export type Mutation = {
   deleteMerk: Merk;
   deleteUnitMeasure: UnitMeasure;
   deleteUserPassword: User;
+  /** Generate Purchase Order Report */
+  generatePurchaseOrder: Scalars['String']['output'];
+  generateReport: Scalars['String']['output'];
   handleReceivedPODetail: PurchaseOrder;
   handleWaitingPO: PurchaseOrder;
   login: LoginResponse;
@@ -578,6 +581,16 @@ export type MutationDeleteUnitMeasureArgs = {
 
 export type MutationDeleteUserPasswordArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type MutationGeneratePurchaseOrderArgs = {
+  purchaseOrderData: Scalars['String']['input'];
+};
+
+
+export type MutationGenerateReportArgs = {
+  attendanceModuleData: Scalars['String']['input'];
 };
 
 
@@ -879,6 +892,8 @@ export type Query = {
   findProjectById: Project;
   findYourApprovalItemTransaction: Array<RequestItemHeader>;
   findYourRequestItemTransaction: Array<RequestItemHeader>;
+  /** Generate Purchasing Report as Base64 PDF */
+  generateReportPurchasing: Scalars['String']['output'];
   getAllEmployees: Array<Employee>;
   getAllMaterialByIds: Array<Material>;
   getAllMaterials: Array<Material>;
@@ -917,6 +932,12 @@ export type Query = {
   getWarehouseById: Warehouse;
   getWarehouseMaterials: Array<MaterialTransaction>;
   getWarehouseTools: Array<ToolTransaction>;
+  /** Preview Project Cost Log Report as Base64 */
+  previewProjectCostLogReport: Scalars['String']['output'];
+  /** Preview Purchase Order Report as Base64 */
+  previewPurchaseOrder: Scalars['String']['output'];
+  /** Preview the report as Base64 string */
+  previewReport: Scalars['String']['output'];
 };
 
 
@@ -958,6 +979,11 @@ export type QueryFindOneRequestItemTransactionArgs = {
 
 export type QueryFindProjectByIdArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryGenerateReportPurchasingArgs = {
+  transactionId: Scalars['String']['input'];
 };
 
 
@@ -1094,6 +1120,23 @@ export type QueryGetWarehouseMaterialsArgs = {
 
 export type QueryGetWarehouseToolsArgs = {
   warehouse_id: Scalars['String']['input'];
+};
+
+
+export type QueryPreviewProjectCostLogReportArgs = {
+  endDate: Scalars['String']['input'];
+  projectId: Scalars['String']['input'];
+  startDate: Scalars['String']['input'];
+};
+
+
+export type QueryPreviewPurchaseOrderArgs = {
+  purchaseOrderData: Scalars['String']['input'];
+};
+
+
+export type QueryPreviewReportArgs = {
+  attendanceModuleData: Scalars['String']['input'];
 };
 
 export type ReceiveItemInput = {

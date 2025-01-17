@@ -1,61 +1,109 @@
-import { ApolloQueryResult, useMutation, useQuery } from "@apollo/client";
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs from 'dayjs';
-import { Box, Button, CircularProgress, MenuItem, Modal, TextField, Typography } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
-import { useEffect, useState } from "react";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useLazyQuery } from "@apollo/client";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Modal,
+  Typography,
+} from "@mui/material";
+import { useState } from "react";
 import { modalStyle } from "../../../theme";
+import { PreviewReportDocument } from "../../../graphql/project.generated";
 
 interface AttendanceReportModalProps {
-  
+  attendanceModuleData: any; // Define the type of attendanceModuleData
 }
 
-const AttendanceReportModal: React.FC<AttendanceReportModalProps> = ({}) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+const AttendanceReportModal: React.FC<AttendanceReportModalProps> = ({
+  attendanceModuleData,
+}) => {
   const [openModal, setOpenModal] = useState(false);
-  const handleOpenModal = () => { setOpenModal(true) }
-  const handleCloseModal = () => { setOpenModal(false) }
-  const dispatch = useDispatch();
+  const [isFetching, setIsFetching] = useState(false);
+  const [pdfURL, setPdfURL] = useState<string | null>(null);
 
-  return (<>
-    <Button onClick={async () => {handleOpenModal()}} variant="contained" color="warning" disabled={isSubmitting} >Laporan Absensi</Button>
+  const [fetchPreviewReport] = useLazyQuery(PreviewReportDocument, {
+    fetchPolicy: "network-only",
+    onCompleted: (data) => {
+      if (data?.previewReport) {
+        // Create Blob URL from Base64 data
+        const byteCharacters = atob(data.previewReport);
+        const byteNumbers = Array.from(byteCharacters, (char) =>
+          char.charCodeAt(0)
+        );
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: "application/pdf" });
 
-    <Modal
-      open={openModal}
-      onClose={handleCloseModal}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
-      <Box sx={modalStyle}>
-        <Typography id="modal-modal-title" variant="h6" component="h2"><b>LAPORAN ABSENSI</b></Typography>
-        {/* FIELD START */}
-        
+        const url = URL.createObjectURL(blob);
+        setPdfURL(url); // Save URL for <object> tag
+        setIsFetching(false);
+      }
+    },
+    onError: () => {
+      setIsFetching(false);
+    },
+  });
 
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Button
-            onClick={handleCloseModal}
-            variant="contained"
-            color="info"
-            disabled={isSubmitting}
-          >
-            Kembali
-          </Button>
-          <Button
-            onClick={() => {}}
-            variant="contained"
-            color="primary"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (<CircularProgress size={24} sx={{ color: "white" }} />) : ("inisialisasi")}
-          </Button>
+  const handleOpenModal = async () => {
+    setOpenModal(true);
+    setIsFetching(true);
+
+    // Fetch PDF data
+    await fetchPreviewReport({
+      variables: {
+        attendanceModuleData: JSON.stringify(attendanceModuleData),
+      },
+    });
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setPdfURL(null); // Clear PDF URL
+  };
+
+  return (
+    <>
+      <Button onClick={handleOpenModal} variant="contained" color="warning">
+        Laporan Absensi
+      </Button>
+
+      <Modal open={openModal} onClose={handleCloseModal}>
+        <Box sx={{ ...modalStyle, width: 1200 }}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            <b>LAPORAN ABSENSI</b>
+          </Typography>
+
+          {isFetching ? (
+            <CircularProgress />
+          ) : pdfURL ? (
+            <Box mt={2}>
+              <object
+                data={pdfURL}
+                type="application/pdf"
+                width="100%"
+                height="500px"
+              >
+                <p>
+                  Your browser does not support PDFs. Download the PDF{" "}
+                  <a href={pdfURL} target="_blank" rel="noopener noreferrer">
+                    here
+                  </a>
+                  .
+                </p>
+              </object>
+            </Box>
+          ) : (
+            <Typography color="error">Failed to load the report.</Typography>
+          )}
+
+          <Box mt={2} display="flex" justifyContent="flex-end">
+            <Button onClick={handleCloseModal} variant="contained" color="info">
+              Kembali
+            </Button>
+          </Box>
         </Box>
-      </Box>
-    </Modal>
-  </>)
-}
+      </Modal>
+    </>
+  );
+};
 
 export default AttendanceReportModal;

@@ -124,7 +124,7 @@ const DetailTool = () => {
       await updateTool({
         variables: {
           id: toolId,
-          updateToolInput: { ...data },
+          updateToolInput: { ...data, price: Number(data.price) },
           requiresAuth: true
         }
       })
