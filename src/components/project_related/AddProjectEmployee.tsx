@@ -188,7 +188,11 @@ const AddProjectEmployee: React.FC<AddProjectEmployeeProps> = ({ projectId, data
           <StickyHeadTable
             tableSx={{ maxHeight: 300 }}
             columns={columns}
-            rows={dataEmployee?.getAllProjectEmployees.unregistered.filter((item: any) => item.person.name.toLowerCase().includes(nameFilter.toLowerCase())) ?? []}
+            rows={dataEmployee?.getAllProjectEmployees.unregistered.filter((item: any) => {
+              let cond1 = item.person.name.toLowerCase().includes(nameFilter.toLowerCase())
+              let cond2 = isConfirmation ? listTargetEmployee.includes(item._id) : true
+              return cond1 && cond2
+            }) ?? []}
             withIndex={true}
             csvname="pegawai_project"
           />

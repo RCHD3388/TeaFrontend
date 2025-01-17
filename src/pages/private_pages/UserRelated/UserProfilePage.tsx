@@ -149,7 +149,7 @@ const UserProfilePage: React.FC<{}> = () => {
                 }
               }}
               render={({ field }) => (<TextField
-                {...field} color="secondary"
+                {...field} color="secondary" type='password'
                 sx={{ width: "100%", mb: 1 }} label="Password Baru" size='small' variant="outlined"
                 error={!!errors.newPassword} helperText={errors.newPassword ? errors.newPassword.message : ''}
               />)}
@@ -163,7 +163,7 @@ const UserProfilePage: React.FC<{}> = () => {
                 }
               }}
               render={({ field }) => (<TextField
-                {...field} color="secondary"
+                {...field} color="secondary" type='password'
                 sx={{ width: "100%", mb: 1 }} label="Konfirmasi Password" size='small' variant="outlined"
                 error={!!errors.confirmPassword} helperText={errors.confirmPassword ? errors.confirmPassword.message : ''}
               />)}

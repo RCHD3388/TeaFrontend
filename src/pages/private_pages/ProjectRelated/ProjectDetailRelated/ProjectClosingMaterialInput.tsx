@@ -144,7 +144,7 @@ const ProjectClosingMaterialInput: React.FC<ProjectClosingMaterialInputProps> = 
       {/* FIELD START */}
       <Autocomplete
         disablePortal
-        options={allWHLoading || !allWHData ? [] : allWHData.getAllWarehouses.map((wh: any) => { return { label: `${wh.name} ( ${wh.address} }`, value: wh._id } })}
+        options={allWHLoading || !allWHData ? [] : allWHData.getAllWarehouses.map((wh: any) => { return { label: `${wh.name} ( ${wh.address} )`, value: wh._id } })}
         onChange={(event: React.SyntheticEvent, newValue: string | null) => {
 
           setWarehouseTo(newValue);
@@ -165,7 +165,6 @@ const ProjectClosingMaterialInput: React.FC<ProjectClosingMaterialInputProps> = 
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <Autocomplete
               disablePortal
-
               options={getItemOptions(watch("item_type"))}
               sx={{ width: "100%", mr: 0.5 }}
               onChange={(_, data) => onChange(data)}
