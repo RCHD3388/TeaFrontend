@@ -89,6 +89,7 @@ const AddInventoryMaterial: React.FC<AddInventoryMaterialProps> = ({ warehouseId
     }
   }
   const handleSubmitButton = async () => {
+    setIsSubmitting(false)
     if (isConfirmation == false) {
       if(rows.length <= 0) {
         setIsEmpty(true)
@@ -96,6 +97,7 @@ const AddInventoryMaterial: React.FC<AddInventoryMaterialProps> = ({ warehouseId
         setIsConfirmation(true)
       }
     } else if (isConfirmation == true) {
+      setIsSubmitting(true)
       // confirmed
       try {
         await addInventoryMaterial({
@@ -113,6 +115,8 @@ const AddInventoryMaterial: React.FC<AddInventoryMaterialProps> = ({ warehouseId
       } catch (error) {
         let msg = GetBadReqMsg("Gagal Tambah Material pada Gudang, silakan coba lagi nanti", error)
         dispatch(openSnackbar({ severity: "error", message: String(msg) }))
+      } finally {
+        setIsSubmitting(false)
       }
     }
   }

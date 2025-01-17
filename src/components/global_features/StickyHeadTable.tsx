@@ -40,6 +40,7 @@ export default function StickyHeadTable<T extends object>({
           : []}
         sx={{
           zIndex: 0,
+          ...tableSx,
         }}
         columns={columns}
         slots={toolbarOption}

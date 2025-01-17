@@ -16,7 +16,7 @@ export default function InventoryMainPage() {
   const [statusFilter, setStatusFilter] = useState("")
   const [warehouseFilter, setWarehouseFilter] = useState("")
 
-  useEffect(() => { if (data) refetch() }, [data, refetch])
+  // useEffect(() => { if (data) refetch() }, [data, refetch])
 
   return (
     <div className="flex flex-col" style={{ maxHeight: "100%" }}>
@@ -59,17 +59,19 @@ export default function InventoryMainPage() {
             PERUSAHAAN BELUM MEMILIKI WAREHOUSE
           </div>
 
-          : data.getAllWarehouses.map((item: any, index: number) => {
-            if (nameFilter != "" && !item.name.toLowerCase().includes(nameFilter.toLowerCase())) return null
-            if (statusFilter != "" && item.status != statusFilter) return null
-            if (warehouseFilter != "" && item.type != warehouseFilter) return null
+          : <Box maxHeight={600} sx={{ overflowY: "auto" }}>
+            {data.getAllWarehouses.map((item: any, index: number) => {
+              if (nameFilter != "" && !item.name.toLowerCase().includes(nameFilter.toLowerCase())) return null
+              if (statusFilter != "" && item.status != statusFilter) return null
+              if (warehouseFilter != "" && item.type != warehouseFilter) return null
 
-            return <CustomListComponent key={index} title={item.name}
-              type={item.type} status={item.status}
-              description={item.description}
-              onDetailClick={() => { navigate(`/appuser/inventory/${item._id}`) }}
-            />
-          })}
+              return <CustomListComponent key={index} title={item.name}
+                type={item.type} status={item.status}
+                description={item.description}
+                onDetailClick={() => { navigate(`/appuser/inventory/${item._id}`) }}
+              />
+            })}
+          </Box>}
       </>}
     </div>
   );

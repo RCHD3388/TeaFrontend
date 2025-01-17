@@ -37,7 +37,7 @@ export default function MandorDashboard({ }) {
 
   return (
     <div className="flex flex-col justiy-center items-center" style={{ maxHeight: "100%", width: "100%" }}>
-      <div className="container">
+      <div className="container mx-auto p-4">
         <Typography variant="h5" sx={{ mt: 1 }}><b>Permintaan Perpindahan Barang</b></Typography>
         <Box maxHeight={300} overflow={"auto"}>
           {!loading && data && getData().filter((req: any) => req.status != RequestStatusType.SELESAI).length == 0 &&

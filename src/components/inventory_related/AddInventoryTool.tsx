@@ -84,6 +84,7 @@ const AddInventoryTool: React.FC<AddInventoryToolProps> = ({ warehouseId, refetc
   }
   const handleSubmitButton = async () => {
     setIsEmpty(false)
+    setIsSubmitting(false)
     if (isConfirmation == false) {
       if (rows.length <= 0) {
         setIsEmpty(true)
@@ -91,6 +92,7 @@ const AddInventoryTool: React.FC<AddInventoryToolProps> = ({ warehouseId, refetc
         setIsConfirmation(true)
       }
     } else if (isConfirmation == true) {
+      setIsSubmitting(true)
       // confirmed
       try {
         await addInventoryTool({
@@ -113,6 +115,8 @@ const AddInventoryTool: React.FC<AddInventoryToolProps> = ({ warehouseId, refetc
       } catch (error: any) {
         let msg = GetBadReqMsg("Gagal tambah tool pada Gudang, silakan coba lagi nanti", error)
         dispatch(openSnackbar({ severity: "error", message: String(msg) }))
+      } finally {
+        setIsSubmitting(false)
       }
     }
   }
