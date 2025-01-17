@@ -282,6 +282,12 @@ const DetailPurchaseOrder: React.FC<DetailPurchaseOrderProps> = ({}) => {
                     Informasi Permintaan PO
                     {formatISODateToCustom(getDataRequest().date.toString())}
                   </Typography>
+                  
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <Typography variant="body1" sx={{ mr: 2 }}>
+                      <b>Judul Permintaan:</b>{getDataRequest().title}
+                    </Typography>
+                  </Stack>
                   <Stack direction="row" spacing={1} alignItems="center">
                     <Typography variant="body1" sx={{ mr: 2 }}>
                       <b>Diajukan oleh:</b>{" "}

@@ -85,7 +85,7 @@ export default function PurchasingDashboard({ }) {
           </>}
           <div className="container mx-auto p-4">
             <Typography variant="h5" sx={{ mt: 1 }}><b>Order Pembelian Terbaru</b></Typography>
-            <Box maxHeight={300} overflow={"auto"}>
+            <Box maxHeight={500} overflow={"auto"}>
               {!loading && data && getData().filter((requestItem: any) => requestItem.status != RequestStatusType.SELESAI).length == 0 && <>
                 <div className="flex justify-center items-center p-5 bg-accent shadow-md">
                   BELUM TERDAPAT ORDER PEMBELIAN TERBARU
