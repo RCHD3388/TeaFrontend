@@ -150,7 +150,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
             }}
             render={({ field }) => (<TextField
               {...field} color="secondary"
-              sx={{ width: "100%", mb: 1 }} label="Phone" size='small' variant="outlined"
+              sx={{ width: "100%", mb: 1 }} label="Nomer telepon" size='small' variant="outlined"
               error={!!errors.phone_number} helperText={errors.phone_number ? errors.phone_number.message : ''}
             />)}
           />
@@ -158,7 +158,7 @@ const AddEmployee: React.FC<AddEmployeeProps> = ({ refetchEmployee }) => {
             name="address" control={control} rules={{ required: 'Alamat tidak boleh kosong' }}
             render={({ field }) => (<TextField
               {...field} color="secondary"
-              sx={{ width: "100%", mb: 1 }} label="Address" size='small' variant="outlined"
+              sx={{ width: "100%", mb: 1 }} label="Alamat" size='small' variant="outlined"
               error={!!errors.address} helperText={errors.address ? errors.address.message : ''}
             />)}
           />

@@ -47,12 +47,12 @@ const AttendanceProjectEmployee: React.FC<AttendanceProjectEmployeeProps> = ({ p
           requiresAuth: true
         }
       })
-      dispatch(openSnackbar({ severity: "success", message: "Berhasil perbarui modul absensi" }))
+      dispatch(openSnackbar({ severity: "success", message: "Berhasil hapus modul absensi" }))
       attendanceRefetch()
       setSelectedAttendanceId(undefined)
       setOpenDeleteModal(false)
     } catch (err: any) {
-      let msg = GetBadReqMsg("Gagal perbarui modul absen, silakan coba lagi nanti", err)
+      let msg = GetBadReqMsg("Gagal hapus modul absen, silakan coba lagi nanti", err)
       dispatch(openSnackbar({ severity: "error", message: String(msg) }))
     } finally {
       setIsSubmitting(false)

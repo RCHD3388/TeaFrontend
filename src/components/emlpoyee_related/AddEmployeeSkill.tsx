@@ -77,7 +77,7 @@ const AddEmployeeSkill: React.FC<AddEmployeeSkillProps> = ({ refetchSkill }) => 
         aria-describedby="modal-modal-description"
       >
         <Box sx={modalStyle}>
-          <Typography id="modal-modal-title" variant="h6" component="h2"><b>TAMBAH PEGAWAI BARU</b></Typography>
+          <Typography id="modal-modal-title" variant="h6" component="h2"><b>TAMBAH DATA SKILL PEGAWAI BARU</b></Typography>
           {/* FIELD START */}
           <Controller
             name="name" control={control} rules={{ required: 'Name is required' }}
