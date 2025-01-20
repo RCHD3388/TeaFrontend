@@ -1,4 +1,4 @@
-# Gunakan base image Node.js yang ringan
+# Build stage
 FROM node:18-alpine AS builder
 
 # Direktori kerja untuk build
@@ -11,21 +11,17 @@ RUN npm install
 # Salin seluruh source code
 COPY . .
 
-# Build aplikasi (transpile TypeScript ke JavaScript)
+# Build aplikasi frontend
 RUN npm run build
 
-# Gunakan base image ringan untuk runtime
-FROM node:18-alpine
+# Production stage
+FROM nginx:stable-alpine
 
-# Direktori kerja untuk runtime
-WORKDIR /app
+# Salin hasil build ke direktori default Nginx
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Copy hanya hasil build dan dependencies
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
+# Expose port 80 untuk akses HTTP
+EXPOSE 5173
 
-# Expose port untuk backend
-EXPOSE 3000
-
-# Jalankan backend dalam mode produksi
-CMD ["node", "dist/main"]
+# Jalankan Nginx
+CMD ["nginx", "-g", "daemon off;"]
