@@ -6,7 +6,7 @@ WORKDIR /app
 
 # Salin file package dan install dependencies
 COPY package.json package-lock.json ./
-RUN npm install --production
+RUN npm install
 
 # Salin seluruh source code
 COPY . .
