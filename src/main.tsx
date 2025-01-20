@@ -34,7 +34,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 });
 
 const httpLink = new HttpLink({
-  uri: 'http://localhost:3000/graphql',
+  uri: 'http://188.166.251.221:3000/graphql',
 });
 
 const authLink = setContext((request, { headers }) => {
