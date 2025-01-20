@@ -1,17 +1,31 @@
-# Base image
-FROM node:18
+# Gunakan base image Node.js yang ringan
+FROM node:18-alpine AS builder
 
+# Direktori kerja untuk build
 WORKDIR /app
 
-# Copy package files and install dependencies
+# Salin file package dan install dependencies
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm install --production
 
-# Copy application source code
+# Salin seluruh source code
 COPY . .
 
-# Expose the development server port
-EXPOSE 5173
+# Build aplikasi (transpile TypeScript ke JavaScript)
+RUN npm run build
 
-# Start the development server
-CMD ["npm", "run", "dev"]
+# Gunakan base image ringan untuk runtime
+FROM node:18-alpine
+
+# Direktori kerja untuk runtime
+WORKDIR /app
+
+# Copy hanya hasil build dan dependencies
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+
+# Expose port untuk backend
+EXPOSE 3000
+
+# Jalankan backend dalam mode produksi
+CMD ["node", "dist/main"]
